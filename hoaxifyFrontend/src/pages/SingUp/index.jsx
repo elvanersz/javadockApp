@@ -1,13 +1,18 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 
 export function SingUp() {
-    const [username, setUsername] = useState()
-    const [email, setEmail] = useState()
-    const [password, setPassword] = useState()
-    const [passwordRepeat, setPasswordRepeat] = useState()
+    const [username, setUsername] = useState();
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+    const [passwordRepeat, setPasswordRepeat] = useState();
     const [apiProgress, setApiProgress] = useState(false);
-    const [successMessage, setSuccasseMessage] = useState();
+    const [successMessage, setSuccessMessage] = useState();
+    const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        setErrors({})
+    }, [username])
 
     const buttonDisable = () => {
         if (!username || !email || !password || password !== passwordRepeat) {
@@ -17,17 +22,21 @@ export function SingUp() {
     const onSubmit = async (event) => {
         event.preventDefault();
         setApiProgress(true);
-        setSuccasseMessage();
+        setSuccessMessage();
+        setGeneralError();
 
         await axios.post('/api/v1/users', {
             username: username,
             email: email,
             password: password
         }).then((response) => {
-            setSuccasseMessage(response.data.username + " has been successfully registered")
-        }).finally(() => {
-            setApiProgress(false)
-        })
+            setSuccessMessage(response.data.username + " has been successfully registered")
+        }).catch((error) => {
+            if (error.response.data) {
+                setErrors(error.response.data)
+                console.log(error.response.data)
+            }
+        }).finally(setApiProgress(false))
     }
 
     return (
@@ -41,8 +50,11 @@ export function SingUp() {
                         <div className="mb-3">
                             <label htmlFor="username" className="form-label">Username</label>
                             <input id="username"
-                                   className="form-control"
+                                   className={errors.message ? "form-control is-invalid" : "form-control"}
                                    onChange={(event) => setUsername(event.target.value)}/>
+                            <div className="invalid-feedback">
+                                {errors.message}
+                            </div>
                         </div>
                         <div className="mb-3">
                             <label htmlFor="email" className="form-label">E-mail</label>
@@ -64,15 +76,14 @@ export function SingUp() {
                                    className="form-control"
                                    onChange={(event) => setPasswordRepeat(event.target.value)}/>
                         </div>
-
                         {successMessage && <div className="alert alert-success">
                             {successMessage}
                         </div>}
-
                         <div className="text-center">
                             <button className="btn btn-primary"
                                     disabled={buttonDisable() || apiProgress}>
-                                    {apiProgress && <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>}
+                                {apiProgress &&
+                                    <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>}
                                 Sing Up
                             </button>
                         </div>
