@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import {Input} from "./components/Input.jsx";
 
@@ -11,6 +11,14 @@ export function SingUp() {
     const [successMessage, setSuccessMessage] = useState();
     const [errors, setErrors] = useState({});
     const [generalError, setGeneralError] = useState();
+
+    const passwordRepeatError = useMemo(() => {
+        if (password && password !== passwordRepeat){
+            return "Password mismatch!";
+        }else {
+            return "";
+        }
+    }, [password, passwordRepeat]);
 
     useEffect(() => {
         setErrors(function (lastErrors) {
@@ -52,8 +60,8 @@ export function SingUp() {
             email: email,
             password: password
         }).then((response) => {
-            setSuccessMessage(response.data.username + " has been successfully registered")
-            console.log(response.data.username)
+            setSuccessMessage("has been successfully registered")
+            console.log(response.data)
         }).catch((error) => {
             if (error.response?.data) {
                 setErrors(error.response.data.validationErrors)
@@ -74,24 +82,22 @@ export function SingUp() {
                     <div className="card-body">
                         <Input id="username"
                                labelText="Username"
-                               error={errors.username}
+                               error={errors ? errors.username : null}
                                onChange={(event) => setUsername(event.target.value)}/>
                         <Input id="email"
                                labelText="E-mail"
-                               error={errors.email}
+                               error={errors ? errors.email : null}
                                onChange={(event) => setEmail(event.target.value)}/>
                         <Input id="password"
                                labelText="Password"
-                               error={errors.password}
+                               error={errors ? errors.password : null}
                                onChange={(event) => setPassword(event.target.value)}
                                type="password"/>
-                        <div className="mb-3">
-                            <label htmlFor="passwordRepeat" className="form-label">Password Repeat</label>
-                            <input id="passwordRepeat"
-                                   type="password"
-                                   className="form-control"
-                                   onChange={(event) => setPasswordRepeat(event.target.value)}/>
-                        </div>
+                        <Input id="passwordRepeat"
+                               labelText="Password Repeat"
+                               error={passwordRepeatError}
+                               onChange={(event) => setPasswordRepeat(event.target.value)}
+                               type="password"/>
                         {successMessage && <div className="alert alert-success">
                             {successMessage}
                         </div>}

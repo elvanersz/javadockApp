@@ -1,5 +1,6 @@
 package com.elvan.hoaxify.entities;
 
+import com.elvan.hoaxify.validation.UniqueEmail;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,25 +10,28 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "users")
+@Table(name = "users",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"username", "email"}))
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Username can not be empty!")
+    @NotBlank(message = "{hoaxify.constraints.username.NotBlank.message}")
     @Column(name = "username")
     private String username;
 
-    @Email(message = "Not a properly formatted e-mail address!")
-    @Size(min=10, max=255, message = "Not a properly formatted e-mail address!")
+    @Email(message = "{hoaxify.constraints.email.format.message}")
+    @UniqueEmail //custom annotation
+    @Size(min = 10, max = 255, message = "{hoaxify.constraints.email.format.message}")
     @Column(name = "email")
     private String email;
 
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,20}$",
-            message = "The password must contain at least one number, one lowercase letter, one uppercase letter and no special characters. " +
-                    "Password must contain a length of at least 8 characters and a maximum of 20 characters.")
+    @Size(min = 8, max = 20, message = "{hoaxify.constraints.password.size.message}")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*$",
+            message = "{hoaxify.constraints.password.pattern.message}")
+
     @Column(name = "password")
     private String password;
 }
