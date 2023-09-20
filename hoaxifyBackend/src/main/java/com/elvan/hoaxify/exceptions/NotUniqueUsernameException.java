@@ -6,14 +6,14 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import java.util.Collections;
 import java.util.Map;
 
-public class NotUniqueEmailException extends RuntimeException{
+public class NotUniqueUsernameException extends RuntimeException{
 
-    public NotUniqueEmailException() {
+    public NotUniqueUsernameException() {
         super(Messages.getMessageForLocale("hoaxify.error.validation", LocaleContextHolder.getLocale()));
     }
 
     public Map<String, String> getValidationErrors(){
         return Collections
-                .singletonMap("email", Messages.getMessageForLocale("hoaxify.constraints.email.NotUnique.message", LocaleContextHolder.getLocale()));
+                .singletonMap("username", Messages.getMessageForLocale("hoaxify.constraints.username.NotUnique.message", LocaleContextHolder.getLocale()));
     }
 }

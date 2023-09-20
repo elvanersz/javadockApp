@@ -60,7 +60,7 @@ export function SingUp() {
             email: email,
             password: password
         }).then((response) => {
-            setSuccessMessage("has been successfully registered")
+            setSuccessMessage("Has been successfully registered")
             console.log(response.data)
         }).catch((error) => {
             if (error.response?.data) {

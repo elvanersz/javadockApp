@@ -1,6 +1,7 @@
 package com.elvan.hoaxify.entities;
 
 import com.elvan.hoaxify.validation.UniqueEmail;
+import com.elvan.hoaxify.validation.UniqueUsername;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -18,6 +19,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @UniqueUsername //custom annotation
     @NotBlank(message = "{hoaxify.constraints.username.NotBlank.message}")
     @Column(name = "username")
     private String username;
