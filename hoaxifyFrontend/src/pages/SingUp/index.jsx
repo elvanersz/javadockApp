@@ -1,6 +1,9 @@
 import {useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import {Input} from "./components/Input.jsx";
+import {useTranslation} from "react-i18next";
+import {LanguageSelector} from "../../shared/components/LanguageSelector.jsx";
+import i18n from "i18next";
 
 export function SingUp() {
     const [username, setUsername] = useState();
@@ -11,11 +14,12 @@ export function SingUp() {
     const [successMessage, setSuccessMessage] = useState();
     const [errors, setErrors] = useState({});
     const [generalError, setGeneralError] = useState();
+    const { t } = useTranslation();
 
     const passwordRepeatError = useMemo(() => {
-        if (password && password !== passwordRepeat){
-            return "Password mismatch!";
-        }else {
+        if (password && password !== passwordRepeat) {
+            return t("passwordMismatch");
+        } else {
             return "";
         }
     }, [password, passwordRepeat]);
@@ -56,45 +60,50 @@ export function SingUp() {
         setSuccessMessage();
 
         await axios.post('/api/v1/users', {
-            username: username,
-            email: email,
-            password: password
-        }).then((response) => {
-            setSuccessMessage("Has been successfully registered")
+                username: username,
+                email: email,
+                password: password
+            },
+            {
+                headers: {
+                    "Accept-Language" : i18n.language
+                }
+            }).then((response) => {
+            setSuccessMessage(t("successMessage"))
             console.log(response.data)
         }).catch((error) => {
             if (error.response?.data) {
                 setErrors(error.response.data.validationErrors)
                 console.log(error.response)
             } else {
-                setGeneralError("Unexpected error occurred, Please try again!")
+                setGeneralError(t("generalErrorMessage"))
             }
         }).finally(setApiProgress(false))
     }
 
     return (
         <div className="container">
-            <div className="col-xl-8 offset-xl-2">
+            <div className="col-xl-6 offset-xl-3 mt-5">
                 <form className="card" onSubmit={onSubmit}>
                     <div className="text-center card-header">
-                        <h1>Sing Up</h1>
+                        <h1>{t("singUp")}</h1>
                     </div>
                     <div className="card-body">
                         <Input id="username"
-                               labelText="Username"
+                               labelText={t("username")}
                                error={errors ? errors.username : null}
                                onChange={(event) => setUsername(event.target.value)}/>
                         <Input id="email"
-                               labelText="E-mail"
+                               labelText={t("email")}
                                error={errors ? errors.email : null}
                                onChange={(event) => setEmail(event.target.value)}/>
                         <Input id="password"
-                               labelText="Password"
+                               labelText={t("password")}
                                error={errors ? errors.password : null}
                                onChange={(event) => setPassword(event.target.value)}
                                type="password"/>
                         <Input id="passwordRepeat"
-                               labelText="Password Repeat"
+                               labelText={t("passwordRepeat")}
                                error={passwordRepeatError}
                                onChange={(event) => setPasswordRepeat(event.target.value)}
                                type="password"/>
@@ -109,11 +118,12 @@ export function SingUp() {
                                     disabled={buttonDisable() || apiProgress}>
                                 {apiProgress &&
                                     <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>}
-                                Sing Up
+                                {t("singUp")}
                             </button>
                         </div>
                     </div>
                 </form>
+                <LanguageSelector />
             </div>
         </div>
     );

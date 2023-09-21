@@ -11,29 +11,25 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "users",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"username", "email"}))
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @UniqueUsername //custom annotation
-    @NotBlank(message = "{hoaxify.constraints.username.NotBlank.message}")
     @Column(name = "username")
     private String username;
 
-    @Email(message = "{hoaxify.constraints.email.format.message}")
-    @UniqueEmail //custom annotation
-    @Size(min = 10, max = 255, message = "{hoaxify.constraints.email.format.message}")
     @Column(name = "email")
     private String email;
 
-    @Size(min = 8, max = 20, message = "{hoaxify.constraints.password.size.message}")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*$",
-            message = "{hoaxify.constraints.password.pattern.message}")
-
     @Column(name = "password")
     private String password;
+
+    @Column(name = "isActive")
+    private boolean isActive= false;
+
+    @Column(name = "activationToken")
+    private String activationToken;
 }

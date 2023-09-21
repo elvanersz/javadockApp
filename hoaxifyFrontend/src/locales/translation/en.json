@@ -1,0 +1,10 @@
+{
+  "singUp": "Sing Up",
+  "username": "Username",
+  "email": "E-mail",
+  "password": "Password",
+  "passwordRepeat": "Password Repeat",
+  "passwordMismatch": "Password mismatch!",
+  "successMessage": "Has been successfully registered",
+  "generalErrorMessage": "Unexpected error occurred. Please try again!"
+}

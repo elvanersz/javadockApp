@@ -1,0 +1,11 @@
+{
+  "singUp": "Kaydol",
+  "username": "Kullanıcı Adı",
+  "email": "E-posta",
+  "password": "Şifre",
+  "passwordRepeat": "Şifre Tekrar",
+  "passwordMismatch": "Şifreler eşleşmiyor!",
+  "successMessage": "Başarıyla kaydedildi",
+  "generalErrorMessage": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin!"
+
+}

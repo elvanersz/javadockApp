@@ -8,6 +8,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -18,6 +20,7 @@ public class UserService {
     public User createOneUser(User newUser){
         try {
             newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+            newUser.setActivationToken(UUID.randomUUID().toString());
             return userRepository.save(newUser);
         } catch (DataIntegrityViolationException exception){
             throw new NotUniqueEmailException();
