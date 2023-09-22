@@ -1,7 +1,6 @@
 package com.elvan.hoaxify.controllers;
 
-import com.elvan.hoaxify.dto.CreateUserRequest;
-import com.elvan.hoaxify.entities.User;
+import com.elvan.hoaxify.requests.CreateUserRequest;
 import com.elvan.hoaxify.services.UserService;
 import com.elvan.hoaxify.validation.GenericMessage;
 import com.elvan.hoaxify.validation.Messages;

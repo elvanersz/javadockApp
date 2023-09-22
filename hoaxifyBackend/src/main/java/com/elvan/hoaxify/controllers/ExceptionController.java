@@ -1,6 +1,7 @@
 package com.elvan.hoaxify.controllers;
 
 import com.elvan.hoaxify.errors.ErrorResponse;
+import com.elvan.hoaxify.exceptions.ActivationNotificationException;
 import com.elvan.hoaxify.exceptions.NotUniqueEmailException;
 import com.elvan.hoaxify.exceptions.NotUniqueUsernameException;
 import com.elvan.hoaxify.validation.Messages;
@@ -58,5 +59,16 @@ public class ExceptionController {
         errorResponse.setValidationErrors(exception.getValidationErrors());
 
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(400));
+    }
+
+    @ExceptionHandler(ActivationNotificationException.class)
+    public ResponseEntity<Object> handleActivationNotificationException(ActivationNotificationException exception){
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setPath("/api/v1/users");
+        errorResponse.setMessage(exception.getMessage());
+        errorResponse.setStatusCode(502);
+
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(502));
     }
 }

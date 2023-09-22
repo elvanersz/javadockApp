@@ -73,8 +73,12 @@ export function SingUp() {
             console.log(response.data)
         }).catch((error) => {
             if (error.response?.data) {
-                setErrors(error.response.data.validationErrors)
                 console.log(error.response)
+                if(error.response.data.status === 400){
+                    setErrors(error.response.data.validationErrors)
+                }else{
+                    setGeneralError(error.response.data.message)
+                }
             } else {
                 setGeneralError(t("generalErrorMessage"))
             }

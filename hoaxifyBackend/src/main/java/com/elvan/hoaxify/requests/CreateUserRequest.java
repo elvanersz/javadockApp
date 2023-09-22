@@ -1,4 +1,4 @@
-package com.elvan.hoaxify.dto;
+package com.elvan.hoaxify.requests;
 
 import com.elvan.hoaxify.entities.User;
 import com.elvan.hoaxify.validation.UniqueEmail;
