@@ -5,6 +5,6 @@
   "password": "Password",
   "passwordRepeat": "Password Repeat",
   "passwordMismatch": "Password mismatch!",
-  "successMessage": "Has been successfully registered",
+  "successMessage": "Has been successfully registered. Please check your mailbox to activate your account.",
   "generalErrorMessage": "Unexpected error occurred. Please try again!"
 }

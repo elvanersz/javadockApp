@@ -26,7 +26,7 @@ public class UserService {
             newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
             newUser.setActivationToken(UUID.randomUUID().toString());
             userRepository.saveAndFlush(newUser);
-            emailService.sendActivationEmail(newUser.getEmail(), newUser.getActivationToken());
+            emailService.sendActivationEmail(newUser);
         } catch (DataIntegrityViolationException exception){
             throw new NotUniqueEmailException();
         } catch (MailException exception){

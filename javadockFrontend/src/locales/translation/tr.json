@@ -5,7 +5,7 @@
   "password": "Şifre",
   "passwordRepeat": "Şifre Tekrar",
   "passwordMismatch": "Şifreler eşleşmiyor!",
-  "successMessage": "Başarıyla kaydedildi",
+  "successMessage": "Başarıyla kaydedildi. Hesabınızı etkinleştirmek için lütfen posta kutunuzu kontrol edin.",
   "generalErrorMessage": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin!"
 
 }

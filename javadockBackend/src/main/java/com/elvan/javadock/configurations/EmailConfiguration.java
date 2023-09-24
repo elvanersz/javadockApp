@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "spring")
-public class EmailProperties {
+public class EmailConfiguration {
 
     private Mail mail;
     private Client client;
