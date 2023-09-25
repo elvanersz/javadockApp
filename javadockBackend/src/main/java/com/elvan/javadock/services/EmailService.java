@@ -36,7 +36,7 @@ public class EmailService {
     private static final String MAIL_SUBJECT = "Registration Confirmation";
 
     public void sendActivationEmail(User newUser){
-        String url = emailConfiguration.getMail().host() + "/activation/" + newUser.getActivationToken();
+        String url = emailConfiguration.getClient().host() + "/activation/" + newUser.getActivationToken();
 
         try {
             final MimeMessage mimeMessage = this.javaMailSender.createMimeMessage();

@@ -2,6 +2,7 @@ package com.elvan.javadock.services;
 
 import com.elvan.javadock.entities.User;
 import com.elvan.javadock.exceptions.ActivationNotificationException;
+import com.elvan.javadock.exceptions.InvalidTokenException;
 import com.elvan.javadock.exceptions.NotUniqueEmailException;
 import com.elvan.javadock.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -32,5 +33,15 @@ public class UserService {
         } catch (MailException exception){
             throw new ActivationNotificationException();
         }
+    }
+
+    public void activateUser(String activationToken) {
+        User user = userRepository.findByActivationToken(activationToken);
+        if(user == null){
+            throw new InvalidTokenException();
+        }
+        user.setActive(true);
+        user.setActivationToken(null);
+        userRepository.save(user);
     }
 }

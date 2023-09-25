@@ -23,4 +23,11 @@ public class UserController {
         String message = Messages.getMessageForLocale("javadock.create.user.success.message", LocaleContextHolder.getLocale());
         return new GenericMessage(message);
     }
+
+    @PatchMapping("/api/v1/users/{activationToken}/active")
+    public GenericMessage activateUser(@PathVariable String activationToken){
+        userService.activateUser(activationToken);
+        String message = Messages.getMessageForLocale("javadock.activate.user.success.message", LocaleContextHolder.getLocale());
+        return new GenericMessage(message);
+    }
 }

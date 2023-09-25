@@ -2,6 +2,7 @@ package com.elvan.javadock.controllers;
 
 import com.elvan.javadock.errors.ErrorResponse;
 import com.elvan.javadock.exceptions.ActivationNotificationException;
+import com.elvan.javadock.exceptions.InvalidTokenException;
 import com.elvan.javadock.exceptions.NotUniqueEmailException;
 import com.elvan.javadock.exceptions.NotUniqueUsernameException;
 import com.elvan.javadock.validation.Messages;
@@ -70,5 +71,16 @@ public class ExceptionController {
         errorResponse.setStatusCode(502);
 
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(502));
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException exception){
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setPath("/api/v1/users/activationToken/active");
+        errorResponse.setMessage(exception.getMessage());
+        errorResponse.setStatusCode(400);
+
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(400));
     }
 }

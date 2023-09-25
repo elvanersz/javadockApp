@@ -2,15 +2,16 @@ import {useEffect, useMemo, useState} from "react";
 import axios from "axios";
 import {Input} from "./components/Input.jsx";
 import {useTranslation} from "react-i18next";
-import {LanguageSelector} from "../../shared/components/LanguageSelector.jsx";
 import i18n from "i18next";
+import {Alert} from "../../shared/components/Alert.jsx";
+import {Spinner} from "../../shared/components/Spinner.jsx";
 
 export function SingUp() {
     const [username, setUsername] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [passwordRepeat, setPasswordRepeat] = useState();
-    const [apiProgress, setApiProgress] = useState(false);
+    const [apiProgress, setApiProgress] = useState();
     const [successMessage, setSuccessMessage] = useState();
     const [errors, setErrors] = useState({});
     const [generalError, setGeneralError] = useState();
@@ -87,7 +88,7 @@ export function SingUp() {
 
     return (
         <div className="container">
-            <div className="col-xl-6 offset-xl-3 mt-5">
+            <div className="col-xl-6 offset-xl-3">
                 <form className="card" onSubmit={onSubmit}>
                     <div className="text-center card-header">
                         <h1>{t("singUp")}</h1>
@@ -111,23 +112,23 @@ export function SingUp() {
                                error={passwordRepeatError}
                                onChange={(event) => setPasswordRepeat(event.target.value)}
                                type="password"/>
-                        {successMessage && <div className="alert alert-success">
-                            {successMessage}
-                        </div>}
-                        {generalError && <div className="alert alert-danger">
-                            {generalError}
-                        </div>}
+                        {successMessage && (
+                            <Alert styleType="success" center>{successMessage}</Alert>
+                        )}
+                        {generalError && (
+                            <Alert styleType="danger" center>{generalError}</Alert>
+                        )}
                         <div className="text-center">
                             <button className="btn btn-primary"
                                     disabled={buttonDisable() || apiProgress}>
-                                {apiProgress &&
-                                    <span className="spinner-border spinner-border-sm" aria-hidden="true"></span>}
+                                {apiProgress && (
+                                    <Spinner sm={true}/>
+                                )}
                                 {t("singUp")}
                             </button>
                         </div>
                     </div>
                 </form>
-                <LanguageSelector />
             </div>
         </div>
     );
