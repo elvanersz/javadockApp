@@ -1,10 +1,15 @@
 {
   "singUp": "Sing Up",
+  "users": "Users",
+  "home": "Home",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "birthDate": "Date of Birth",
   "username": "Username",
   "email": "E-mail",
   "password": "Password",
   "passwordRepeat": "Password Repeat",
   "passwordMismatch": "Password mismatch!",
-  "successMessage": "Has been successfully registered. Please check your mailbox to activate your account.",
+  "successMessage": "Please check your mailbox to activate your account.",
   "generalErrorMessage": "Unexpected error occurred. Please try again!"
 }

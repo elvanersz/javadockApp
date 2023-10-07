@@ -1,17 +1,17 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import axios from "axios";
-import {Alert} from "../../shared/components/Alert.jsx";
-import {Spinner} from "../../shared/components/Spinner.jsx";
+import {Alert} from "@/shared/components/Alert.jsx";
+import {Spinner} from "@/shared/components/Spinner.jsx";
+import http from "@/lib/http";
 
 export function Activation() {
     const {activationToken} = useParams()
-    const [apiProgress, setApiProgress] = useState(true);
+    const [apiProgress, setApiProgress] = useState();
     const [successMessage, setSuccessMessage] = useState();
     const [errorMessage, setErrorMessage] = useState();
 
     function activateUser(activationToken) {
-        return axios.patch(`/api/v1/users/${activationToken}/active`)
+        return http.patch(`/api/v1/users/${activationToken}/active`)
     }
 
     useEffect(() => {
@@ -26,7 +26,7 @@ export function Activation() {
                 setApiProgress(false);
             }
         }
-        //activate()
+        activate()
     }, [])
 
     return <>

@@ -1,13 +1,16 @@
 import {useEffect, useMemo, useState} from "react";
-import axios from "axios";
-import {Input} from "./components/Input.jsx";
+import {Input} from "../../shared/components/Input.jsx";
 import {useTranslation} from "react-i18next";
-import i18n from "i18next";
-import {Alert} from "../../shared/components/Alert.jsx";
-import {Spinner} from "../../shared/components/Spinner.jsx";
+import {Alert} from "@/shared/components/Alert.jsx";
+import {Spinner} from "@/shared/components/Spinner.jsx";
+import http from "@/lib/http";
+import BasicDatePicker from "@/shared/components/BasicDatePicker.jsx";
 
 export function SingUp() {
+    const [firstName, setFirstName] = useState();
+    const [lastName, setLastName] = useState();
     const [username, setUsername] = useState();
+    const [birthDate, setBirthDate] = useState(null);
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [passwordRepeat, setPasswordRepeat] = useState();
@@ -15,7 +18,7 @@ export function SingUp() {
     const [successMessage, setSuccessMessage] = useState();
     const [errors, setErrors] = useState({});
     const [generalError, setGeneralError] = useState();
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     const passwordRepeatError = useMemo(() => {
         if (password && password !== passwordRepeat) {
@@ -29,10 +32,34 @@ export function SingUp() {
         setErrors(function (lastErrors) {
             return {
                 ...lastErrors,
+                firstName: undefined
+            }
+        })
+    }, [firstName])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                lastName: undefined
+            }
+        })
+    }, [lastName])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
                 username: undefined
             }
         })
     }, [username])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                birthDate: undefined
+            }
+        })
+    }, [birthDate])
     useEffect(() => {
         setErrors(function (lastErrors) {
             return {
@@ -51,7 +78,7 @@ export function SingUp() {
     }, [password])
 
     const buttonDisable = () => {
-        if (!username || !email || !password || password !== passwordRepeat) {
+        if (!firstName || !lastName || !username || !birthDate || !email || !password || password !== passwordRepeat) {
             return true
         }
     }
@@ -60,24 +87,22 @@ export function SingUp() {
         setApiProgress(true);
         setSuccessMessage();
 
-        await axios.post('/api/v1/users', {
-                username: username,
-                email: email,
-                password: password
-            },
-            {
-                headers: {
-                    "Accept-Language" : i18n.language
-                }
-            }).then((response) => {
+        await http.post('/api/v1/users', {
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            birthDate: birthDate,
+            email: email,
+            password: password
+        }).then((response) => {
             setSuccessMessage(t("successMessage"))
             console.log(response.data)
         }).catch((error) => {
             if (error.response?.data) {
                 console.log(error.response)
-                if(error.response.data.statusCode === 400){
+                if (error.response.data.statusCode === 400) {
                     setErrors(error.response.data.validationErrors)
-                }else{
+                } else {
                     setGeneralError(error.response.data.message)
                 }
             } else {
@@ -94,10 +119,25 @@ export function SingUp() {
                         <h1>{t("singUp")}</h1>
                     </div>
                     <div className="card-body">
+                        <Input id="firstName"
+                               labelText={t("firstName")}
+                               error={errors ? errors.firstName : null}
+                               onChange={(event) => setFirstName(event.target.value)}/>
+                        <Input id="lastName"
+                               labelText={t("lastName")}
+                               error={errors ? errors.lastName : null}
+                               onChange={(event) => setLastName(event.target.value)}/>
                         <Input id="username"
                                labelText={t("username")}
                                error={errors ? errors.username : null}
                                onChange={(event) => setUsername(event.target.value)}/>
+                        <BasicDatePicker id="birthDate"
+                                         labelText={t("birthDate")}
+                                         value={birthDate}
+                                         onChange={(date) => {
+                                             setBirthDate(date)
+                                             console.log()
+                                         }}/>
                         <Input id="email"
                                labelText={t("email")}
                                error={errors ? errors.email : null}
@@ -121,9 +161,7 @@ export function SingUp() {
                         <div className="text-center">
                             <button className="btn btn-primary"
                                     disabled={buttonDisable() || apiProgress}>
-                                {apiProgress && (
-                                    <Spinner sm={true}/>
-                                )}
+                                {apiProgress && (<Spinner sm={true}/>)}
                                 {t("singUp")}
                             </button>
                         </div>

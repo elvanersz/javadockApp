@@ -1,11 +1,16 @@
 {
   "singUp": "Kaydol",
+  "users": "Kullanıcılar",
+  "home": "Anasayfa",
+  "firstName": "Ad",
+  "lastName": "Soyad",
+  "birthDate": "Doğum Tarihi",
   "username": "Kullanıcı Adı",
   "email": "E-posta",
   "password": "Şifre",
   "passwordRepeat": "Şifre Tekrar",
   "passwordMismatch": "Şifreler eşleşmiyor!",
-  "successMessage": "Başarıyla kaydedildi. Hesabınızı etkinleştirmek için lütfen posta kutunuzu kontrol edin.",
+  "successMessage": "Lütfen hesabınızı etkinleştirmek için posta kutunuzu kontrol edin.",
   "generalErrorMessage": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin!"
 
 }

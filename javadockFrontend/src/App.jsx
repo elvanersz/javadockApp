@@ -9,7 +9,6 @@ function App() {
             <NavBar />
             <div className="container mt-3">
                 <Outlet/>
-                <LanguageSelector/>
             </div>
         </>
     )

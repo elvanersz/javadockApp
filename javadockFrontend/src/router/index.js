@@ -1,8 +1,9 @@
 import {createBrowserRouter} from "react-router-dom";
-import {Home} from "../pages/Home/index.jsx";
-import {SingUp} from "../pages/SingUp/index.jsx";
-import App from "../App";
-import {Activation} from "../pages/activation/index.jsx";
+import {Home} from "@/pages/Home/index.jsx";
+import {SingUp} from "@/pages/SingUp/index.jsx";
+import App from "@/App";
+import {Activation} from "@/pages/Activation/index.jsx";
+import {Users} from "@/pages/Users/index.jsx";
 
 
 export default createBrowserRouter([
@@ -22,6 +23,10 @@ export default createBrowserRouter([
             {
                 path: "/activation/:activationToken",
                 Component: Activation
+            },
+            {
+                path: "/users",
+                Component: Users
             }
         ]
     }

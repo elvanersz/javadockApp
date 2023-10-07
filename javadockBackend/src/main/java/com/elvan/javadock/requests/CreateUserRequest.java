@@ -4,10 +4,8 @@ import com.elvan.javadock.entities.User;
 import com.elvan.javadock.validation.UniqueEmail;
 import com.elvan.javadock.validation.UniqueUsername;
 import jakarta.persistence.Column;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+import java.util.Date;
 
 public record CreateUserRequest(
 
@@ -15,6 +13,16 @@ public record CreateUserRequest(
         @NotBlank(message = "{javadock.constraints.username.NotBlank.message}")
         @Column(name = "username")
         String username,
+
+        @NotBlank(message = "{javadock.constraints.firstName.NotBlank.message}")
+        String firstName,
+
+        @NotBlank(message = "{javadock.constraints.lastName.NotBlank.message}")
+        String lastName,
+
+        @PastOrPresent
+        @NotNull(message = "{javadock.constraints.birthDate.NotNull.message}")
+        Date birthDate,
 
         @Email(message = "{javadock.constraints.email.format.message}")
         @UniqueEmail //custom annotation
@@ -32,7 +40,10 @@ public record CreateUserRequest(
     public User toUser(){
         User user = new User();
 
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         user.setUsername(username);
+        user.setBirthDate(birthDate);
         user.setEmail(email);
         user.setPassword(password);
 

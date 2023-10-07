@@ -45,10 +45,10 @@ public class EmailService {
 
             email.setTo(newUser.getEmail());
             email.setSubject(MAIL_SUBJECT);
-            email.setFrom(new InternetAddress(emailConfiguration.getMail().username(), "Java Dock"));
+            email.setFrom(new InternetAddress(emailConfiguration.getMail().username(), "Javadock"));
 
             final Context ctx = new Context(LocaleContextHolder.getLocale());
-            ctx.setVariable("name", newUser.getUsername());
+            ctx.setVariable("name", newUser.getFirstName() + " " + newUser.getLastName());
             ctx.setVariable("username", newUser.getUsername());
             ctx.setVariable("email", newUser.getEmail());
             ctx.setVariable("url", url);

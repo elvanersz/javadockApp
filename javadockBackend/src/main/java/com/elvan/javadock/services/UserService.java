@@ -1,6 +1,7 @@
 package com.elvan.javadock.services;
 
 import com.elvan.javadock.entities.User;
+import com.elvan.javadock.enums.Role;
 import com.elvan.javadock.exceptions.ActivationNotificationException;
 import com.elvan.javadock.exceptions.InvalidTokenException;
 import com.elvan.javadock.exceptions.NotUniqueEmailException;
@@ -8,9 +9,14 @@ import com.elvan.javadock.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -40,8 +46,13 @@ public class UserService {
         if(user == null){
             throw new InvalidTokenException();
         }
+        user.setRole(Role.USER);
         user.setActive(true);
         user.setActivationToken(null);
         userRepository.save(user);
+    }
+
+    public Page<User> getAllUsers(Pageable page) {
+        return userRepository.findAll(page);
     }
 }
