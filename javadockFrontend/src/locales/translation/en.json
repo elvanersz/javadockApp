@@ -1,9 +1,13 @@
 {
   "singUp": "Sing Up",
   "users": "Users",
+  "userList": "User List",
+  "previous": "Previous",
+  "next": "Next",
   "home": "Home",
   "firstName": "First Name",
   "lastName": "Last Name",
+  "job": "Job",
   "birthDate": "Date of Birth",
   "username": "Username",
   "email": "E-mail",

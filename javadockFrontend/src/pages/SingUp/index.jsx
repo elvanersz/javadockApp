@@ -5,6 +5,7 @@ import {Alert} from "@/shared/components/Alert.jsx";
 import {Spinner} from "@/shared/components/Spinner.jsx";
 import http from "@/lib/http";
 import BasicDatePicker from "@/shared/components/BasicDatePicker.jsx";
+import {JobSelector} from "@/shared/components/JobSelector.jsx";
 
 export function SingUp() {
     const [firstName, setFirstName] = useState();
@@ -131,12 +132,13 @@ export function SingUp() {
                                labelText={t("username")}
                                error={errors ? errors.username : null}
                                onChange={(event) => setUsername(event.target.value)}/>
+                        <JobSelector id="job"
+                                     labelText={t("job")}/>
                         <BasicDatePicker id="birthDate"
                                          labelText={t("birthDate")}
                                          value={birthDate}
                                          onChange={(date) => {
                                              setBirthDate(date)
-                                             console.log()
                                          }}/>
                         <Input id="email"
                                labelText={t("email")}

@@ -18,6 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.Locale;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class,
 								ThymeleafAutoConfiguration.class})
@@ -43,7 +46,7 @@ public class JavadockApplication {
 				.license(new License().name("javadock App Lisence")));
 	}
 
-	@Bean
+	/*@Bean
 	CommandLineRunner userCreator(UserRepository userRepository){
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -55,7 +58,7 @@ public class JavadockApplication {
 					user.setFirstName("firstname" + i);
 					user.setLastName("lastname" + i);
 					user.setUsername("username" + i);
-					user.setBirthDate(new Date(2000 - 1900,10 - 1,10 + 1));
+					user.setBirthDate(LocalDate.of(2020, 10, 10));
 					user.setEmail("email" + i + "@gmail.com");
 					user.setPassword(passwordEncoder.encode("password" + i));
 					user.setRole(Role.USER);
@@ -64,5 +67,5 @@ public class JavadockApplication {
 				}
 			}
 		};
-	}
+	}*/
 }

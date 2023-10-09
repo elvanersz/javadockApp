@@ -1,7 +1,7 @@
 package com.elvan.javadock.controllers;
 
-import com.elvan.javadock.entities.User;
 import com.elvan.javadock.requests.CreateUserRequest;
+import com.elvan.javadock.responses.UserResponse;
 import com.elvan.javadock.services.UserService;
 import com.elvan.javadock.validation.GenericMessage;
 import com.elvan.javadock.validation.Messages;
@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/users")
-    public Page<User> getAllUsers(Pageable page){
-        return userService.getAllUsers(page);
+    public Page<UserResponse> getAllUsers(Pageable page){
+        return userService.getAllUsers(page).map(UserResponse::new);
     }
 }

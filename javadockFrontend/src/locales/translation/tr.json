@@ -1,9 +1,13 @@
 {
   "singUp": "Kaydol",
   "users": "Kullanıcılar",
+  "userList": "Kullanıcı Listesi",
+  "previous": "Önceki",
+  "next": "Sonraki",
   "home": "Anasayfa",
   "firstName": "Ad",
   "lastName": "Soyad",
+  "job": "Meslek",
   "birthDate": "Doğum Tarihi",
   "username": "Kullanıcı Adı",
   "email": "E-posta",

@@ -15,7 +15,7 @@ export function NavBar() {
                 </Link>
                 <ul className="navbar-nav mb-1 px-2 ms-auto">
                     <li className="navbar-nav-item">
-                        <Link className="nav-link" to="users">{t('Users')}</Link>
+                        <Link className="nav-link" to="users">{t('users')}</Link>
                     </li>
                 </ul>
                 <ul className="navbar-nav mb-1 px-2 ms-auto">

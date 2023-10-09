@@ -1,11 +1,10 @@
 package com.elvan.javadock.entities;
 
 import com.elvan.javadock.enums.Role;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Data
@@ -25,8 +24,12 @@ public class User {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "job")
+
+    private Job job;
+
     @Column(name = "birthDate")
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "email")
     private String email;
@@ -45,4 +48,7 @@ public class User {
 
     @Column(name = "activationToken")
     private String activationToken;
+
+    @Column(name = "image")
+    private String image;
 }
