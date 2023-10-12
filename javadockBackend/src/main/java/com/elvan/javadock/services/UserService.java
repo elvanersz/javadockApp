@@ -4,6 +4,7 @@ import com.elvan.javadock.entities.User;
 import com.elvan.javadock.enums.Role;
 import com.elvan.javadock.exceptions.ActivationNotificationException;
 import com.elvan.javadock.exceptions.InvalidTokenException;
+import com.elvan.javadock.exceptions.NotFoundException;
 import com.elvan.javadock.exceptions.NotUniqueEmailException;
 import com.elvan.javadock.repositories.UserRepository;
 import com.elvan.javadock.responses.UserResponse;
@@ -53,5 +54,9 @@ public class UserService {
 
     public Page<User> getAllUsers(Pageable page) {
         return userRepository.findAll(page);
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 }

@@ -3,8 +3,8 @@ import {Home} from "@/pages/Home/index.jsx";
 import {SingUp} from "@/pages/SingUp/index.jsx";
 import App from "@/App";
 import {Activation} from "@/pages/Activation/index.jsx";
-import {Users} from "@/pages/Users/index.jsx";
-
+import {UserList} from "@/pages/UserList/index.jsx";
+import {UserProfile} from "@/pages/UserProfile/index.jsx";
 
 export default createBrowserRouter([
     {
@@ -26,7 +26,11 @@ export default createBrowserRouter([
             },
             {
                 path: "/users",
-                Component: Users
+                Component: UserList
+            },
+            {
+                path: "/user/:id",
+                Component: UserProfile
             }
         ]
     }

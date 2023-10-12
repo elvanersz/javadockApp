@@ -1,8 +1,24 @@
 import {MenuItem, Select} from "@mui/material";
 import * as React from "react";
+import http from "@/lib/http.js";
+import {useCallback, useEffect, useState} from "react";
 
 export function JobSelector(props) {
     const {id, labelText} = props;
+    const [jobs, setJobs] = useState([]);
+
+    function loadJobs() {
+        return http.get("/api/v1/jobs")
+    }
+
+    const getJobs = useCallback(async () => {
+        const response = await loadJobs()
+        setJobs(response.data)
+    }, [])
+
+    useEffect(() => {
+        getJobs()
+    }, [])
 
     return <>
         <div>
@@ -12,9 +28,10 @@ export function JobSelector(props) {
             <Select className="form-label"
                     size="small"
                     sx={{marginBottom: 2, width: '1'}}>
-                <MenuItem>Ten</MenuItem>
-                <MenuItem>Twenty</MenuItem>
-                <MenuItem>Thirty</MenuItem>
+                {jobs.map(job => {
+                    return <MenuItem key={job.jobId} value={job.jobId}>{job.jobName}</MenuItem>
+                })}
+
             </Select>
         </div>
     </>

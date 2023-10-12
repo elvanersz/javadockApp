@@ -11,6 +11,7 @@ export function SingUp() {
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
     const [username, setUsername] = useState();
+    const [job, setJob] = useState();
     const [birthDate, setBirthDate] = useState(null);
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -132,8 +133,10 @@ export function SingUp() {
                                labelText={t("username")}
                                error={errors ? errors.username : null}
                                onChange={(event) => setUsername(event.target.value)}/>
-                        <JobSelector id="job"
-                                     labelText={t("job")}/>
+                        {/*<JobSelector id="job"
+                                     labelText={t("job")}
+                                     onChange={(event) => console.log(event.target.value)}/>
+                        */}
                         <BasicDatePicker id="birthDate"
                                          labelText={t("birthDate")}
                                          value={birthDate}

@@ -40,4 +40,9 @@ public class UserController {
     public Page<UserResponse> getAllUsers(Pageable page){
         return userService.getAllUsers(page).map(UserResponse::new);
     }
+
+    @GetMapping("/api/v1/users/{id}")
+    UserResponse getUserById(@PathVariable Long id){
+        return new UserResponse(userService.getUserById(id));
+    }
 }

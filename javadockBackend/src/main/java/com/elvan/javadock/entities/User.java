@@ -1,13 +1,15 @@
 package com.elvan.javadock.entities;
 
 import com.elvan.javadock.enums.Role;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "users")
 public class User {
 
@@ -24,8 +26,8 @@ public class User {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "job")
-
+    @ManyToOne
+    @JoinColumn(name = "jobId")
     private Job job;
 
     @Column(name = "birthDate")

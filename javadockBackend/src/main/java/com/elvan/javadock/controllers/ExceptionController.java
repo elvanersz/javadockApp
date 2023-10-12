@@ -1,11 +1,10 @@
 package com.elvan.javadock.controllers;
 
 import com.elvan.javadock.errors.ErrorResponse;
-import com.elvan.javadock.exceptions.ActivationNotificationException;
-import com.elvan.javadock.exceptions.InvalidTokenException;
-import com.elvan.javadock.exceptions.NotUniqueEmailException;
-import com.elvan.javadock.exceptions.NotUniqueUsernameException;
+import com.elvan.javadock.exceptions.*;
 import com.elvan.javadock.validation.Messages;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatusCode;
@@ -14,6 +13,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class ExceptionController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         String errorMessage = Messages
                 .getMessageForLocale("javadock.error.validation", LocaleContextHolder.getLocale());
 
@@ -39,7 +39,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(NotUniqueEmailException.class)
-    public ResponseEntity<Object> handleNotUniqueEmailException(NotUniqueEmailException exception){
+    public ResponseEntity<Object> handleNotUniqueEmailException(NotUniqueEmailException exception) {
 
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setPath("/api/v1/users");
@@ -51,7 +51,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(NotUniqueUsernameException.class)
-    public ResponseEntity<Object> handleNotUniqueUsernameException(NotUniqueUsernameException exception){
+    public ResponseEntity<Object> handleNotUniqueUsernameException(NotUniqueUsernameException exception) {
 
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setPath("/api/v1/users");
@@ -63,7 +63,7 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(ActivationNotificationException.class)
-    public ResponseEntity<Object> handleActivationNotificationException(ActivationNotificationException exception){
+    public ResponseEntity<Object> handleActivationNotificationException(ActivationNotificationException exception) {
 
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setPath("/api/v1/users");
@@ -74,13 +74,26 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException exception){
+    public ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException exception,
+                                                              HttpServletRequest request) {
 
         ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setPath("/api/v1/users/activationToken/active");
+        errorResponse.setPath(request.getRequestURI());
         errorResponse.setMessage(exception.getMessage());
         errorResponse.setStatusCode(400);
 
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(400));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handleNotFoundException(NotFoundException exception,
+                                                          HttpServletRequest request) {
+
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setPath(request.getRequestURI());
+        errorResponse.setMessage(exception.getMessage());
+        errorResponse.setStatusCode(404);
+
+        return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(404));
     }
 }

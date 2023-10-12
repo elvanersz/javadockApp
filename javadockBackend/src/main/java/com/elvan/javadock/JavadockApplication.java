@@ -1,5 +1,6 @@
 package com.elvan.javadock;
 
+import com.elvan.javadock.entities.Job;
 import com.elvan.javadock.entities.User;
 import com.elvan.javadock.enums.Role;
 import com.elvan.javadock.repositories.UserRepository;
@@ -46,11 +47,14 @@ public class JavadockApplication {
 				.license(new License().name("javadock App Lisence")));
 	}
 
-	/*@Bean
+	/*
+	@Bean
 	CommandLineRunner userCreator(UserRepository userRepository){
 		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		return new CommandLineRunner() {
+			Job job = new Job(1L);
+
 			@Override
 			public void run(String... args) throws Exception {
 				for (var i=1 ; i<=25 ; i++){
@@ -58,6 +62,7 @@ public class JavadockApplication {
 					user.setFirstName("firstname" + i);
 					user.setLastName("lastname" + i);
 					user.setUsername("username" + i);
+					user.setJob(job);
 					user.setBirthDate(LocalDate.of(2020, 10, 10));
 					user.setEmail("email" + i + "@gmail.com");
 					user.setPassword(passwordEncoder.encode("password" + i));
@@ -67,5 +72,6 @@ public class JavadockApplication {
 				}
 			}
 		};
-	}*/
+	}
+	*/
 }

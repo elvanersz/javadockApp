@@ -4,7 +4,7 @@ import {Spinner} from "@/shared/components/Spinner.jsx";
 import {UserLıstItem} from "@/shared/components/UserListItem.jsx";
 import {useTranslation} from "react-i18next";
 
-export function Users() {
+export function UserList() {
     const [apiProgress, setApiProgress] = useState(false)
     const {t} = useTranslation();
     const [userPage, setUserPage] = useState({
@@ -15,14 +15,14 @@ export function Users() {
         number: 0
     })
 
-    function loadUsers(page = 0) {
+    function loadUserList(page = 0) {
         return http.get("/api/v1/users", {params: {page, size: 10}})
     }
 
     const getUsers = useCallback(async (page) => {
         setApiProgress(true)
         try {
-            const response = await loadUsers(page)
+            const response = await loadUserList(page)
             setUserPage(response.data)
         } catch {
 

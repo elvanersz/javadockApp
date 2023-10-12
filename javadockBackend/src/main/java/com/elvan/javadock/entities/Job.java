@@ -1,11 +1,14 @@
 package com.elvan.javadock.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "job")
 public class Job {
 
@@ -15,4 +18,11 @@ public class Job {
 
     @Column(name = "jobName")
     private String jobName;
+
+    @OneToMany(mappedBy = "job")
+    private List<User> userList;
+
+    public Job(Long jobId) {
+        this.jobId = jobId;
+    }
 }
