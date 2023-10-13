@@ -14,7 +14,7 @@ public class JobController {
 
     private JobService jobService;
 
-    @GetMapping()
+    @GetMapping("/api/v1/jobs")
     public List<Job> getAllJobs(){
         return jobService.getAllJobs();
     }

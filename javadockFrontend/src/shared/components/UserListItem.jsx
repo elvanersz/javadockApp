@@ -10,6 +10,7 @@ export function UserLıstItem(props) {
               style={{textDecoration: "none"}}>
             <img src={defaultProfileImage} width="30" className="img-fluid rounded-circle"/>
             <span className="ms-2">{user.username}</span>
+            <span className="float-end mt-1 text-secondary">{user.jobName}</span>
         </Link>
     );
 }

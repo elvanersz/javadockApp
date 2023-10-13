@@ -1,6 +1,7 @@
 package com.elvan.javadock.entities;
 
 import com.elvan.javadock.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,7 @@ public class User {
     private String username;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "jobId")
     private Job job;
 

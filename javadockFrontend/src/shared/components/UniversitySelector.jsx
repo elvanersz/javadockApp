@@ -3,7 +3,7 @@ import * as React from "react";
 import http from "@/lib/http.js";
 import {useCallback, useEffect, useState} from "react";
 
-export function JobSelector(props) {
+export function UniversitySelector(props) {
     const {id, labelText, onChange, error} = props;
     const [jobs, setJobs] = useState([]);
 

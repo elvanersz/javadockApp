@@ -58,6 +58,14 @@ export function SingUp() {
         setErrors(function (lastErrors) {
             return {
                 ...lastErrors,
+                jobId: undefined
+            }
+        })
+    }, [job])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
                 birthDate: undefined
             }
         })
@@ -93,15 +101,14 @@ export function SingUp() {
             firstName: firstName,
             lastName: lastName,
             username: username,
+            jobId: job,
             birthDate: birthDate,
             email: email,
             password: password
         }).then((response) => {
             setSuccessMessage(t("successMessage"))
-            console.log(response.data)
         }).catch((error) => {
             if (error.response?.data) {
-                console.log(error.response)
                 if (error.response.data.statusCode === 400) {
                     setErrors(error.response.data.validationErrors)
                 } else {
@@ -133,10 +140,10 @@ export function SingUp() {
                                labelText={t("username")}
                                error={errors ? errors.username : null}
                                onChange={(event) => setUsername(event.target.value)}/>
-                        {/*<JobSelector id="job"
+                        <JobSelector id="job"
                                      labelText={t("job")}
-                                     onChange={(event) => console.log(event.target.value)}/>
-                        */}
+                                     error={errors.jobId ? true : false}
+                                     onChange={(event) => setJob(event.target.value)}/>
                         <BasicDatePicker id="birthDate"
                                          labelText={t("birthDate")}
                                          value={birthDate}

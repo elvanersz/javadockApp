@@ -1,5 +1,6 @@
 package com.elvan.javadock.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +20,7 @@ public class Job {
     @Column(name = "jobName")
     private String jobName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "job")
     private List<User> userList;
 
