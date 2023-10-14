@@ -52,13 +52,9 @@ export function UserProfile() {
                                         <MDBTypography tag="h5">{user.username}</MDBTypography>
                                         <MDBCardText>{user.jobName}</MDBCardText>
                                     </div>
-                                    <div className="ms-3" style={{ marginTop: '130px' }}>
-                                        <button type="button" className="btn btn-primary px-3">
-                                            <i className="fas fa-users" aria-hidden="true"></i>
-                                        </button>
+                                    <div className="position-absolute end-0 mx-3" style={{ marginTop: '155px' }}>
+                                        <button type="button" className="btn btn-sm btn-outline-info">{t("updateProfile")}</button>
                                     </div>
-
-
                                 </div>
                                 <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
                                     <div className="d-flex justify-content-end text-center py-1">

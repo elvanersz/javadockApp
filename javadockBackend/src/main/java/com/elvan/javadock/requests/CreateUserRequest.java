@@ -30,6 +30,7 @@ public record CreateUserRequest(
         @NotNull(message = "{javadock.constraints.birthDate.NotNull.message}")
         LocalDate birthDate,
 
+        @NotNull(message = "{javadock.constraints.university.NotNull.message}")
         Long universityId,
 
         @Email(message = "{javadock.constraints.email.format.message}")

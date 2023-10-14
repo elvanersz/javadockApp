@@ -24,5 +24,6 @@
   "membershipTime": "Membership Time",
   "about": "About",
   "role": "Role",
-  "age": "Age"
+  "age": "Age",
+  "updateProfile": "Update Profile"
 }

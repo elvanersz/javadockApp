@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 
 export function UniversitySelector(props) {
     const {t} = useTranslation();
-    const {id, labelText, onChange} = props;
+    const {id, labelText, error, onChange} = props;
     const [universities, setUniversities] = useState([]);
 
     function loadUniversities() {
@@ -28,8 +28,8 @@ export function UniversitySelector(props) {
         </div>
         <div>
             <Select className="form-label"
-                    defaultValue=""
                     size="small"
+                    error={error}
                     onChange={onChange}
                     sx={{marginBottom: 2, width: '1'}}>
                 <MenuItem value={0}>{t("iDoNotWantToSpecify")}</MenuItem>

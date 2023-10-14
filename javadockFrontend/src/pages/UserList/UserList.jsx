@@ -38,7 +38,6 @@ export function UserList() {
     return (
         <>
             <div className="card">
-                <div className="card-header text-center fs-4">{t("userList")}</div>
                 <ul className="list-group list-group-flush">
                     {userPage.content.map(user => {
                         return <UserListItem key={user.username} user={user}/>
@@ -48,13 +47,13 @@ export function UserList() {
                     {apiProgress && <Spinner/>}
                     {!apiProgress && !userPage.first &&
                         <button
-                            className="btn btn-outline-secondary btn-sm float-start"
+                            className="btn btn-secondary btn-sm float-start mt-2"
                             onClick={() => getUsers(userPage.number - 1)}>
                             {t("previous")}
                         </button>}
                     {!apiProgress && !userPage.last &&
                         <button
-                            className="btn btn-outline-secondary btn-sm float-end"
+                            className="btn btn-secondary btn-sm float-end mt-2"
                             onClick={() => getUsers(userPage.number + 1)}>
                             {t("next")}
                         </button>}

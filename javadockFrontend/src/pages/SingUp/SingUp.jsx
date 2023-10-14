@@ -76,7 +76,7 @@ export function SingUp() {
         setErrors(function (lastErrors) {
             return {
                 ...lastErrors,
-                university: undefined
+                universityId: undefined
             }
         })
     }, [university])
@@ -163,6 +163,7 @@ export function SingUp() {
                                          }}/>
                         <UniversitySelector id="university"
                                             labelText={t("university")}
+                                            error={errors.universityId ? true : false}
                                             onChange={(event) => setUniversity(event.target.value)}/>
                         <Input id="email"
                                labelText={t("email")}

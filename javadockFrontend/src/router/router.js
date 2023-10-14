@@ -1,10 +1,10 @@
 import {createBrowserRouter} from "react-router-dom";
-import {Home} from "@/pages/Home/index.jsx";
-import {SingUp} from "@/pages/SingUp/index.jsx";
+import {Home} from "@/pages/Home/Home.jsx";
+import {SingUp} from "@/pages/SingUp/SingUp.jsx";
 import App from "@/App";
-import {Activation} from "@/pages/Activation/index.jsx";
-import {UserList} from "@/pages/UserList/index.jsx";
-import {UserProfile} from "@/pages/UserProfile/index.jsx";
+import {Activation} from "@/pages/Activation/Activation.jsx";
+import {UserList} from "@/pages/UserList/UserList.jsx";
+import {UserProfile} from "@/pages/UserProfile/UserProfile.jsx";
 
 export default createBrowserRouter([
     {
