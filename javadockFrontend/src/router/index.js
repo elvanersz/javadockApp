@@ -29,7 +29,7 @@ export default createBrowserRouter([
                 Component: UserList
             },
             {
-                path: "/user/:id",
+                path: "/users/:id",
                 Component: UserProfile
             }
         ]

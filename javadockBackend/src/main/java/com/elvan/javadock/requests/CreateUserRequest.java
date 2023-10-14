@@ -1,6 +1,7 @@
 package com.elvan.javadock.requests;
 
 import com.elvan.javadock.entities.Job;
+import com.elvan.javadock.entities.University;
 import com.elvan.javadock.entities.User;
 import com.elvan.javadock.validation.UniqueEmail;
 import com.elvan.javadock.validation.UniqueUsername;
@@ -29,6 +30,8 @@ public record CreateUserRequest(
         @NotNull(message = "{javadock.constraints.birthDate.NotNull.message}")
         LocalDate birthDate,
 
+        Long universityId,
+
         @Email(message = "{javadock.constraints.email.format.message}")
         @UniqueEmail //custom annotation
         @Size(min = 10, max = 255, message = "{javadock.constraints.email.format.message}")
@@ -45,12 +48,14 @@ public record CreateUserRequest(
     public User toUser(){
         User user = new User();
         Job job = new Job(jobId);
+        University university = new University(universityId);
 
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setUsername(username);
         user.setJob(job);
         user.setBirthDate(birthDate);
+        user.setUniversity(university);
         user.setEmail(email);
         user.setPassword(password);
 

@@ -46,7 +46,7 @@ public class UserService {
         if(user == null){
             throw new InvalidTokenException();
         }
-        user.setRole(Role.USER);
+        user.setRole(Role.User);
         user.setActive(true);
         user.setActivationToken(null);
         userRepository.save(user);

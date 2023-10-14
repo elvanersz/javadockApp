@@ -1,10 +1,18 @@
 package com.elvan.javadock.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Entity(name = "university")
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "university")
 public class University {
 
     @Id
@@ -12,4 +20,12 @@ public class University {
 
     @Column(name = "universityName")
     private String universityName;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "university")
+    private List<User> userList;
+
+    public University(Long universityId) {
+        this.universityId = universityId;
+    }
 }

@@ -6,6 +6,7 @@ import {Spinner} from "@/shared/components/Spinner.jsx";
 import http from "@/lib/http";
 import BasicDatePicker from "@/shared/components/BasicDatePicker.jsx";
 import {JobSelector} from "@/shared/components/JobSelector.jsx";
+import {UniversitySelector} from "@/shared/components/UniversitySelector.jsx";
 
 export function SingUp() {
     const [firstName, setFirstName] = useState();
@@ -13,6 +14,7 @@ export function SingUp() {
     const [username, setUsername] = useState();
     const [job, setJob] = useState();
     const [birthDate, setBirthDate] = useState(null);
+    const [university, setUniversity] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [passwordRepeat, setPasswordRepeat] = useState();
@@ -74,6 +76,14 @@ export function SingUp() {
         setErrors(function (lastErrors) {
             return {
                 ...lastErrors,
+                university: undefined
+            }
+        })
+    }, [university])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
                 email: undefined
             }
         })
@@ -103,6 +113,7 @@ export function SingUp() {
             username: username,
             jobId: job,
             birthDate: birthDate,
+            universityId: university,
             email: email,
             password: password
         }).then((response) => {
@@ -150,6 +161,9 @@ export function SingUp() {
                                          onChange={(date) => {
                                              setBirthDate(date)
                                          }}/>
+                        <UniversitySelector id="university"
+                                            labelText={t("university")}
+                                            onChange={(event) => setUniversity(event.target.value)}/>
                         <Input id="email"
                                labelText={t("email")}
                                error={errors ? errors.email : null}

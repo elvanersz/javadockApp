@@ -35,6 +35,11 @@ public class User {
     @Column(name = "birthDate")
     private LocalDate birthDate;
 
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "universityId")
+    private University university;
+
     @Column(name = "email")
     private String email;
 
@@ -42,7 +47,7 @@ public class User {
     private String password;
 
     @Column(name = "role")
-    private Role role = Role.GUEST;
+    private Role role = Role.Guest;
 
     @Column(name = "createTime")
     private LocalDate createTime = LocalDate.now();

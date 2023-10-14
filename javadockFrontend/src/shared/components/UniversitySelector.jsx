@@ -1,24 +1,25 @@
-import {MenuItem, Select, FormHelperText} from "@mui/material";
+import {MenuItem, Select} from "@mui/material";
 import * as React from "react";
 import http from "@/lib/http.js";
 import {useCallback, useEffect, useState} from "react";
+import {useTranslation} from "react-i18next";
 
 export function UniversitySelector(props) {
-    const {id, labelText, onChange, error} = props;
-    const [jobs, setJobs] = useState([]);
+    const {t} = useTranslation();
+    const {id, labelText, onChange} = props;
+    const [universities, setUniversities] = useState([]);
 
-    function loadJobs() {
-        return http.get("/api/v1/jobs")
+    function loadUniversities() {
+        return http.get("/api/v1/universities")
     }
 
-    const getJobs = useCallback(async () => {
-        const response = await loadJobs()
-        setJobs(response.data)
-        console.log(response.data)
+    const getUniversities = useCallback(async () => {
+        const response = await loadUniversities()
+        setUniversities(response.data)
     }, [])
 
     useEffect(() => {
-        getJobs()
+        getUniversities()
     }, [])
 
     return <>
@@ -30,13 +31,14 @@ export function UniversitySelector(props) {
                     defaultValue=""
                     size="small"
                     onChange={onChange}
-                    sx={{marginBottom: 2, width: '1'}}
-                    error={error}>
-                {jobs.map(job => {
-                    return <MenuItem key={job.jobId} value={job.jobId}>{job.jobName}</MenuItem>
+                    sx={{marginBottom: 2, width: '1'}}>
+                <MenuItem value={0}>{t("iDoNotWantToSpecify")}</MenuItem>
+                {universities.map(university => {
+                    if(!university.universityId == 0){
+                        return <MenuItem key={university.universityId} value={university.universityId}>{university.universityName}</MenuItem>
+                    }
                 })}
             </Select>
         </div>
     </>
 }
-

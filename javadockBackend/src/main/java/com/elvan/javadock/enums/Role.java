@@ -2,8 +2,8 @@ package com.elvan.javadock.enums;
 
 public enum Role {
 
-    GUEST,
-    USER,
-    ADMIN,
-    MANAGER
+    Guest,
+    User,
+    Admin,
+    Manager
 }

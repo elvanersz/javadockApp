@@ -17,6 +17,7 @@ public class UserResponse {
     private String fullName;
     private String username;
     private String jobName;
+    private String universityName;
     private String email;
     private int age;
     private Role role;
@@ -31,6 +32,7 @@ public class UserResponse {
         setFullName(user.getFirstName() + " " + user.getLastName());
         setUsername(user.getUsername());
         setJobName(user.getJob().getJobName());
+        setUniversityName(user.getUniversity().getUniversityName());
         setEmail(user.getEmail());
         setAge(diffAge.getYears());
         setRole(user.getRole());

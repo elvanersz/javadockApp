@@ -9,12 +9,20 @@
   "lastName": "Soyad",
   "job": "Meslek",
   "birthDate": "Doğum Tarihi",
+  "university": "Üniversite",
+  "iDoNotWantToSpecify": "BELİRTMEK İSTEMİYORUM",
   "username": "Kullanıcı Adı",
   "email": "E-posta",
   "password": "Şifre",
   "passwordRepeat": "Şifre Tekrar",
   "passwordMismatch": "Şifreler eşleşmiyor!",
   "successMessage": "Lütfen hesabınızı etkinleştirmek için posta kutunuzu kontrol edin.",
-  "generalErrorMessage": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin!"
-
+  "generalErrorMessage": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin!",
+  "post": "Gönderi",
+  "posts": "Gönderiler",
+  "friends": "Arkadaş",
+  "membershipTime": "Üyelik Süresi",
+  "about": "Hakkında",
+  "role": "Rol",
+  "age": "Yaş"
 }

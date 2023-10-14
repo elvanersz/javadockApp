@@ -1,7 +1,7 @@
 import http from "@/lib/http.js";
 import {useCallback, useEffect, useState} from "react";
 import {Spinner} from "@/shared/components/Spinner.jsx";
-import {UserLıstItem} from "@/shared/components/UserListItem.jsx";
+import {UserListItem} from "@/shared/components/UserListItem.jsx";
 import {useTranslation} from "react-i18next";
 
 export function UserList() {
@@ -41,7 +41,7 @@ export function UserList() {
                 <div className="card-header text-center fs-4">{t("userList")}</div>
                 <ul className="list-group list-group-flush">
                     {userPage.content.map(user => {
-                        return <UserLıstItem key={user.username} user={user}/>
+                        return <UserListItem key={user.username} user={user}/>
                     })}
                 </ul>
                 <div className="card-footer text-center">

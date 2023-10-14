@@ -1,4 +1,4 @@
-import {MenuItem, Select, FormHelperText} from "@mui/material";
+import {MenuItem, Select} from "@mui/material";
 import * as React from "react";
 import http from "@/lib/http.js";
 import {useCallback, useEffect, useState} from "react";
@@ -14,7 +14,6 @@ export function JobSelector(props) {
     const getJobs = useCallback(async () => {
         const response = await loadJobs()
         setJobs(response.data)
-        console.log(response.data)
     }, [])
 
     useEffect(() => {
