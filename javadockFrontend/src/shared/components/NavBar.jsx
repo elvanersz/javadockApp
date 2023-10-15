@@ -20,6 +20,11 @@ export function NavBar() {
                 </ul>
                 <ul className="navbar-nav mb-1 px-2 ms-auto">
                     <li className="navbar-nav-item">
+                        <Link className="nav-link" to="login">{t('login')}</Link>
+                    </li>
+                </ul>
+                <ul className="navbar-nav mb-1 px-2 ms-auto">
+                    <li className="navbar-nav-item">
                         <Link className="nav-link" to="singup">{t('singUp')}</Link>
                     </li>
                 </ul>

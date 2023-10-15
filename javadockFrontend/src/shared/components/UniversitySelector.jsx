@@ -29,6 +29,7 @@ export function UniversitySelector(props) {
         <div>
             <Select className="form-label"
                     size="small"
+                    defaultValue=""
                     error={error}
                     onChange={onChange}
                     sx={{marginBottom: 2, width: '1'}}>

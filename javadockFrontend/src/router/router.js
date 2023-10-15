@@ -1,6 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
 import {Home} from "@/pages/Home/Home.jsx";
 import {SingUp} from "@/pages/SingUp/SingUp.jsx";
+import {Login} from "@/pages/Login/Login.jsx";
 import App from "@/App";
 import {Activation} from "@/pages/Activation/Activation.jsx";
 import {UserList} from "@/pages/UserList/UserList.jsx";
@@ -19,6 +20,10 @@ export default createBrowserRouter([
             {
                 path: "/singup",
                 Component: SingUp
+            },
+            {
+                path: "/login",
+                Component: Login
             },
             {
                 path: "/activation/:activationToken",
