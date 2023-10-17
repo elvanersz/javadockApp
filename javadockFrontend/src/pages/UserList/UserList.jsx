@@ -5,7 +5,7 @@ import {UserListItem} from "@/shared/components/UserListItem.jsx";
 import {useTranslation} from "react-i18next";
 
 export function UserList() {
-    const [apiProgress, setApiProgress] = useState(false)
+    const [apiProgress, setApiProgress] = useState(false);
     const {t} = useTranslation();
     const [userPage, setUserPage] = useState({
         content: [],
@@ -13,7 +13,7 @@ export function UserList() {
         totalPages: 0,
         first: false,
         number: 0
-    })
+    });
 
     function loadUserList(page = 0) {
         return http.get("/api/v1/users", {params: {page, size: 10}})

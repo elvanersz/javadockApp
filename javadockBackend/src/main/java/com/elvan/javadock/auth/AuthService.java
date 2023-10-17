@@ -1,6 +1,5 @@
 package com.elvan.javadock.auth;
 
-import com.elvan.javadock.Token;
 import com.elvan.javadock.auth.dto.AuthResponse;
 import com.elvan.javadock.auth.dto.Credentials;
 import com.elvan.javadock.entities.User;
@@ -31,7 +30,7 @@ public class AuthService {
 
         AuthResponse authResponse = new AuthResponse();
         authResponse.setToken(token);
-        authResponse.setUserResponse(new UserResponse(user));
+        authResponse.setUser(new UserResponse(user));
 
         return authResponse;
     }

@@ -4,6 +4,8 @@ import {useTranslation} from "react-i18next";
 import {Alert} from "@/shared/components/Alert.jsx";
 import {Spinner} from "@/shared/components/Spinner.jsx";
 import http from "@/lib/http";
+import {useAuthDispatch} from "@/shared/state/context.jsx";
+import {useNavigate} from "react-router-dom";
 
 export function Login() {
     const [email, setEmail] = useState();
@@ -12,6 +14,8 @@ export function Login() {
     const [errors, setErrors] = useState({});
     const [generalError, setGeneralError] = useState();
     const {t} = useTranslation();
+    const navigate = useNavigate();
+    const dispatch = useAuthDispatch()
 
     useEffect(() => {
         setErrors(function (lastErrors) {
@@ -33,13 +37,13 @@ export function Login() {
     const onSubmit = async (event) => {
         event.preventDefault();
         setApiProgress(true);
-        setSuccessMessage();
 
-        await http.post('/api/v1/users', {
+        await http.post('/api/v1/auth', {
             email: email,
             password: password
         }).then((response) => {
-            setSuccessMessage(t("successMessage"))
+            dispatch({type: "login-success", data: response.data})
+            navigate("/")
         }).catch((error) => {
             if (error.response?.data) {
                 if (error.response.data.statusCode === 400) {

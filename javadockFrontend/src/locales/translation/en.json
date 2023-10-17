@@ -15,7 +15,7 @@
   "username": "Username",
   "email": "E-mail",
   "password": "Password",
-  "passwordRepeat": "Password Repeat",
+  "passwordConfirm": "Confirm Password",
   "passwordMismatch": "Password mismatch!",
   "successMessage": "Please check your mailbox to activate your account.",
   "generalErrorMessage": "Unexpected error occurred. Please try again!",
@@ -26,5 +26,7 @@
   "about": "About",
   "role": "Role",
   "age": "Age",
-  "updateProfile": "Update Profile"
+  "editProfile": "Edit Profile",
+  "logout": "Logout",
+  "myProfile": "My Profile"
 }

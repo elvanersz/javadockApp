@@ -1,6 +1,5 @@
 package com.elvan.javadock.auth;
 
-import com.elvan.javadock.Token;
 import com.elvan.javadock.auth.dto.Credentials;
 import com.elvan.javadock.entities.User;
 

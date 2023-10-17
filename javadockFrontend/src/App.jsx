@@ -1,16 +1,15 @@
-import {Outlet, Link} from "react-router-dom";
-import logo from "./assets/javadock-icon.png"
-import {LanguageSelector} from "./shared/components/LanguageSelector.jsx";
+import {Outlet} from "react-router-dom";
 import {NavBar} from "./shared/components/NavBar.jsx";
+import {AuthenticationContext} from "@/shared/state/context.jsx";
 
 function App() {
     return (
-        <>
-            <NavBar />
+        <AuthenticationContext>
+            <NavBar/>
             <div className="container mt-3">
                 <Outlet/>
             </div>
-        </>
+        </AuthenticationContext>
     )
 }
 

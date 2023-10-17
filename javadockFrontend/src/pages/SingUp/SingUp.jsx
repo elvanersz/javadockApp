@@ -17,20 +17,20 @@ export function SingUp() {
     const [university, setUniversity] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
-    const [passwordRepeat, setPasswordRepeat] = useState();
+    const [passwordConfirm, setPasswordConfirm] = useState();
     const [apiProgress, setApiProgress] = useState();
     const [successMessage, setSuccessMessage] = useState();
     const [errors, setErrors] = useState({});
     const [generalError, setGeneralError] = useState();
     const {t} = useTranslation();
 
-    const passwordRepeatError = useMemo(() => {
-        if (password && password !== passwordRepeat) {
+    const passwordConfirmError = useMemo(() => {
+        if (password && password !== passwordConfirm) {
             return t("passwordMismatch");
         } else {
             return "";
         }
-    }, [password, passwordRepeat]);
+    }, [password, passwordConfirm]);
 
     useEffect(() => {
         setErrors(function (lastErrors) {
@@ -98,7 +98,7 @@ export function SingUp() {
     }, [password])
 
     const buttonDisable = () => {
-        if (!firstName || !lastName || !username || !birthDate || !email || !password || password !== passwordRepeat) {
+        if (!firstName || !lastName || !username || !birthDate || !email || !password || password !== passwordConfirm) {
             return true
         }
     }
@@ -174,10 +174,10 @@ export function SingUp() {
                                error={errors ? errors.password : null}
                                onChange={(event) => setPassword(event.target.value)}
                                type="password"/>
-                        <Input id="passwordRepeat"
-                               labelText={t("passwordRepeat")}
-                               error={passwordRepeatError}
-                               onChange={(event) => setPasswordRepeat(event.target.value)}
+                        <Input id="passwordConfirm"
+                               labelText={t("passwordConfirm")}
+                               error={passwordConfirmError}
+                               onChange={(event) => setPasswordConfirm(event.target.value)}
                                type="password"/>
                         {successMessage && (
                             <Alert styleType="success" center>{successMessage}</Alert>
