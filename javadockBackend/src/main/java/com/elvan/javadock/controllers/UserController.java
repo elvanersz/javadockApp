@@ -1,5 +1,6 @@
 package com.elvan.javadock.controllers;
 
+import com.elvan.javadock.auth.TokenService;
 import com.elvan.javadock.requests.CreateUserRequest;
 import com.elvan.javadock.responses.UserResponse;
 import com.elvan.javadock.services.UserService;
@@ -20,29 +21,35 @@ public class UserController {
 
     private UserService userService;
     private MessageSource messageSource;
+    private TokenService tokenService;
 
 
     @PostMapping("/api/v1/users")
-    public GenericMessage createUser(@Valid @RequestBody CreateUserRequest newUser){
+    public GenericMessage createUser(@Valid @RequestBody CreateUserRequest newUser) {
         userService.createOneUser(newUser.toUser());
-        String message = Messages.getMessageForLocale("javadock.create.user.success.message", LocaleContextHolder.getLocale());
+        String message = Messages.getMessageForLocale("javadock.create.user.success.message",
+                LocaleContextHolder.getLocale());
         return new GenericMessage(message);
     }
 
     @PatchMapping("/api/v1/users/{activationToken}/active")
-    public GenericMessage activateUser(@PathVariable String activationToken){
+    public GenericMessage activateUser(@PathVariable String activationToken) {
         userService.activateUser(activationToken);
-        String message = Messages.getMessageForLocale("javadock.activate.user.success.message", LocaleContextHolder.getLocale());
+        String message = Messages.getMessageForLocale("javadock.activate.user.success.message",
+                LocaleContextHolder.getLocale());
         return new GenericMessage(message);
     }
 
     @GetMapping("/api/v1/users")
-    public Page<UserResponse> getAllUsers(Pageable page){
-        return userService.getAllUsers(page).map(UserResponse::new);
+    public Page<UserResponse> getAllUsers(Pageable page,
+                                          @RequestHeader(name = "Authorization",
+                                                  required = false) String authorizationHeader) {
+        var loggedInUser = tokenService.verifyToken(authorizationHeader);
+        return userService.getAllUsers(page, loggedInUser).map(UserResponse::new);
     }
 
     @GetMapping("/api/v1/users/{id}")
-    UserResponse getUserById(@PathVariable Long id){
+    UserResponse getUserById(@PathVariable Long id) {
         return new UserResponse(userService.getUserById(id));
     }
 }

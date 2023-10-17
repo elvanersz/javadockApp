@@ -7,7 +7,6 @@ import com.elvan.javadock.exceptions.InvalidTokenException;
 import com.elvan.javadock.exceptions.NotFoundException;
 import com.elvan.javadock.exceptions.NotUniqueEmailException;
 import com.elvan.javadock.repositories.UserRepository;
-import com.elvan.javadock.responses.UserResponse;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -52,8 +51,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Page<User> getAllUsers(Pageable page) {
-        return userRepository.findAll(page);
+    public Page<User> getAllUsers(Pageable page, User loggedInUser) {
+        if (loggedInUser == null){
+            return userRepository.findAll(page);
+        }
+        return userRepository.findByIdNot(loggedInUser.getId(), page);
     }
 
     public User getUserById(Long id) {

@@ -17,6 +17,7 @@ export function UserProfile() {
     const [apiProgress, setApiProgress] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
     const authState = useAuthState();
+    const [editMode, setEditMode] = useState(false)
 
     function getUser(id) {
         return http.get(`/api/v1/users/${id}`)
@@ -58,8 +59,9 @@ export function UserProfile() {
                                         <MDBCardText>{user.jobName}</MDBCardText>
                                     </div>
                                     <div className="position-absolute end-0 mx-3" style={{marginTop: '155px'}}>
-                                        {authState.id === user.id &&
+                                        {!editMode && authState.id === user.id &&
                                             <button type="button"
+                                                    onClick={() => setEditMode(true)}
                                                     className="btn btn-sm btn-outline-info">{t("editProfile")}</button>
                                         }
                                     </div>
