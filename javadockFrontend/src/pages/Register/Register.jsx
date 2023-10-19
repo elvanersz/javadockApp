@@ -8,7 +8,7 @@ import BasicDatePicker from "@/shared/components/BasicDatePicker.jsx";
 import {JobSelector} from "@/shared/components/JobSelector.jsx";
 import {UniversitySelector} from "@/shared/components/UniversitySelector.jsx";
 
-export function SingUp() {
+export function Register() {
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
     const [username, setUsername] = useState();
@@ -136,7 +136,7 @@ export function SingUp() {
             <div className="col-xl-6 offset-xl-3">
                 <form className="card" onSubmit={onSubmit}>
                     <div className="text-center card-header">
-                        <h1>{t("singUp")}</h1>
+                        <h1>{t("register")}</h1>
                     </div>
                     <div className="card-body">
                         <Input id="firstName"
@@ -189,7 +189,7 @@ export function SingUp() {
                             <button className="btn btn-primary"
                                     disabled={buttonDisable() || apiProgress}>
                                 {apiProgress && (<Spinner sm={true}/>)}
-                                {t("singUp")}
+                                {t("register")}
                             </button>
                         </div>
                     </div>

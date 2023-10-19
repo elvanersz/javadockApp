@@ -48,7 +48,7 @@ public class UserController {
         return userService.getAllUsers(page, loggedInUser).map(UserResponse::new);
     }
 
-    @GetMapping("/api/v1/users/{id}")
+    @GetMapping("/api/v1/user/{id}")
     UserResponse getUserById(@PathVariable Long id) {
         return new UserResponse(userService.getUserById(id));
     }

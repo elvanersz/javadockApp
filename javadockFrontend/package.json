@@ -25,6 +25,7 @@
     "dayjs": "^1.11.10",
     "i18next": "^23.5.1",
     "mdb-react-ui-kit": "^6.3.0",
+    "mdbreact": "^5.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.2.2",

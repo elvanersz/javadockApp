@@ -19,6 +19,7 @@ public class UserResponse {
     private String jobName;
     private String universityName;
     private String email;
+    private LocalDate birthDate;
     private int age;
     private Role role;
     private int membershipTime;
@@ -34,6 +35,7 @@ public class UserResponse {
         setJobName(user.getJob().getJobName());
         setUniversityName(user.getUniversity().getUniversityName());
         setEmail(user.getEmail());
+        setBirthDate(user.getBirthDate());
         setAge(diffAge.getYears());
         setRole(user.getRole());
         setMembershipTime(diffMembershipTime.getYears()*12 + diffMembershipTime.getMonths());

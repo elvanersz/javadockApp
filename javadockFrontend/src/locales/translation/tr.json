@@ -1,5 +1,5 @@
 {
-  "singUp": "Kaydol",
+  "register": "Kaydol",
   "login": "Giriş Yap",
   "users": "Kullanıcılar",
   "userList": "Kullanıcı Listesi",
@@ -8,6 +8,7 @@
   "home": "Anasayfa",
   "firstName": "Ad",
   "lastName": "Soyad",
+  "name": "İsim",
   "job": "Meslek",
   "birthDate": "Doğum Tarihi",
   "university": "Üniversite",

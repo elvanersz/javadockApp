@@ -1,11 +1,11 @@
 import {createBrowserRouter} from "react-router-dom";
 import {Home} from "@/pages/Home/Home.jsx";
-import {SingUp} from "@/pages/SingUp/SingUp.jsx";
+import {Register} from "@/pages/Register/Register.jsx";
 import {Login} from "@/pages/Login/Login.jsx";
 import App from "@/App";
 import {Activation} from "@/pages/Activation/Activation.jsx";
-import {UserList} from "@/pages/UserList/UserList.jsx";
-import {UserProfile} from "@/pages/UserProfile/UserProfile.jsx";
+import {UserList} from "@/pages/User/UserList/UserList.jsx";
+import {UserProfile} from "@/pages/User/UserProfile/UserProfile.jsx";
 
 export default createBrowserRouter([
     {
@@ -19,7 +19,7 @@ export default createBrowserRouter([
             },
             {
                 path: "/singup",
-                Component: SingUp
+                Component: Register
             },
             {
                 path: "/login",
@@ -34,7 +34,7 @@ export default createBrowserRouter([
                 Component: UserList
             },
             {
-                path: "/users/:id",
+                path: "/user/:id",
                 Component: UserProfile
             }
         ]

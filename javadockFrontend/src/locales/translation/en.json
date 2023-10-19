@@ -1,5 +1,5 @@
 {
-  "singUp": "Sing Up",
+  "register": "Register",
   "login": "Login",
   "users": "Users",
   "userList": "User List",
@@ -8,6 +8,7 @@
   "home": "Home",
   "firstName": "First Name",
   "lastName": "Last Name",
+  "name": "Name",
   "job": "Job",
   "birthDate": "Date of Birth",
   "university": "University",
@@ -22,7 +23,7 @@
   "post": "Post",
   "posts": "Posts",
   "friends": "Friends",
-  "membershipTime": "Membership Time",
+  "membershipTime": "Member For",
   "about": "About",
   "role": "Role",
   "age": "Age",

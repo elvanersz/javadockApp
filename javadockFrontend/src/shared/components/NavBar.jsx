@@ -34,7 +34,7 @@ export function NavBar() {
                         </ul>
                         <ul className="navbar-nav mb-1 px-2 ms-auto">
                             <li className="navbar-nav-item">
-                                <Link className="nav-link" to="singup">{t('singUp')}</Link>
+                                <Link className="nav-link" to="singup">{t('register')}</Link>
                             </li>
                         </ul>
                     </>}
@@ -47,7 +47,7 @@ export function NavBar() {
                         </ul>
                         <ul className="navbar-nav mb-1 px-2 ms-auto">
                             <li className="navbar-nav-item">
-                                <Link className="nav-link" to={`/users/${authState.id}`}>{t("myProfile")}</Link>
+                                <Link className="nav-link" to={`/user/${authState.id}`}>{t("myProfile")}</Link>
                             </li>
                         </ul>
                     </>}

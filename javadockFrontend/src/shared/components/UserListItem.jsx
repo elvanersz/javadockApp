@@ -8,7 +8,7 @@ export function UserListItem(props) {
 
     return (
         <Link className="list-group-item list-group-item-action"
-              to={`/users/${user.id}`}
+              to={`/user/${user.id}`}
               style={{textDecoration: "none"}}>
             <img src={defaultProfileImage} width="50" className="img-fluid rounded-circle"/>
             <span className="ms-2">{user.username}</span>
