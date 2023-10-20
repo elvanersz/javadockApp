@@ -1,17 +1,25 @@
 import http from "@/lib/http.js";
 import {useParams} from "react-router-dom";
 import * as React from "react";
-import {useEffect, useState,} from "react";
+import {useEffect, useMemo, useState,} from "react";
 import {Alert} from "@/shared/components/Alert.jsx";
 import {Spinner} from "@/shared/components/Spinner.jsx";
 import {useTranslation} from "react-i18next";
 import defaultProfileImage from "@/assets/avatars/avatar1.png"
-import {MDBCardText, MDBCardBody, MDBCardImage, MDBTypography, MDBCol, MDBContainer, MDBRow, MDBCard} from 'mdb-react-ui-kit';
+import {
+    MDBCardText,
+    MDBCardBody,
+    MDBCardImage,
+    MDBTypography,
+    MDBCol,
+    MDBContainer,
+    MDBRow,
+    MDBCard
+} from 'mdb-react-ui-kit';
 import {useAuthState} from "@/shared/state/context.jsx";
 import {MDBBtn, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
 import {Input} from "@/shared/components/Input.jsx";
 import {JobSelector} from "@/shared/components/JobSelector.jsx";
-import BasicDatePicker from "@/shared/components/BasicDatePicker.jsx";
 import {UniversitySelector} from "@/shared/components/UniversitySelector.jsx";
 
 export function UserProfile() {
@@ -19,17 +27,39 @@ export function UserProfile() {
     const [user, setUser] = useState(null);
     const {t} = useTranslation();
     const [apiProgress, setApiProgress] = useState(false);
+    const [errors, setErrors] = useState({});
     const [errorMessage, setErrorMessage] = useState();
     const authState = useAuthState();
-    const [editMode, setEditMode] = useState();
+    const [editProfileMode, setEditProfileMode] = useState();
+    const [updatePasswordMode, setUpdatePasswordMode] = useState();
+    const [firstName, setFirstName] = useState();
+    const [lastName, setLastName] = useState();
+    const [username, setUsername] = useState();
+    const [job, setJob] = useState();
+    const [university, setUniversity] = useState();
+    const [currentPassword, setCurrentPassword] = useState();
+    const [newPassword, setNewPassword] = useState();
+    const [newPasswordConfirm, setNewPasswordConfirm] = useState();
 
     function getUser(id) {
         return http.get(`/api/v1/user/${id}`)
     }
 
-    function onClickEdit() {
-       setEditMode(!editMode);
+    function onClickEditProfile() {
+        setEditProfileMode(!editProfileMode);
     }
+
+    function onClickUpdatePassword() {
+        setUpdatePasswordMode(!updatePasswordMode);
+    }
+
+    const passwordConfirmError = useMemo(() => {
+        if (newPassword && newPassword !== newPasswordConfirm) {
+            return t("passwordMismatch");
+        } else {
+            return "";
+        }
+    }, [newPassword, newPasswordConfirm]);
 
     useEffect(() => {
         async function user() {
@@ -46,6 +76,54 @@ export function UserProfile() {
 
         user()
     }, [id])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                firstName: undefined
+            }
+        })
+    }, [firstName])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                lastName: undefined
+            }
+        })
+    }, [lastName])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                username: undefined
+            }
+        })
+    }, [username])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                jobId: undefined
+            }
+        })
+    }, [job])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                universityId: undefined
+            }
+        })
+    }, [university])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                password: undefined
+            }
+        })
+    }, [currentPassword])
 
     return <>
         {user && (
@@ -64,13 +142,21 @@ export function UserProfile() {
                                     </div>
                                     <div className="ms-3" style={{marginTop: '130px'}}>
                                         <MDBTypography tag="h5">{user.username}</MDBTypography>
-                                        <MDBCardText>{user.jobName}</MDBCardText>
+                                        <MDBCardText>{user.job.jobName}</MDBCardText>
                                     </div>
                                     <div className="position-absolute end-0 mx-3" style={{marginTop: '155px'}}>
                                         {authState.id === user.id &&
-                                            <button type="button"
-                                                    onClick={onClickEdit}
-                                                    className="btn btn-sm btn-outline-info">{t("editProfile")}</button>
+                                            <div>
+
+                                                <button type="button"
+                                                        onClick={onClickUpdatePassword}
+                                                        className="btn btn-sm btn-outline-info">{t("updatePassword")}
+                                                </button>
+                                                <button type="button"
+                                                        onClick={onClickEditProfile}
+                                                        className="btn btn-sm btn-outline-info">{t("editProfile")}
+                                                </button>
+                                            </div>
                                         }
                                     </div>
                                 </div>
@@ -104,7 +190,7 @@ export function UserProfile() {
                                             <MDBCardText
                                                 className="font-italic mb-1">{t("email") + ": " + user.email}</MDBCardText>
                                             <MDBCardText className="font-italic mb-1">
-                                                {user.universityName !== null && t("university") + ": " + user.universityName}
+                                                {user.university.universityName !== null && t("university") + ": " + user.university.universityName}
                                             </MDBCardText>
                                         </div>
                                     </div>
@@ -143,21 +229,70 @@ export function UserProfile() {
 
             </div>
         )}
-        {editMode && (
+        {editProfileMode && (
             <MDBContainer>
-                <MDBModal isOpen={editMode} toggle={onClickEdit} side position="bottom-right">
-                    <MDBModalHeader toggle={onClickEdit}>MDBModal title</MDBModalHeader>
+                <MDBModal isOpen={editProfileMode} toggle={onClickEditProfile} side position="bottom-right">
+                    <MDBModalHeader toggle={onClickEditProfile}>{t("editProfile")}</MDBModalHeader>
                     <MDBModalBody>
-                        <Input id="firstName"/>
-                        <Input id="lastName"/>
-                        <Input id="username"/>
-                        <JobSelector id="job"/>
-                        <BasicDatePicker id="birthDate"/>
-                        <UniversitySelector id="university"/>
+                        <Input id="firstName"
+                               defaultValue={user.firstName}
+                               labelText={t("firstName")}
+                               error={errors ? errors.firstName : null}
+                               onChange={(event) => setFirstName(event.target.value)}/>
+                        <Input id="lastName"
+                               defaultValue={user.lastName}
+                               labelText={t("lastName")}
+                               error={errors ? errors.lastName : null}
+                               onChange={(event) => setLastName(event.target.value)}/>
+                        <Input id="username"
+                               defaultValue={user.username}
+                               labelText={t("username")}
+                               error={errors ? errors.username : null}
+                               onChange={(event) => setUsername(event.target.value)}/>
+                        <JobSelector id="job"
+                                     defaultValue={user.job.jobId}
+                                     labelText={t("job")}
+                                     error={errors.jobId ? true : false}
+                                     onChange={(event) => setJob(event.target.value)}/>
+                        <UniversitySelector id="university"
+                                            defaultValue={user.university.universityId}
+                                            labelText={t("university")}
+                                            error={errors.universityId ? true : false}
+                                            onChange={(event) => setUniversity(event.target.value)}/>
                     </MDBModalBody>
                     <MDBModalFooter>
-                        <MDBBtn color="secondary" onClick={onClickEdit}>Close</MDBBtn>
-                        <MDBBtn color="primary">Save changes</MDBBtn>
+                        <MDBBtn color="secondary" onClick={onClickEditProfile}>{t("close")}</MDBBtn>
+                        <MDBBtn color="primary">{t("saveChanges")}</MDBBtn>
+                    </MDBModalFooter>
+                </MDBModal>
+            </MDBContainer>
+        )}
+        {updatePasswordMode && (
+            <MDBContainer>
+                <MDBModal isOpen={updatePasswordMode} toggle={onClickUpdatePassword} side position="bottom-right">
+                    <MDBModalHeader toggle={onClickUpdatePassword}>{t("updatePassword")}</MDBModalHeader>
+                    <MDBModalBody>
+
+                        <Input id="currentPassword"
+                               labelText={t("currentPassword")}
+                               error={errors ? errors.password : null}
+                               onChange={(event) => setCurrentPassword(event.target.value)}
+                               type="password"/>
+                        <Input id="newPassword"
+                               labelText={t("newPassword")}
+                               error={errors ? errors.password : null}
+                               onChange={(event) => setNewPassword(event.target.value)}
+                               type="password"/>
+                        <Input id="newPasswordConfirm"
+                               labelText={t("newPasswordConfirm")}
+                               error={passwordConfirmError}
+                               onChange={(event) => setNewPasswordConfirm(event.target.value)}
+                               type="password"/>
+
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                        <MDBBtn color="secondary" onClick={onClickUpdatePassword}>{t("close")}</MDBBtn>
+                        <MDBBtn color="primary">{t("save")}</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
             </MDBContainer>

@@ -3,10 +3,16 @@ import {DemoContainer} from '@mui/x-date-pickers/internals/demo';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import {useEffect} from "react";
 
 
 export default function BasicDatePicker(props) {
     const {id, labelText, value, onChange} = props;
+
+    useEffect(() => {
+        console.log(defaultValue)
+    })
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -14,7 +20,6 @@ export default function BasicDatePicker(props) {
             <DemoContainer components={['DatePicker']}
                            sx={{marginBottom: 2, width: '1'}}>
                 <DatePicker
-                    format="DD-MM-YYYY"
                     value={value}
                     onChange={onChange}
                     slotProps={{textField: {size: 'small'}}}

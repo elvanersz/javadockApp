@@ -1,6 +1,7 @@
 package com.elvan.javadock.responses;
 
 import com.elvan.javadock.entities.Job;
+import com.elvan.javadock.entities.University;
 import com.elvan.javadock.entities.User;
 import com.elvan.javadock.enums.Role;
 import lombok.Getter;
@@ -14,10 +15,12 @@ import java.time.Period;
 public class UserResponse {
 
     private Long id;
+    private String firstName;
+    private String lastName;
     private String fullName;
     private String username;
-    private String jobName;
-    private String universityName;
+    private Job job;
+    private University university;
     private String email;
     private LocalDate birthDate;
     private int age;
@@ -30,10 +33,12 @@ public class UserResponse {
         Period diffMembershipTime = Period.between(user.getCreateTime(), LocalDate.now());
 
         setId(user.getId());
+        setFirstName(user.getFirstName());
+        setLastName(user.getLastName());
         setFullName(user.getFirstName() + " " + user.getLastName());
         setUsername(user.getUsername());
-        setJobName(user.getJob().getJobName());
-        setUniversityName(user.getUniversity().getUniversityName());
+        setJob(user.getJob());
+        setUniversity(user.getUniversity());
         setEmail(user.getEmail());
         setBirthDate(user.getBirthDate());
         setAge(diffAge.getYears());

@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 
 export function UniversitySelector(props) {
     const {t} = useTranslation();
-    const {id, labelText, error, onChange} = props;
+    const {id, labelText, error, onChange, defaultValue=""} = props;
     const [universities, setUniversities] = useState([]);
 
     function loadUniversities() {
@@ -29,7 +29,7 @@ export function UniversitySelector(props) {
         <div>
             <Select className="form-label"
                     size="small"
-                    defaultValue=""
+                    defaultValue={defaultValue}
                     error={error}
                     onChange={onChange}
                     sx={{marginBottom: 2, width: '1'}}>

@@ -4,7 +4,7 @@ import http from "@/lib/http.js";
 import {useCallback, useEffect, useState} from "react";
 
 export function JobSelector(props) {
-    const {id, labelText, onChange, error} = props;
+    const {id, labelText, onChange, error, defaultValue} = props;
     const [jobs, setJobs] = useState([]);
 
     function loadJobs() {
@@ -26,7 +26,7 @@ export function JobSelector(props) {
         </div>
         <div>
             <Select className="form-label"
-                    defaultValue=""
+                    defaultValue={defaultValue == null ? "" : defaultValue}
                     size="small"
                     onChange={onChange}
                     sx={{marginBottom: 2, width: '1'}}

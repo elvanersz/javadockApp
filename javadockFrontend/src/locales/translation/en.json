@@ -28,6 +28,13 @@
   "role": "Role",
   "age": "Age",
   "editProfile": "Edit Profile",
+  "updatePassword": "Update Password",
   "logout": "Logout",
-  "myProfile": "My Profile"
+  "myProfile": "My Profile",
+  "close": "Close",
+  "saveChanges": "Save Changes",
+  "currentPassword": "Current Password",
+  "newPassword": "New Password",
+  "confirmNewPassword": "Confirm New Password",
+  "save": "Save"
 }

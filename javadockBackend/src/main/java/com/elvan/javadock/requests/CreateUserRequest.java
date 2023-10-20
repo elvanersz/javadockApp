@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 public record CreateUserRequest(
 
@@ -51,15 +52,21 @@ public record CreateUserRequest(
         Job job = new Job(jobId);
         University university = new University(universityId);
 
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setUsername(username);
-        user.setJob(job);
-        user.setBirthDate(birthDate);
-        user.setUniversity(university);
-        user.setEmail(email);
-        user.setPassword(password);
+        Period diffAge = Period.between(birthDate, LocalDate.now());
 
-        return user;
+        if(diffAge.getYears() > 7){
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setUsername(username);
+            user.setJob(job);
+            user.setBirthDate(birthDate);
+            user.setUniversity(university);
+            user.setEmail(email);
+            user.setPassword(password);
+            return user;
+        } else {
+            System.out.println("Yaş 7 den küçük");
+            return null;
+        }
     }
 }

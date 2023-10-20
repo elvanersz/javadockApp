@@ -28,6 +28,13 @@
   "role": "Rol",
   "age": "Yaş",
   "editProfile": "Profili Düzenle",
+  "updatePassword": "Şifreyi Güncelle",
   "logout": "Çıkış",
-  "myProfile": "Profilim"
+  "myProfile": "Profilim",
+  "close": "Kapat",
+  "saveChanges": "Değişiklikleri Kaydet",
+  "currentPassword": "Eski Şifre",
+  "newPassword": "Yeni Şifre",
+  "newPasswordConfirm": "Yeni Şifre Onay",
+  "save": "Kaydet"
 }
