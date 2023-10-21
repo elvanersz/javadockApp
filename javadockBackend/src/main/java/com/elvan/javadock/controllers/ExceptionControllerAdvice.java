@@ -26,7 +26,9 @@ public class ExceptionControllerAdvice {
             ActivationNotificationException.class,
             InvalidTokenException.class,
             NotFoundException.class,
-            AuthenticationException.class})
+            AuthenticationException.class,
+            InappropriateAgeException.class,
+            EmailNotFoundException.class})
     public ResponseEntity<Object> handleException(Exception exception,
                                                   HttpServletRequest request) {
 
@@ -34,30 +36,35 @@ public class ExceptionControllerAdvice {
         errorResponse.setPath(request.getRequestURI());
         errorResponse.setMessage(exception.getMessage());
 
-        if(exception instanceof MethodArgumentNotValidException){
+        if (exception instanceof MethodArgumentNotValidException) {
             String errorMessage = Messages
                     .getMessageForLocale("javadock.error.validation", LocaleContextHolder.getLocale());
 
             errorResponse.setMessage(errorMessage);
             errorResponse.setStatusCode(400);
-            var validationErrors = ((MethodArgumentNotValidException)exception).getBindingResult().getFieldErrors()
+            var validationErrors = ((MethodArgumentNotValidException) exception).getBindingResult().getFieldErrors()
                     .stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage, (existing, replacing) -> existing));
             errorResponse.setValidationErrors(validationErrors);
         } else if (exception instanceof NotUniqueEmailException) {
             errorResponse.setStatusCode(400);
-            errorResponse.setValidationErrors(((NotUniqueEmailException)exception).getValidationErrors());
-        } else if (exception instanceof NotUniqueUsernameException){
+            errorResponse.setValidationErrors(((NotUniqueEmailException) exception).getValidationErrors());
+        } else if (exception instanceof NotUniqueUsernameException) {
             errorResponse.setStatusCode(400);
-            errorResponse.setValidationErrors(((NotUniqueUsernameException)exception).getValidationErrors());
-        } else if (exception instanceof ActivationNotificationException){
+            errorResponse.setValidationErrors(((NotUniqueUsernameException) exception).getValidationErrors());
+        } else if (exception instanceof ActivationNotificationException) {
             errorResponse.setStatusCode(502);
-        } else if (exception instanceof InvalidTokenException){
+        } else if (exception instanceof InvalidTokenException) {
             errorResponse.setStatusCode(400);
-        } else if (exception instanceof NotFoundException){
+        } else if (exception instanceof NotFoundException) {
             errorResponse.setStatusCode(404);
-        } else if (exception instanceof AuthenticationException){
+        } else if (exception instanceof AuthenticationException) {
             errorResponse.setStatusCode(401);
+        } else if (exception instanceof InappropriateAgeException) {
+            errorResponse.setStatusCode(418);
+            errorResponse.setValidationErrors(((InappropriateAgeException) exception).getValidationErrors());
+        } else if (exception instanceof EmailNotFoundException){
+            errorResponse.setStatusCode(404);
         }
 
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(errorResponse.getStatusCode()));

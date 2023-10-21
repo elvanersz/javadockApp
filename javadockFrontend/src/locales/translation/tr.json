@@ -36,5 +36,15 @@
   "currentPassword": "Eski Şifre",
   "newPassword": "Yeni Şifre",
   "newPasswordConfirm": "Yeni Şifre Onay",
-  "save": "Kaydet"
+  "save": "Kaydet",
+  "areYouNewToJavadock": "Javadock'da yeni misiniz?",
+  "alreadyMemberOfJavadock": "Zaten Javadock üyesi misiniz?",
+  "forgotYourPassword": "Şifrenizi mi unuttunuz?",
+  "delete": "Sil",
+  "userDelete": "Kullanıcı Silme",
+  "userDeleteWarning": "Eğer kullanıcı silinirse, geri getirilemez!",
+  "warning": "Uyarı",
+  "sendMail": "Mail Gönder",
+  "mailSentMessage": "Şifrenizi sıfırlamak için posta kutunuzu kontrol edin.",
+  "resetYourPassword": "Şifreni sıfırla"
 }

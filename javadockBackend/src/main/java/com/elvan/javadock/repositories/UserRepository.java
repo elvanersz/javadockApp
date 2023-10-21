@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByActivationToken(String activationToken);
 
     Page<User> findByIdNot(Long id, Pageable page);
+
+    User findByPasswordResetToken(String passwordResetToken);
 }

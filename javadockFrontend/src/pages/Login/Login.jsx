@@ -5,7 +5,7 @@ import {Alert} from "@/shared/components/Alert.jsx";
 import {Spinner} from "@/shared/components/Spinner.jsx";
 import http from "@/lib/http";
 import {useAuthDispatch} from "@/shared/state/context.jsx";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 export function Login() {
     const [email, setEmail] = useState();
@@ -77,12 +77,20 @@ export function Login() {
                         {generalError && (
                             <Alert styleType="danger" center>{generalError}</Alert>
                         )}
+                        <div className="mb-2">
+                            <Link className="text-decoration-none" to="/request-password-reset">{t("forgotYourPassword")}</Link>
+                        </div>
                         <div className="text-center">
-                            <button className="btn btn-primary"
-                                    disabled={apiProgress}>
-                                {apiProgress && (<Spinner sm={true}/>)}
-                                {t("login")}
-                            </button>
+                            <div>
+                                <button className="btn btn-primary"
+                                        disabled={apiProgress}>
+                                    {apiProgress && (<Spinner sm={true}/>)}
+                                    {t("login")}
+                                </button>
+                            </div>
+                            <div className="mt-3">
+                                {t("areYouNewToJavadock")} <Link className="text-decoration-none" to="/register">{t("register")}</Link>
+                            </div>
                         </div>
                     </div>
                 </form>

@@ -3,6 +3,7 @@ package com.elvan.javadock.requests;
 import com.elvan.javadock.entities.Job;
 import com.elvan.javadock.entities.University;
 import com.elvan.javadock.entities.User;
+import com.elvan.javadock.exceptions.InappropriateAgeException;
 import com.elvan.javadock.validation.UniqueEmail;
 import com.elvan.javadock.validation.UniqueUsername;
 import jakarta.persistence.Column;
@@ -54,7 +55,7 @@ public record CreateUserRequest(
 
         Period diffAge = Period.between(birthDate, LocalDate.now());
 
-        if(diffAge.getYears() > 7){
+        if(diffAge.getYears() > 7 && diffAge.getYears() < 100){
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setUsername(username);
@@ -65,8 +66,7 @@ public record CreateUserRequest(
             user.setPassword(password);
             return user;
         } else {
-            System.out.println("Yaş 7 den küçük");
-            return null;
+            throw new InappropriateAgeException();
         }
     }
 }

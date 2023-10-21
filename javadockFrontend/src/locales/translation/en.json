@@ -35,6 +35,16 @@
   "saveChanges": "Save Changes",
   "currentPassword": "Current Password",
   "newPassword": "New Password",
-  "confirmNewPassword": "Confirm New Password",
-  "save": "Save"
+  "newPasswordConfirm": "Confirm New Password",
+  "save": "Save",
+  "areYouNewToJavadock": "Are you new to Javadock?",
+  "alreadyMemberOfJavadock": "Already a member of Javadock?",
+  "forgotYourPassword": "Forgot your password?",
+  "delete": "Delete",
+  "userDelete": "User Delete",
+  "userDeleteWarning": "If the user is deleted, it cannot be restored!",
+  "warning": "Warning",
+  "sendMail": "Send Mail",
+  "mailSentMessage": "Check your mailbox to reset your password.",
+  "resetYourPassword": "Reset your password"
 }

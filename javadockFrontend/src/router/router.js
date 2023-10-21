@@ -4,8 +4,10 @@ import {Register} from "@/pages/Register/Register.jsx";
 import {Login} from "@/pages/Login/Login.jsx";
 import App from "@/App";
 import {Activation} from "@/pages/Activation/Activation.jsx";
-import {UserList} from "@/pages/User/UserList/UserList.jsx";
-import {UserProfile} from "@/pages/User/UserProfile/UserProfile.jsx";
+import {UserList} from "@/pages/UserList/UserList.jsx";
+import {UserProfile} from "@/pages/UserProfile/UserProfile.jsx";
+import {RequestPasswordReset} from "@/pages/PasswordReset/RequestPasswordReset.jsx";
+import {PasswordReset} from "@/pages/PasswordReset/PasswordReset.jsx";
 
 export default createBrowserRouter([
     {
@@ -18,7 +20,7 @@ export default createBrowserRouter([
                 Component: Home
             },
             {
-                path: "/singup",
+                path: "/register",
                 Component: Register
             },
             {
@@ -36,6 +38,14 @@ export default createBrowserRouter([
             {
                 path: "/user/:id",
                 Component: UserProfile
+            },
+            {
+                path: "/request-password-reset",
+                Component: RequestPasswordReset
+            },
+            {
+                path: "/password-reset/:passwordResetToken",
+                Component: PasswordReset
             }
         ]
     }

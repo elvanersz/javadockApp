@@ -21,6 +21,8 @@ import {MDBBtn, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "md
 import {Input} from "@/shared/components/Input.jsx";
 import {JobSelector} from "@/shared/components/JobSelector.jsx";
 import {UniversitySelector} from "@/shared/components/UniversitySelector.jsx";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPen, faLock, faTrashCan} from "@fortawesome/free-solid-svg-icons"
 
 export function UserProfile() {
     const {id} = useParams();
@@ -32,6 +34,7 @@ export function UserProfile() {
     const authState = useAuthState();
     const [editProfileMode, setEditProfileMode] = useState();
     const [updatePasswordMode, setUpdatePasswordMode] = useState();
+    const [deleteUserMode, setDeleteUserMode] = useState();
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
     const [username, setUsername] = useState();
@@ -48,9 +51,11 @@ export function UserProfile() {
     function onClickEditProfile() {
         setEditProfileMode(!editProfileMode);
     }
-
     function onClickUpdatePassword() {
         setUpdatePasswordMode(!updatePasswordMode);
+    }
+    function onClickDeleteUser() {
+        setDeleteUserMode(!deleteUserMode);
     }
 
     const passwordConfirmError = useMemo(() => {
@@ -127,11 +132,11 @@ export function UserProfile() {
 
     return <>
         {user && (
-            <div className="gradient-custom-2" style={{backgroundColor: '#9de2ff'}}>
-                <MDBContainer className="py-5 h-100">
+            <div>
+                <MDBContainer className="h-100">
                     <MDBRow className="justify-content-center align-items-center h-100">
                         <MDBCol lg="9" xl="7">
-                            <MDBCard>
+                            <MDBCard style={{backgroundColor: "#F8F6F4"}}>
                                 <div className="rounded-top text-white d-flex flex-row"
                                      style={{backgroundColor: '#000', height: '200px'}}>
                                     <div className="ms-4 mt-5 d-flex flex-column" style={{width: '150px'}}>
@@ -147,20 +152,26 @@ export function UserProfile() {
                                     <div className="position-absolute end-0 mx-3" style={{marginTop: '155px'}}>
                                         {authState.id === user.id &&
                                             <div>
-
                                                 <button type="button"
                                                         onClick={onClickUpdatePassword}
-                                                        className="btn btn-sm btn-outline-info">{t("updatePassword")}
+                                                        className="btn btn-sm btn-outline-info rounded-circle mx-2">
+                                                    <FontAwesomeIcon icon={faLock} />
                                                 </button>
                                                 <button type="button"
                                                         onClick={onClickEditProfile}
-                                                        className="btn btn-sm btn-outline-info">{t("editProfile")}
+                                                        className="btn btn-sm btn-outline-info rounded-circle">
+                                                    <FontAwesomeIcon icon={faPen} />
+                                                </button>
+                                                <button type="button"
+                                                        onClick={onClickDeleteUser}
+                                                        className="btn btn-sm btn-outline-danger rounded-circle mx-2">
+                                                    <FontAwesomeIcon icon={faTrashCan} />
                                                 </button>
                                             </div>
                                         }
                                     </div>
                                 </div>
-                                <div className="p-4 text-black" style={{backgroundColor: '#f8f9fa'}}>
+                                <div className="p-4 text-black">
                                     <div className="d-flex justify-content-end text-center py-1">
                                         <div className="px-3">
                                             <MDBCardText className="small text-muted mb-0">{t("post")}</MDBCardText>
@@ -184,7 +195,7 @@ export function UserProfile() {
                                 <MDBCardBody className="text-black p-4">
                                     <div className="mb-5">
                                         <p className="lead fw-normal mb-1">{t("about")}</p>
-                                        <div className="p-4" style={{backgroundColor: '#f8f9fa'}}>
+                                        <div className="p-4">
                                             <MDBCardText
                                                 className="font-italic mb-1">{t("name") + ": " + user.fullName}</MDBCardText>
                                             <MDBCardText
@@ -197,18 +208,6 @@ export function UserProfile() {
                                     <div className="d-flex justify-content-between align-items-center mb-4">
                                         <MDBCardText className="lead fw-normal mb-0">{t("posts")}</MDBCardText>
                                     </div>
-                                    <MDBRow>
-                                        <MDBCol className="mb-2">
-                                            <MDBCardImage
-                                                src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp"
-                                                alt="image 1" className="w-100 rounded-3"/>
-                                        </MDBCol>
-                                        <MDBCol className="mb-2">
-                                            <MDBCardImage
-                                                src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp"
-                                                alt="image 1" className="w-100 rounded-3"/>
-                                        </MDBCol>
-                                    </MDBRow>
                                     <MDBRow className="g-2">
                                         <MDBCol className="mb-2">
                                             <MDBCardImage
@@ -255,7 +254,7 @@ export function UserProfile() {
                                      error={errors.jobId ? true : false}
                                      onChange={(event) => setJob(event.target.value)}/>
                         <UniversitySelector id="university"
-                                            defaultValue={user.university.universityId}
+                                            defaultValue={"" || user.university.universityId}
                                             labelText={t("university")}
                                             error={errors.universityId ? true : false}
                                             onChange={(event) => setUniversity(event.target.value)}/>
@@ -272,7 +271,6 @@ export function UserProfile() {
                 <MDBModal isOpen={updatePasswordMode} toggle={onClickUpdatePassword} side position="bottom-right">
                     <MDBModalHeader toggle={onClickUpdatePassword}>{t("updatePassword")}</MDBModalHeader>
                     <MDBModalBody>
-
                         <Input id="currentPassword"
                                labelText={t("currentPassword")}
                                error={errors ? errors.password : null}
@@ -288,11 +286,36 @@ export function UserProfile() {
                                error={passwordConfirmError}
                                onChange={(event) => setNewPasswordConfirm(event.target.value)}
                                type="password"/>
-
                     </MDBModalBody>
                     <MDBModalFooter>
                         <MDBBtn color="secondary" onClick={onClickUpdatePassword}>{t("close")}</MDBBtn>
                         <MDBBtn color="primary">{t("save")}</MDBBtn>
+                    </MDBModalFooter>
+                </MDBModal>
+            </MDBContainer>
+        )}
+        {deleteUserMode && (
+            <MDBContainer>
+                <MDBModal isOpen={deleteUserMode} toggle={onClickDeleteUser} side position="bottom-right">
+                    <MDBModalHeader toggle={onClickDeleteUser}>{t("userDelete")}</MDBModalHeader>
+                    <MDBModalBody>
+                        <Input id="username"
+                               disabled={true}
+                               defaultValue={user.username}
+                               labelText={t("username")}
+                               error={errors ? errors.username : null}
+                               onChange={(event) => setUsername(event.target.value)}/>
+                        <Input id="email"
+                               disabled={true}
+                               labelText={t("email")}
+                               defaultValue={user.email}
+                               error={errors ? errors.email : null}
+                               onChange={(event) => setEmail(event.target.value)}/>
+                        <span className="text-danger">{t("warning")}: {t("userDeleteWarning")}</span>
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                        <MDBBtn color="secondary" onClick={onClickDeleteUser}>{t("close")}</MDBBtn>
+                        <MDBBtn color="danger">{t("delete")}</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
             </MDBContainer>

@@ -2,11 +2,13 @@ package com.elvan.javadock.controllers;
 
 import com.elvan.javadock.auth.TokenService;
 import com.elvan.javadock.requests.CreateUserRequest;
+import com.elvan.javadock.requests.PasswordResetRequest;
 import com.elvan.javadock.responses.UserResponse;
 import com.elvan.javadock.services.UserService;
 import com.elvan.javadock.validation.GenericMessage;
 import com.elvan.javadock.validation.Messages;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -51,5 +53,15 @@ public class UserController {
     @GetMapping("/api/v1/user/{id}")
     UserResponse getUserById(@PathVariable Long id) {
         return new UserResponse(userService.getUserById(id));
+    }
+
+    @PostMapping("/api/v1/request-password-reset")
+    public void requestPasswordReset(@Valid @RequestBody PasswordResetRequest passwordResetRequest){
+        userService.requestPasswordReset(passwordResetRequest.email());
+    }
+
+    @PatchMapping("/api/v1/password-reset/{passwordResetToken}")
+    private void passwordReset(@PathVariable String passwordResetToken, @RequestBody String newPassword){
+        userService.passwordReset(passwordResetToken, newPassword);
     }
 }

@@ -3,6 +3,14 @@ import {Link} from "react-router-dom";
 import logo from "@/assets/javadock-icon.png";
 import {LanguageSelector} from "@/shared/components/LanguageSelector.jsx";
 import {useAuthDispatch, useAuthState} from "@/shared/state/context.jsx";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {
+    faUsers,
+    faRightToBracket,
+    faFileSignature,
+    faIdCardClip,
+    faRightFromBracket
+} from "@fortawesome/free-solid-svg-icons"
 
 export function NavBar() {
     const {t} = useTranslation();
@@ -14,43 +22,60 @@ export function NavBar() {
     }
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <div className="container-fluid">
+        <nav className="navbar navbar-expand-lg p-0">
+            <div className="container-fluid" style={{backgroundColor: "#F8F6F4"}}>
                 <Link className="navbar-brand" to="/">
                     <img src={logo} width={80}/>
-                    {t('home')}
                 </Link>
                 <ul className="navbar-nav mb-1 px-2 ms-auto">
-                    <li className="navbar-nav-item">
-                        <Link className="nav-link" to="users">{t('users')}</Link>
+                    <li className="navbar-nav-item text-center mt-2 mx-3">
+                        <Link className="nav-link" to="users">
+                            <div><FontAwesomeIcon icon={faUsers} size="lg"/></div>
+                            <span>{t("users")}</span>
+                        </Link>
                     </li>
                 </ul>
                 {authState.id === 0 &&
                     <>
                         <ul className="navbar-nav mb-1 px-2 ms-auto">
-                            <li className="navbar-nav-item">
-                                <Link className="nav-link" to="login">{t('login')}</Link>
+                            <li className="navbar-nav-item text-center mt-2 mx-3">
+                                <Link className="nav-link" to="login">
+                                    <div><FontAwesomeIcon icon={faRightToBracket} size="lg"/></div>
+                                    <span>{t("login")}</span>
+                                </Link>
                             </li>
                         </ul>
                         <ul className="navbar-nav mb-1 px-2 ms-auto">
-                            <li className="navbar-nav-item">
-                                <Link className="nav-link" to="singup">{t('register')}</Link>
+                            <li className="navbar-nav-item text-center mt-2 mx-3">
+                                <Link className="nav-link" to="register">
+                                    <div><FontAwesomeIcon icon={faFileSignature} size="lg"/></div>
+                                    <span>{t("register")}</span>
+                                </Link>
                             </li>
                         </ul>
-                    </>}
+                    </>
+                }
                 {authState.id > 0 &&
                     <>
                         <ul className="navbar-nav mb-1 px-2 ms-auto">
-                            <li className="navbar-nav-item">
-                                <span className="nav-link" role="button" onClick={onClickLogout}>{t("logout")}</span>
+                            <li className="navbar-nav-item text-center mt-2">
+                                <Link className="nav-link">
+                                    <div><FontAwesomeIcon icon={faRightFromBracket} size="lg"/></div>
+                                    <span className="nav-link p-0" role="button"
+                                          onClick={onClickLogout}>{t("logout")}</span>
+                                </Link>
                             </li>
                         </ul>
                         <ul className="navbar-nav mb-1 px-2 ms-auto">
-                            <li className="navbar-nav-item">
-                                <Link className="nav-link" to={`/user/${authState.id}`}>{t("myProfile")}</Link>
+                            <li className="navbar-nav-item text-center mt-2 mx-3">
+                                <Link className="nav-link" to={`/user/${authState.id}`}>
+                                    <div><FontAwesomeIcon icon={faIdCardClip} size="lg"/></div>
+                                    <span>{t("myProfile")}</span>
+                                </Link>
                             </li>
                         </ul>
-                    </>}
+                    </>
+                }
                 <ul className="navbar-nav">
                     <li className="navbar-nav-item mb-2">
                         <LanguageSelector/>

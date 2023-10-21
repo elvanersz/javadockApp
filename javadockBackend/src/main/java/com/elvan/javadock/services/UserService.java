@@ -2,10 +2,7 @@ package com.elvan.javadock.services;
 
 import com.elvan.javadock.entities.User;
 import com.elvan.javadock.enums.Role;
-import com.elvan.javadock.exceptions.ActivationNotificationException;
-import com.elvan.javadock.exceptions.InvalidTokenException;
-import com.elvan.javadock.exceptions.NotFoundException;
-import com.elvan.javadock.exceptions.NotUniqueEmailException;
+import com.elvan.javadock.exceptions.*;
 import com.elvan.javadock.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -15,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 @Service
@@ -64,5 +60,29 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public void requestPasswordReset(String email) {
+        User user = userRepository.findByEmail(email);
+        if(user == null){
+            throw new EmailNotFoundException();
+        }
+        try {
+            user.setPasswordResetToken(UUID.randomUUID().toString());
+            emailService.sendPasswordResetEmail(user);
+            userRepository.save(user);
+        } catch (MailException mailException){
+            throw new PasswordNotificationException();
+        }
+
+    }
+
+    public void passwordReset(String passwordResetToken, String newPassword) {
+        User user = userRepository.findByPasswordResetToken(passwordResetToken);
+        if(user == null){
+            throw new InvalidTokenException();
+        }
+        user.setPassword(newPassword);
+        userRepository.save(user);
     }
 }

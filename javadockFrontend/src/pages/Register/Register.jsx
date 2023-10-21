@@ -7,6 +7,7 @@ import http from "@/lib/http";
 import BasicDatePicker from "@/shared/components/BasicDatePicker.jsx";
 import {JobSelector} from "@/shared/components/JobSelector.jsx";
 import {UniversitySelector} from "@/shared/components/UniversitySelector.jsx";
+import {Link} from "react-router-dom";
 
 export function Register() {
     const [firstName, setFirstName] = useState();
@@ -116,12 +117,15 @@ export function Register() {
             universityId: university,
             email: email,
             password: password
-        }).then((response) => {
+        }).then(() => {
             setSuccessMessage(t("successMessage"))
         }).catch((error) => {
+            console.log(error)
             if (error.response?.data) {
                 if (error.response.data.statusCode === 400) {
                     setErrors(error.response.data.validationErrors)
+                } else if (error.response.data.statusCode === 418){
+                    setGeneralError(error.response.data.validationErrors.birthDate)
                 } else {
                     setGeneralError(error.response.data.message)
                 }
@@ -151,7 +155,7 @@ export function Register() {
                                labelText={t("username")}
                                error={errors ? errors.username : null}
                                onChange={(event) => setUsername(event.target.value)}/>
-                        <JobSelector id="job"
+                        {/*<JobSelector id="job"
                                      labelText={t("job")}
                                      error={errors.jobId ? true : false}
                                      onChange={(event) => setJob(event.target.value)}/>
@@ -164,7 +168,7 @@ export function Register() {
                         <UniversitySelector id="university"
                                             labelText={t("university")}
                                             error={errors.universityId ? true : false}
-                                            onChange={(event) => setUniversity(event.target.value)}/>
+                                            onChange={(event) => setUniversity(event.target.value)}/>*/}
                         <Input id="email"
                                labelText={t("email")}
                                error={errors ? errors.email : null}
@@ -186,11 +190,16 @@ export function Register() {
                             <Alert styleType="danger" center>{generalError}</Alert>
                         )}
                         <div className="text-center">
-                            <button className="btn btn-primary"
-                                    disabled={buttonDisable() || apiProgress}>
-                                {apiProgress && (<Spinner sm={true}/>)}
-                                {t("register")}
-                            </button>
+                            <div>
+                                <button className="btn btn-primary"
+                                        disabled={buttonDisable() || apiProgress}>
+                                    {apiProgress && (<Spinner sm={true}/>)}
+                                    {t("register")}
+                                </button>
+                            </div>
+                            <div className="mt-3">
+                                {t("alreadyMemberOfJavadock")} <Link className="text-decoration-none" to="/login">{t("login")}</Link>
+                            </div>
                         </div>
                     </div>
                 </form>

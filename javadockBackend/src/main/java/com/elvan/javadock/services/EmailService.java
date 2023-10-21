@@ -30,10 +30,8 @@ public class EmailService {
     private final Environment environment;
     private final TemplateEngine htmlTemplateEngine;
 
-    private static final String TEMPLATE_NAME = "ValidationEmailPage";
     private static final String SPRING_LOGO_IMAGE = "templates/images/javadock.png";
     private static final String PNG_MIME = "image/png";
-    private static final String MAIL_SUBJECT = "Registration Confirmation";
 
     public void sendActivationEmail(User newUser){
         String url = emailConfiguration.getClient().host() + "/activation/" + newUser.getActivationToken();
@@ -44,7 +42,7 @@ public class EmailService {
             email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
             email.setTo(newUser.getEmail());
-            email.setSubject(MAIL_SUBJECT);
+            email.setSubject("Registration Confirmation");
             email.setFrom(new InternetAddress(emailConfiguration.getMail().username(), "Javadock"));
 
             final Context ctx = new Context(LocaleContextHolder.getLocale());
@@ -54,7 +52,39 @@ public class EmailService {
             ctx.setVariable("url", url);
             ctx.setVariable("javadockLogo", SPRING_LOGO_IMAGE);
 
-            final String htmlContent = this.htmlTemplateEngine.process(TEMPLATE_NAME, ctx);
+            final String htmlContent = this.htmlTemplateEngine.process("ValidationEmailPage", ctx);
+
+            email.setText(htmlContent, true);
+
+            ClassPathResource clr = new ClassPathResource(SPRING_LOGO_IMAGE);
+
+            email.addInline("javadockLogo", clr, PNG_MIME);
+
+            javaMailSender.send(mimeMessage);
+
+        }catch (UnsupportedEncodingException | MessagingException e){
+            throw new ActivationNotificationException();
+        }
+    }
+
+    public void sendPasswordResetEmail(User user){
+        String url = emailConfiguration.getClient().host() + "/password-reset/" + user.getPasswordResetToken();
+
+        try {
+            final MimeMessage mimeMessage = this.javaMailSender.createMimeMessage();
+            final MimeMessageHelper email;
+            email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            email.setTo(user.getEmail());
+            email.setSubject("Reset Your Password");
+            email.setFrom(new InternetAddress(emailConfiguration.getMail().username(), "Javadock"));
+
+            final Context ctx = new Context(LocaleContextHolder.getLocale());
+            ctx.setVariable("username", user.getUsername());
+            ctx.setVariable("url", url);
+            ctx.setVariable("javadockLogo", SPRING_LOGO_IMAGE);
+
+            final String htmlContent = this.htmlTemplateEngine.process("PasswordResetPage", ctx);
 
             email.setText(htmlContent, true);
 
