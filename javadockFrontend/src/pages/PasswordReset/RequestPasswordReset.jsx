@@ -24,22 +24,27 @@ export function RequestPasswordReset() {
 
     const onSubmit = async (event) => {
         event.preventDefault();
+        setSuccessMessage();
+        setGeneralError();
         setApiProgress(true);
 
         await http.post(`/api/v1/request-password-reset`, {email: email})
             .then(() => {
-                setSuccessMessage(t("mailSentMessage"))
+                setApiProgress(false);
+                setSuccessMessage(t("passwordResetMailSent"))
             }).catch((error) => {
                 if (error.response?.data) {
+                    setApiProgress(false);
                     if (error.response.data.statusCode === 400) {
                         setErrors(error.response.data.validationErrors)
                     } else {
                         setGeneralError(error.response.data.message)
                     }
                 } else {
+                    setApiProgress(false);
                     setGeneralError(t("generalErrorMessage"))
                 }
-            }).finally(setApiProgress(false))
+            })
     }
 
     return (

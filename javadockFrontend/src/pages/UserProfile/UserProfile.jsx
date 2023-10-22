@@ -57,6 +57,9 @@ export function UserProfile() {
     function onClickDeleteUser() {
         setDeleteUserMode(!deleteUserMode);
     }
+    function onClickDeleteButton() {
+        setDeleteUserMode(!deleteUserMode);
+    }
 
     const passwordConfirmError = useMemo(() => {
         if (newPassword && newPassword !== newPasswordConfirm) {
@@ -146,8 +149,8 @@ export function UserProfile() {
                                                       style={{width: '150px', zIndex: '1'}}/>
                                     </div>
                                     <div className="ms-3" style={{marginTop: '130px'}}>
-                                        <MDBTypography tag="h5">{user.username}</MDBTypography>
-                                        <MDBCardText>{user.job.jobName}</MDBCardText>
+                                        <MDBTypography tag="h5"><b>{user.username}</b></MDBTypography>
+                                        {user.job !== null && (<MDBCardText>{user.job.jobName}</MDBCardText>)}
                                     </div>
                                     <div className="position-absolute end-0 mx-3" style={{marginTop: '155px'}}>
                                         {authState.id === user.id &&
@@ -173,13 +176,9 @@ export function UserProfile() {
                                 </div>
                                 <div className="p-4 text-black">
                                     <div className="d-flex justify-content-end text-center py-1">
-                                        <div className="px-3">
+                                        <div>
                                             <MDBCardText className="small text-muted mb-0">{t("post")}</MDBCardText>
                                             <MDBCardText className="mb-1 h5">null</MDBCardText>
-                                        </div>
-                                        <div>
-                                            <MDBCardText className="small text-muted mb-0">{t("age")}</MDBCardText>
-                                            <MDBCardText className="mb-1 h5">{user.age}</MDBCardText>
                                         </div>
                                         <div className="px-3">
                                             <MDBCardText
@@ -201,7 +200,7 @@ export function UserProfile() {
                                             <MDBCardText
                                                 className="font-italic mb-1">{t("email") + ": " + user.email}</MDBCardText>
                                             <MDBCardText className="font-italic mb-1">
-                                                {user.university.universityName !== null && t("university") + ": " + user.university.universityName}
+                                                {user.university !== null && t("university") + ": " + user.university.universityName}
                                             </MDBCardText>
                                         </div>
                                     </div>
@@ -249,12 +248,10 @@ export function UserProfile() {
                                error={errors ? errors.username : null}
                                onChange={(event) => setUsername(event.target.value)}/>
                         <JobSelector id="job"
-                                     defaultValue={user.job.jobId}
                                      labelText={t("job")}
                                      error={errors.jobId ? true : false}
                                      onChange={(event) => setJob(event.target.value)}/>
                         <UniversitySelector id="university"
-                                            defaultValue={"" || user.university.universityId}
                                             labelText={t("university")}
                                             error={errors.universityId ? true : false}
                                             onChange={(event) => setUniversity(event.target.value)}/>
@@ -315,7 +312,7 @@ export function UserProfile() {
                     </MDBModalBody>
                     <MDBModalFooter>
                         <MDBBtn color="secondary" onClick={onClickDeleteUser}>{t("close")}</MDBBtn>
-                        <MDBBtn color="danger">{t("delete")}</MDBBtn>
+                        <MDBBtn color="danger" onClick={onClickDeleteButton}>{t("delete")}</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
             </MDBContainer>

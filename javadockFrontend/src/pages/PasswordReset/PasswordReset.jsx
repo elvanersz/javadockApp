@@ -5,11 +5,15 @@ import {Input} from "@/shared/components/Input.jsx";
 import {Alert} from "@/shared/components/Alert.jsx";
 import {Spinner} from "@/shared/components/Spinner.jsx";
 import * as React from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import axios from "axios";
 
 export function PasswordReset() {
+    const {passwordResetToken} = useParams();
     const [apiProgress, setApiProgress] = useState();
-    const [successMessage, setSuccessMessage] = useState();
     const [errors, setErrors] = useState({});
+    const [successMessage, setSuccessMessage] = useState();
+    const [errorMessage, setErrorMessage] = useState();
     const [generalError, setGeneralError] = useState();
     const {t} = useTranslation();
     const [newPassword, setNewPassword] = useState();
@@ -23,62 +27,105 @@ export function PasswordReset() {
         }
     }, [newPassword, newPasswordConfirm]);
 
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                password: undefined
+            }
+        })
+    }, [newPassword])
+
+    function passwordReset(passwordResetToken) {
+        return http.patch(`/api/v1/password-reset/${passwordResetToken}`)
+    }
+
+    useEffect(() => {
+        async function reset() {
+            setApiProgress(true)
+            try {
+                await passwordReset(passwordResetToken);
+            } catch (error) {
+                setErrorMessage(error.response.data.message)
+            } finally {
+                setApiProgress(false);
+            }
+        }
+
+        reset()
+    }, [passwordResetToken])
+
+    const buttonDisable = () => {
+        if (newPassword !== newPasswordConfirm) {
+            return true
+        }
+    }
+
     const onSubmit = async (event) => {
         event.preventDefault();
         setApiProgress(true);
 
-        await http.post(`/api/v1/password-reset`,
-            {newPassword: newPassword}
-        ).then(() => {
-            setSuccessMessage(t("mailSentMessage"))
-        }).catch((error) => {
-            if (error.response?.data) {
-                if (error.response.data.statusCode === 400) {
-                    setErrors(error.response.data.validationErrors)
+        await axios.patch(`/api/v1/password-reset/${passwordResetToken}`, {
+            password: newPassword
+        })
+            .then(() => {
+                setApiProgress(false)
+                setSuccessMessage(t("passwordResetSuccess"))
+            }).catch((error) => {
+                if (error.response?.data) {
+                    setApiProgress(false)
+                    if (error.response.data.statusCode === 400) {
+                        setErrors(error.response.data.validationErrors)
+                    } else {
+                        setGeneralError(error.response.data.message)
+                    }
                 } else {
-                    setGeneralError(error.response.data.message)
+                    setApiProgress(false)
+                    setGeneralError(t("generalErrorMessage"))
                 }
-            } else {
-                setGeneralError(t("generalErrorMessage"))
-            }
-        }).finally(setApiProgress(false))
+            })
     }
 
     return (
-        <div className="container">
-            <div className="col-xl-6 offset-xl-3">
-                <form className="card" onSubmit={onSubmit}>
-                    <div className="text-center card-header">
-                        <h1>{t("resetYourPassword")}</h1>
-                    </div>
-                    <div className="card-body">
-                        <Input id="newPassword"
-                               labelText={t("newPassword")}
-                               error={errors ? errors.password : null}
-                               onChange={(event) => setNewPassword(event.target.value)}
-                               type="password"/>
-                        <Input id="newPasswordConfirm"
-                               labelText={t("newPasswordConfirm")}
-                               error={passwordConfirmError}
-                               onChange={(event) => setNewPasswordConfirm(event.target.value)}
-                               type="password"/>
-                        {successMessage && (
-                            <Alert styleType="success" center>{successMessage}</Alert>
-                        )}
-                        {generalError && (
-                            <Alert styleType="danger" center>{generalError}</Alert>
-                        )}
-                        <div className="text-center">
-                            <button className="btn btn-primary"
-                                    onChange={onSubmit}
-                                    disabled={apiProgress}>
-                                {apiProgress && (<Spinner sm={true}/>)}
-                                {t("sendMail")}
-                            </button>
+        <>
+            {!errorMessage && !generalError && <div className="container">
+                <div className="col-xl-6 offset-xl-3">
+                    <form className="card" onSubmit={onSubmit}>
+                        <div className="text-center card-header">
+                            <h1>{t("resetYourPassword")}</h1>
                         </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+                        <div className="card-body">
+                            <Input id="newPassword"
+                                   labelText={t("newPassword")}
+                                   error={errors ? errors.password : null}
+                                   onChange={(event) => setNewPassword(event.target.value)}
+                                   type="password"/>
+                            <Input id="newPasswordConfirm"
+                                   labelText={t("newPasswordConfirm")}
+                                   error={passwordConfirmError}
+                                   onChange={(event) => setNewPasswordConfirm(event.target.value)}
+                                   type="password"/>
+                            {successMessage && (
+                                <Alert styleType="success" center>{successMessage}</Alert>
+                            )}
+                            <div className="text-center">
+                                <button className="btn btn-primary"
+                                        onChange={onSubmit}
+                                        disabled={buttonDisable() || apiProgress}>
+                                    {apiProgress && (<Spinner sm={true}/>)}
+                                    {t("save")}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>}
+            {errorMessage && (
+                <Alert styleType="danger" center>{errorMessage}</Alert>
+            )}
+            {generalError && (
+                <Alert styleType="danger" center>{generalError}</Alert>
+            )}
+        </>
     );
 }

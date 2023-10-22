@@ -59,10 +59,9 @@ export function NavBar() {
                     <>
                         <ul className="navbar-nav mb-1 px-2 ms-auto">
                             <li className="navbar-nav-item text-center mt-2">
-                                <Link className="nav-link">
+                                <Link onClick={onClickLogout} className="nav-link">
                                     <div><FontAwesomeIcon icon={faRightFromBracket} size="lg"/></div>
-                                    <span className="nav-link p-0" role="button"
-                                          onClick={onClickLogout}>{t("logout")}</span>
+                                    <span className="nav-link p-0">{t("logout")}</span>
                                 </Link>
                             </li>
                         </ul>

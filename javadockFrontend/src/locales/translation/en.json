@@ -45,6 +45,7 @@
   "userDeleteWarning": "If the user is deleted, it cannot be restored!",
   "warning": "Warning",
   "sendMail": "Send Mail",
-  "mailSentMessage": "Check your mailbox to reset your password.",
-  "resetYourPassword": "Reset your password"
+  "passwordResetMailSent": "Check your mailbox to reset your password.",
+  "resetYourPassword": "Reset your password",
+  "passwordResetSuccess": "Your password has been updated successfully."
 }

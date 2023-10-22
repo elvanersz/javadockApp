@@ -4,18 +4,12 @@ import {useTranslation} from "react-i18next";
 import {Alert} from "@/shared/components/Alert.jsx";
 import {Spinner} from "@/shared/components/Spinner.jsx";
 import http from "@/lib/http";
-import BasicDatePicker from "@/shared/components/BasicDatePicker.jsx";
-import {JobSelector} from "@/shared/components/JobSelector.jsx";
-import {UniversitySelector} from "@/shared/components/UniversitySelector.jsx";
 import {Link} from "react-router-dom";
 
 export function Register() {
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
     const [username, setUsername] = useState();
-    const [job, setJob] = useState();
-    const [birthDate, setBirthDate] = useState(null);
-    const [university, setUniversity] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [passwordConfirm, setPasswordConfirm] = useState();
@@ -61,30 +55,6 @@ export function Register() {
         setErrors(function (lastErrors) {
             return {
                 ...lastErrors,
-                jobId: undefined
-            }
-        })
-    }, [job])
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                birthDate: undefined
-            }
-        })
-    }, [birthDate])
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                universityId: undefined
-            }
-        })
-    }, [university])
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
                 email: undefined
             }
         })
@@ -99,7 +69,7 @@ export function Register() {
     }, [password])
 
     const buttonDisable = () => {
-        if (!firstName || !lastName || !username || !birthDate || !email || !password || password !== passwordConfirm) {
+        if (!firstName || !lastName || !username || !email || !password || password !== passwordConfirm) {
             return true
         }
     }
@@ -107,32 +77,31 @@ export function Register() {
         event.preventDefault();
         setApiProgress(true);
         setSuccessMessage();
+        setGeneralError();
 
         await http.post('/api/v1/users', {
             firstName: firstName,
             lastName: lastName,
             username: username,
-            jobId: job,
-            birthDate: birthDate,
-            universityId: university,
             email: email,
             password: password
         }).then(() => {
+            setApiProgress(false);
             setSuccessMessage(t("successMessage"))
         }).catch((error) => {
             console.log(error)
             if (error.response?.data) {
+                setApiProgress(false);
                 if (error.response.data.statusCode === 400) {
                     setErrors(error.response.data.validationErrors)
-                } else if (error.response.data.statusCode === 418){
-                    setGeneralError(error.response.data.validationErrors.birthDate)
                 } else {
                     setGeneralError(error.response.data.message)
                 }
             } else {
+                setApiProgress(false);
                 setGeneralError(t("generalErrorMessage"))
             }
-        }).finally(setApiProgress(false))
+        })
     }
 
     return (
@@ -155,20 +124,6 @@ export function Register() {
                                labelText={t("username")}
                                error={errors ? errors.username : null}
                                onChange={(event) => setUsername(event.target.value)}/>
-                        {/*<JobSelector id="job"
-                                     labelText={t("job")}
-                                     error={errors.jobId ? true : false}
-                                     onChange={(event) => setJob(event.target.value)}/>
-                        <BasicDatePicker id="birthDate"
-                                         labelText={t("birthDate")}
-                                         value={birthDate}
-                                         onChange={(date) => {
-                                             setBirthDate(date)
-                                         }}/>
-                        <UniversitySelector id="university"
-                                            labelText={t("university")}
-                                            error={errors.universityId ? true : false}
-                                            onChange={(event) => setUniversity(event.target.value)}/>*/}
                         <Input id="email"
                                labelText={t("email")}
                                error={errors ? errors.email : null}

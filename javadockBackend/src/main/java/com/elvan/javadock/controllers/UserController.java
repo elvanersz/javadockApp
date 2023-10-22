@@ -2,19 +2,22 @@ package com.elvan.javadock.controllers;
 
 import com.elvan.javadock.auth.TokenService;
 import com.elvan.javadock.requests.CreateUserRequest;
+import com.elvan.javadock.requests.PasswordResetMailRequest;
 import com.elvan.javadock.requests.PasswordResetRequest;
 import com.elvan.javadock.responses.UserResponse;
 import com.elvan.javadock.services.UserService;
 import com.elvan.javadock.validation.GenericMessage;
 import com.elvan.javadock.validation.Messages;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 
 @RestController
@@ -56,12 +59,16 @@ public class UserController {
     }
 
     @PostMapping("/api/v1/request-password-reset")
-    public void requestPasswordReset(@Valid @RequestBody PasswordResetRequest passwordResetRequest){
-        userService.requestPasswordReset(passwordResetRequest.email());
+    public void requestPasswordReset(@Valid @RequestBody PasswordResetMailRequest passwordResetMailRequest){
+        userService.requestPasswordReset(passwordResetMailRequest.email());
     }
 
     @PatchMapping("/api/v1/password-reset/{passwordResetToken}")
-    private void passwordReset(@PathVariable String passwordResetToken, @RequestBody String newPassword){
-        userService.passwordReset(passwordResetToken, newPassword);
+    private void passwordReset(@PathVariable String passwordResetToken, @Valid @RequestBody @Nullable PasswordResetRequest passwordResetRequest){
+        if(passwordResetRequest != null){
+            userService.passwordReset(passwordResetToken, passwordResetRequest.password());
+        } else {
+            userService.passwordReset(passwordResetToken, null);
+        }
     }
 }

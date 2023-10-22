@@ -32,9 +32,6 @@ public class User {
     @JoinColumn(name = "jobId")
     private Job job;
 
-    @Column(name = "birthDate")
-    private LocalDate birthDate;
-
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "universityId")

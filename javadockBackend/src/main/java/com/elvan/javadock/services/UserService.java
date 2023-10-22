@@ -4,6 +4,7 @@ import com.elvan.javadock.entities.User;
 import com.elvan.javadock.enums.Role;
 import com.elvan.javadock.exceptions.*;
 import com.elvan.javadock.repositories.UserRepository;
+import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 
 @Service
@@ -39,7 +41,7 @@ public class UserService {
     public void activateUser(String activationToken) {
         User user = userRepository.findByActivationToken(activationToken);
         if(user == null){
-            throw new InvalidTokenException();
+            throw new InvalidActivationTokenException();
         }
         user.setRole(Role.User);
         user.setActive(true);
@@ -77,12 +79,18 @@ public class UserService {
 
     }
 
-    public void passwordReset(String passwordResetToken, String newPassword) {
+    public void passwordReset(String passwordResetToken, @Nullable String newPassword) {
         User user = userRepository.findByPasswordResetToken(passwordResetToken);
         if(user == null){
-            throw new InvalidTokenException();
+            throw new InvalidPasswordResetTokenException();
+        } else if(newPassword != null){
+            user.setPassword(passwordEncoder.encode(newPassword));
+            user.setPasswordResetToken(null);
+            userRepository.save(user);
         }
-        user.setPassword(newPassword);
-        userRepository.save(user);
+    }
+
+    public void deleteUser(Long id){
+        userRepository.deleteById(id);
     }
 }

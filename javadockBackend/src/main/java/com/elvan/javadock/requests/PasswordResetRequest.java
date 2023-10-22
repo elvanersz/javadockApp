@@ -1,16 +1,15 @@
 package com.elvan.javadock.requests;
 
 import jakarta.persistence.Column;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record PasswordResetRequest(
-        @Email(message = "{javadock.constraints.email.format.message}")
-        @NotEmpty(message = "{javadock.constraints.email.format.message}")
-        @Size(min = 10, max = 255, message = "{javadock.constraints.email.format.message}")
-        @Column(name = "email")
-        String email
+        @Size(min = 8, max = 20, message = "{javadock.constraints.password.size.message}")
+        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).*$",
+                message = "{javadock.constraints.password.pattern.message}")
+        @Column(name = "password")
+        String password
 ) {
 
 

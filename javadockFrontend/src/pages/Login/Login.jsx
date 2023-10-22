@@ -42,19 +42,22 @@ export function Login() {
             email: email,
             password: password
         }).then((response) => {
+            setApiProgress(false);
             dispatch({type: "login-success", data: response.data})
             navigate("/")
         }).catch((error) => {
             if (error.response?.data) {
+                setApiProgress(false);
                 if (error.response.data.statusCode === 400) {
                     setErrors(error.response.data.validationErrors)
                 } else {
                     setGeneralError(error.response.data.message)
                 }
             } else {
+                setApiProgress(false);
                 setGeneralError(t("generalErrorMessage"))
             }
-        }).finally(setApiProgress(false))
+        })
     }
 
     return (

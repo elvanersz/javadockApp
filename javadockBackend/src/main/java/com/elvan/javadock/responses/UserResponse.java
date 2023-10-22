@@ -22,14 +22,11 @@ public class UserResponse {
     private Job job;
     private University university;
     private String email;
-    private LocalDate birthDate;
-    private int age;
     private Role role;
     private int membershipTime;
     private String image;
 
     public UserResponse(User user){
-        Period diffAge = Period.between(user.getBirthDate(), LocalDate.now());
         Period diffMembershipTime = Period.between(user.getCreateTime(), LocalDate.now());
 
         setId(user.getId());
@@ -40,8 +37,6 @@ public class UserResponse {
         setJob(user.getJob());
         setUniversity(user.getUniversity());
         setEmail(user.getEmail());
-        setBirthDate(user.getBirthDate());
-        setAge(diffAge.getYears());
         setRole(user.getRole());
         setMembershipTime(diffMembershipTime.getYears()*12 + diffMembershipTime.getMonths());
         setImage(user.getImage());

@@ -14,6 +14,7 @@ export default function BasicDatePicker(props) {
             <DemoContainer components={['DatePicker']}
                            sx={{marginBottom: 2, width: '1'}}>
                 <DatePicker
+                    format="DD-MM-YYYY"
                     value={value}
                     onChange={onChange}
                     slotProps={{textField: {size: 'small'}}}

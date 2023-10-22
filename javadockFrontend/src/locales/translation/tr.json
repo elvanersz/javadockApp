@@ -45,6 +45,7 @@
   "userDeleteWarning": "Eğer kullanıcı silinirse, geri getirilemez!",
   "warning": "Uyarı",
   "sendMail": "Mail Gönder",
-  "mailSentMessage": "Şifrenizi sıfırlamak için posta kutunuzu kontrol edin.",
-  "resetYourPassword": "Şifreni sıfırla"
+  "passwordResetMailSent": "Şifrenizi sıfırlamak için posta kutunuzu kontrol edin.",
+  "resetYourPassword": "Şifreni sıfırla",
+  "passwordResetSuccess": "Şifreniz başarıyla güncellendi."
 }

@@ -24,11 +24,11 @@ public class ExceptionControllerAdvice {
             NotUniqueEmailException.class,
             NotUniqueUsernameException.class,
             ActivationNotificationException.class,
-            InvalidTokenException.class,
+            InvalidActivationTokenException.class,
             NotFoundException.class,
             AuthenticationException.class,
-            InappropriateAgeException.class,
-            EmailNotFoundException.class})
+            EmailNotFoundException.class,
+            InvalidPasswordResetTokenException.class})
     public ResponseEntity<Object> handleException(Exception exception,
                                                   HttpServletRequest request) {
 
@@ -54,17 +54,16 @@ public class ExceptionControllerAdvice {
             errorResponse.setValidationErrors(((NotUniqueUsernameException) exception).getValidationErrors());
         } else if (exception instanceof ActivationNotificationException) {
             errorResponse.setStatusCode(502);
-        } else if (exception instanceof InvalidTokenException) {
+        } else if (exception instanceof InvalidActivationTokenException) {
             errorResponse.setStatusCode(400);
         } else if (exception instanceof NotFoundException) {
             errorResponse.setStatusCode(404);
         } else if (exception instanceof AuthenticationException) {
             errorResponse.setStatusCode(401);
-        } else if (exception instanceof InappropriateAgeException) {
-            errorResponse.setStatusCode(418);
-            errorResponse.setValidationErrors(((InappropriateAgeException) exception).getValidationErrors());
         } else if (exception instanceof EmailNotFoundException){
             errorResponse.setStatusCode(404);
+        } else if (exception instanceof InvalidPasswordResetTokenException){
+            errorResponse.setStatusCode(400);
         }
 
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(errorResponse.getStatusCode()));
