@@ -24,8 +24,8 @@ export function UserList() {
         try {
             const response = await loadUserList(page)
             setUserPage(response.data)
-        } catch {
-
+        } catch(error) {
+            console.log(error)
         } finally {
             setApiProgress(false)
         }

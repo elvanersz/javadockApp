@@ -18,7 +18,6 @@
   "password": "Şifre",
   "passwordConfirm": "Şifre Onay",
   "passwordMismatch": "Şifreler eşleşmiyor!",
-  "successMessage": "Lütfen hesabınızı etkinleştirmek için posta kutunuzu kontrol edin.",
   "generalErrorMessage": "Beklenmedik bir hata oluştu. Lütfen tekrar deneyin!",
   "post": "Gönderi",
   "posts": "Gönderiler",
@@ -45,7 +44,6 @@
   "userDeleteWarning": "Eğer kullanıcı silinirse, geri getirilemez!",
   "warning": "Uyarı",
   "sendMail": "Mail Gönder",
-  "passwordResetMailSent": "Şifrenizi sıfırlamak için posta kutunuzu kontrol edin.",
   "resetYourPassword": "Şifreni sıfırla",
-  "passwordResetSuccess": "Şifreniz başarıyla güncellendi."
+  "deleteYourAccount": "Hesabını sil"
 }

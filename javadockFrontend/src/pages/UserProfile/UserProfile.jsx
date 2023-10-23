@@ -1,5 +1,5 @@
 import http from "@/lib/http.js";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import * as React from "react";
 import {useEffect, useMemo, useState,} from "react";
 import {Alert} from "@/shared/components/Alert.jsx";
@@ -16,7 +16,7 @@ import {
     MDBRow,
     MDBCard
 } from 'mdb-react-ui-kit';
-import {useAuthState} from "@/shared/state/context.jsx";
+import {useAuthDispatch, useAuthState} from "@/shared/state/context.jsx";
 import {MDBBtn, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
 import {Input} from "@/shared/components/Input.jsx";
 import {JobSelector} from "@/shared/components/JobSelector.jsx";
@@ -33,7 +33,7 @@ export function UserProfile() {
     const [errorMessage, setErrorMessage] = useState();
     const authState = useAuthState();
     const [editProfileMode, setEditProfileMode] = useState();
-    const [updatePasswordMode, setUpdatePasswordMode] = useState();
+    const [passwordChangeMode, setPasswordChangeMode] = useState();
     const [deleteUserMode, setDeleteUserMode] = useState();
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
@@ -43,23 +43,11 @@ export function UserProfile() {
     const [currentPassword, setCurrentPassword] = useState();
     const [newPassword, setNewPassword] = useState();
     const [newPasswordConfirm, setNewPasswordConfirm] = useState();
-
-    function getUser(id) {
-        return http.get(`/api/v1/user/${id}`)
-    }
-
-    function onClickEditProfile() {
-        setEditProfileMode(!editProfileMode);
-    }
-    function onClickUpdatePassword() {
-        setUpdatePasswordMode(!updatePasswordMode);
-    }
-    function onClickDeleteUser() {
-        setDeleteUserMode(!deleteUserMode);
-    }
-    function onClickDeleteButton() {
-        setDeleteUserMode(!deleteUserMode);
-    }
+    const dispatch = useAuthDispatch();
+    const navigate = useNavigate();
+    const [userDeleteSuccessMessage, setUserDeleteSuccessMessage] = useState();
+    const [passwordChangeSuccessMessage, setPasswordChangeSuccessMessage] = useState();
+    const [editProfileSuccessMessage, setEditProfileSuccessMessage] = useState();
 
     const passwordConfirmError = useMemo(() => {
         if (newPassword && newPassword !== newPasswordConfirm) {
@@ -68,6 +56,81 @@ export function UserProfile() {
             return "";
         }
     }, [newPassword, newPasswordConfirm]);
+
+    function getUser(id) {
+        return http.get(`/api/v1/user/${id}`)
+    }
+
+
+    function onClickDeleteUserModal() {
+        setDeleteUserMode(!deleteUserMode);
+    }
+    function onClickDeleteUserButton() {
+        http.delete(`/api/v1/user/${id}`)
+            .then((response) => {
+                setApiProgress(false);
+                setUserDeleteSuccessMessage(response.data.message)
+                dispatch({type: "logout-success"})
+
+                setTimeout(() => {
+                    navigate('/')
+                }, 5000)
+
+            }).catch((error) => {
+                console.log(error)
+            }
+        )
+    }
+
+
+    function onClickEditProfileModal() {
+        setEditProfileMode(!editProfileMode);
+    }
+    function onClickEditProfileButton() {
+        http.patch(`/api/v1/user/${id}`, {
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            job: jobId,
+            university: universityId
+        }).then((response) => {
+            setEditProfileSuccessMessage(response.data.message)
+        }).catch((error) => {
+            if (error.response?.data) {
+                if (error.response.data.statusCode === 400) {
+                    setErrors(error.response.data.validationErrors)
+                } else {
+                    setGeneralError(error.response.data.message)
+                }
+            } else {
+                setGeneralError(t("generalErrorMessage"))
+            }
+        })
+    }
+
+
+    function onClickPasswordChangeModal() {
+        setPasswordChangeMode(!passwordChangeMode);
+    }
+    function onClickPasswordChangeButton() {
+        http.patch(`/api/v1/password-change/${id}`, {
+            password: currentPassword,
+            newPassword: newPassword
+        }).then((response) => {
+            setPasswordChangeSuccessMessage(response.data.message)
+        }).catch((error) => {
+            if (error.response?.data) {
+                if (error.response.data.statusCode === 400) {
+                    setErrors(error.response.data.validationErrors)
+                } else {
+                    setGeneralError(error.response.data.message)
+                }
+            } else {
+                setGeneralError(t("generalErrorMessage"))
+            }
+        })
+    }
+
 
     useEffect(() => {
         async function user() {
@@ -132,6 +195,14 @@ export function UserProfile() {
             }
         })
     }, [currentPassword])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                newPassword: undefined
+            }
+        })
+    }, [newPassword])
 
     return <>
         {user && (
@@ -156,19 +227,19 @@ export function UserProfile() {
                                         {authState.id === user.id &&
                                             <div>
                                                 <button type="button"
-                                                        onClick={onClickUpdatePassword}
+                                                        onClick={onClickPasswordChangeModal}
                                                         className="btn btn-sm btn-outline-info rounded-circle mx-2">
-                                                    <FontAwesomeIcon icon={faLock} />
+                                                    <FontAwesomeIcon icon={faLock}/>
                                                 </button>
                                                 <button type="button"
-                                                        onClick={onClickEditProfile}
+                                                        onClick={onClickEditProfileModal}
                                                         className="btn btn-sm btn-outline-info rounded-circle">
-                                                    <FontAwesomeIcon icon={faPen} />
+                                                    <FontAwesomeIcon icon={faPen}/>
                                                 </button>
                                                 <button type="button"
-                                                        onClick={onClickDeleteUser}
+                                                        onClick={onClickDeleteUserModal}
                                                         className="btn btn-sm btn-outline-danger rounded-circle mx-2">
-                                                    <FontAwesomeIcon icon={faTrashCan} />
+                                                    <FontAwesomeIcon icon={faTrashCan}/>
                                                 </button>
                                             </div>
                                         }
@@ -229,8 +300,8 @@ export function UserProfile() {
         )}
         {editProfileMode && (
             <MDBContainer>
-                <MDBModal isOpen={editProfileMode} toggle={onClickEditProfile} side position="bottom-right">
-                    <MDBModalHeader toggle={onClickEditProfile}>{t("editProfile")}</MDBModalHeader>
+                <MDBModal isOpen={editProfileMode} toggle={onClickEditProfileModal} side position="bottom-right">
+                    <MDBModalHeader toggle={onClickEditProfileModal}>{t("editProfile")}</MDBModalHeader>
                     <MDBModalBody>
                         <Input id="firstName"
                                defaultValue={user.firstName}
@@ -255,18 +326,21 @@ export function UserProfile() {
                                             labelText={t("university")}
                                             error={errors.universityId ? true : false}
                                             onChange={(event) => setUniversity(event.target.value)}/>
+                        {editProfileSuccessMessage &&
+                            <Alert styleType="success" center>{editProfileSuccessMessage}</Alert>
+                        }
                     </MDBModalBody>
                     <MDBModalFooter>
-                        <MDBBtn color="secondary" onClick={onClickEditProfile}>{t("close")}</MDBBtn>
-                        <MDBBtn color="primary">{t("saveChanges")}</MDBBtn>
+                        <MDBBtn color="secondary" onClick={onClickEditProfileModal}>{t("close")}</MDBBtn>
+                        <MDBBtn color="primary" onClick={onClickEditProfileButton}>{t("saveChanges")}</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
             </MDBContainer>
         )}
-        {updatePasswordMode && (
+        {passwordChangeMode && (
             <MDBContainer>
-                <MDBModal isOpen={updatePasswordMode} toggle={onClickUpdatePassword} side position="bottom-right">
-                    <MDBModalHeader toggle={onClickUpdatePassword}>{t("updatePassword")}</MDBModalHeader>
+                <MDBModal isOpen={passwordChangeMode} toggle={onClickPasswordChangeModal} side position="bottom-right">
+                    <MDBModalHeader toggle={onClickPasswordChangeModal}>{t("updatePassword")}</MDBModalHeader>
                     <MDBModalBody>
                         <Input id="currentPassword"
                                labelText={t("currentPassword")}
@@ -275,7 +349,7 @@ export function UserProfile() {
                                type="password"/>
                         <Input id="newPassword"
                                labelText={t("newPassword")}
-                               error={errors ? errors.password : null}
+                               error={errors ? errors.newPassword : null}
                                onChange={(event) => setNewPassword(event.target.value)}
                                type="password"/>
                         <Input id="newPasswordConfirm"
@@ -283,36 +357,38 @@ export function UserProfile() {
                                error={passwordConfirmError}
                                onChange={(event) => setNewPasswordConfirm(event.target.value)}
                                type="password"/>
+                        {passwordChangeSuccessMessage &&
+                            <Alert styleType="success" center>{passwordChangeSuccessMessage}</Alert>
+                        }
                     </MDBModalBody>
                     <MDBModalFooter>
-                        <MDBBtn color="secondary" onClick={onClickUpdatePassword}>{t("close")}</MDBBtn>
-                        <MDBBtn color="primary">{t("save")}</MDBBtn>
+                        <MDBBtn color="secondary" onClick={onClickPasswordChangeModal}>{t("close")}</MDBBtn>
+                        <MDBBtn color="primary" onClick={onClickPasswordChangeButton}>{t("save")}</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
             </MDBContainer>
         )}
         {deleteUserMode && (
             <MDBContainer>
-                <MDBModal isOpen={deleteUserMode} toggle={onClickDeleteUser} side position="bottom-right">
-                    <MDBModalHeader toggle={onClickDeleteUser}>{t("userDelete")}</MDBModalHeader>
+                <MDBModal isOpen={deleteUserMode} toggle={onClickDeleteUserModal} side position="bottom-right">
+                    <MDBModalHeader toggle={onClickDeleteUserModal}>{t("deleteYourAccount")}</MDBModalHeader>
                     <MDBModalBody>
                         <Input id="username"
                                disabled={true}
                                defaultValue={user.username}
-                               labelText={t("username")}
-                               error={errors ? errors.username : null}
-                               onChange={(event) => setUsername(event.target.value)}/>
+                               labelText={t("username")}/>
                         <Input id="email"
                                disabled={true}
                                labelText={t("email")}
-                               defaultValue={user.email}
-                               error={errors ? errors.email : null}
-                               onChange={(event) => setEmail(event.target.value)}/>
-                        <span className="text-danger">{t("warning")}: {t("userDeleteWarning")}</span>
+                               defaultValue={user.email}/>
+                        {!userDeleteSuccessMessage ?
+                            <span className="text-danger">{t("warning")}: {t("userDeleteWarning")}
+                            </span> : <Alert styleType="success" center>{userDeleteSuccessMessage}</Alert>
+                        }
                     </MDBModalBody>
                     <MDBModalFooter>
-                        <MDBBtn color="secondary" onClick={onClickDeleteUser}>{t("close")}</MDBBtn>
-                        <MDBBtn color="danger" onClick={onClickDeleteButton}>{t("delete")}</MDBBtn>
+                        <MDBBtn color="secondary" onClick={onClickDeleteUserModal}>{t("close")}</MDBBtn>
+                        <MDBBtn color="danger" onClick={onClickDeleteUserButton}>{t("delete")}</MDBBtn>
                     </MDBModalFooter>
                 </MDBModal>
             </MDBContainer>

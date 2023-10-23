@@ -10,13 +10,13 @@ public class EmailConfiguration {
     private Mail mail;
     private Client client;
 
-    public static record Mail(
+    public record Mail(
             String username,
             String password,
             String host,
             int port
     ){}
-    public static record Client(
+    public record Client(
             String host
     ){}
 

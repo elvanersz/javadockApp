@@ -19,10 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.sql.Date;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.Locale;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class,
 								ThymeleafAutoConfiguration.class})
@@ -38,7 +34,7 @@ public class JavadockApplication {
 	}
 
 	@Bean
-	public OpenAPI customOpenApı(@Value("${application-decription}") String description,
+	public OpenAPI customOpenApi(@Value("${application-description}") String description,
 								 @Value("${application-version}") String version){
 		return new OpenAPI()
 				.info(new Info()
@@ -59,7 +55,7 @@ public class JavadockApplication {
 			University university = new University(139L);
 
 			@Override
-			public void run(String... args) throws Exception {
+			public void run(String... args) {
 				for (var i=1 ; i<=25 ; i++){
 					User user = new User();
 					user.setFirstName("firstname" + i);
@@ -67,17 +63,14 @@ public class JavadockApplication {
 					user.setUsername("username" + i);
 					user.setJob(job);
 					user.setUniversity(university);
-					user.setBirthDate(LocalDate.of(2020, 10, 10));
 					user.setEmail("email" + i + "@gmail.com");
 					user.setPassword(passwordEncoder.encode("password" + i));
-					user.setRole(Role.USER);
+					user.setRole(Role.User);
 					user.setActive(true);
 					userRepository.save(user);
 				}
 			}
 		};
 	}
-
-	 */
-
+	*/
 }

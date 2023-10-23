@@ -17,23 +17,6 @@ export function Login() {
     const navigate = useNavigate();
     const dispatch = useAuthDispatch()
 
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                email: undefined
-            }
-        })
-    }, [email])
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                password: undefined
-            }
-        })
-    }, [password])
-
     const onSubmit = async (event) => {
         event.preventDefault();
         setApiProgress(true);
@@ -59,6 +42,23 @@ export function Login() {
             }
         })
     }
+
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                email: undefined
+            }
+        })
+    }, [email])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                password: undefined
+            }
+        })
+    }, [password])
 
     return (
         <div className="container">

@@ -1,10 +1,8 @@
 import defaultProfileImage from "@/assets/avatars/avatar1.png"
 import {Link} from "react-router-dom";
-import {useTranslation} from "react-i18next";
 
 export function UserListItem(props) {
     const {user} = props;
-    const {t} = useTranslation();
 
     return (
         <Link className="list-group-item list-group-item-action"

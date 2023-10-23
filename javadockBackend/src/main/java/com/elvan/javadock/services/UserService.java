@@ -4,6 +4,8 @@ import com.elvan.javadock.entities.User;
 import com.elvan.javadock.enums.Role;
 import com.elvan.javadock.exceptions.*;
 import com.elvan.javadock.repositories.UserRepository;
+import com.elvan.javadock.requests.PasswordChangeRequest;
+import com.elvan.javadock.requests.UpdateUserRequest;
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -90,7 +92,24 @@ public class UserService {
         }
     }
 
-    public void deleteUser(Long id){
+    public void passwordChangeById(Long id, PasswordChangeRequest passwordChangeRequest) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+
+        if(!passwordEncoder.matches(passwordChangeRequest.password(), user.getPassword())){
+            throw new PasswordMismatchException();
+        } else {
+            user.setPassword(passwordEncoder.encode(passwordChangeRequest.newPassword()));
+            userRepository.save(user);
+        }
+    }
+
+    public void deleteUserById(Long id){
         userRepository.deleteById(id);
+    }
+
+    public void updateUserById(Long id, UpdateUserRequest updateUserRequest) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+
+        
     }
 }

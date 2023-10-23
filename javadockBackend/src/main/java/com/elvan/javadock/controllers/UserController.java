@@ -1,9 +1,7 @@
 package com.elvan.javadock.controllers;
 
-import com.elvan.javadock.auth.TokenService;
-import com.elvan.javadock.requests.CreateUserRequest;
-import com.elvan.javadock.requests.PasswordResetMailRequest;
-import com.elvan.javadock.requests.PasswordResetRequest;
+import  com.elvan.javadock.auth.TokenService;
+import com.elvan.javadock.requests.*;
 import com.elvan.javadock.responses.UserResponse;
 import com.elvan.javadock.services.UserService;
 import com.elvan.javadock.validation.GenericMessage;
@@ -16,8 +14,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 
 @RestController
@@ -47,8 +43,7 @@ public class UserController {
 
     @GetMapping("/api/v1/users")
     public Page<UserResponse> getAllUsers(Pageable page,
-                                          @RequestHeader(name = "Authorization",
-                                                  required = false) String authorizationHeader) {
+                                          @RequestHeader(name = "Authorization", required = false) String authorizationHeader) {
         var loggedInUser = tokenService.verifyToken(authorizationHeader);
         return userService.getAllUsers(page, loggedInUser).map(UserResponse::new);
     }
@@ -59,16 +54,48 @@ public class UserController {
     }
 
     @PostMapping("/api/v1/request-password-reset")
-    public void requestPasswordReset(@Valid @RequestBody PasswordResetMailRequest passwordResetMailRequest){
+    public GenericMessage requestPasswordReset(@Valid @RequestBody PasswordResetMailRequest passwordResetMailRequest){
         userService.requestPasswordReset(passwordResetMailRequest.email());
+        String message = Messages.getMessageForLocale("javadock.password.reset.mail.success.message",
+                LocaleContextHolder.getLocale());
+        return new GenericMessage(message);
     }
 
     @PatchMapping("/api/v1/password-reset/{passwordResetToken}")
-    private void passwordReset(@PathVariable String passwordResetToken, @Valid @RequestBody @Nullable PasswordResetRequest passwordResetRequest){
+    public GenericMessage passwordReset(@PathVariable String passwordResetToken,
+                                        @Valid @RequestBody @Nullable PasswordResetRequest passwordResetRequest){
         if(passwordResetRequest != null){
             userService.passwordReset(passwordResetToken, passwordResetRequest.password());
         } else {
             userService.passwordReset(passwordResetToken, null);
         }
+        String message = Messages.getMessageForLocale("javadock.password.reset.success.message",
+                LocaleContextHolder.getLocale());
+        return new GenericMessage(message);
+    }
+
+    @PatchMapping("/api/v1/password-change/{id}")
+    public GenericMessage passwordChangeById(@PathVariable Long id,
+                                             @Valid @RequestBody PasswordChangeRequest passwordChangeRequest){
+        userService.passwordChangeById(id, passwordChangeRequest);
+        String message = Messages.getMessageForLocale("javadock.password.change.success.message",
+                LocaleContextHolder.getLocale());
+        return new GenericMessage(message);
+    }
+
+    @DeleteMapping("/api/v1/user/{id}")
+    public GenericMessage deleteUserById(@PathVariable Long id){
+        userService.deleteUserById(id);
+        String message = Messages.getMessageForLocale("javadock.delete.user.success.message",
+                LocaleContextHolder.getLocale());
+        return new GenericMessage(message);
+    }
+
+    @PatchMapping("/api/v1/user/{id}")
+    public GenericMessage updateUserById(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest updateUserRequest){
+        userService.updateUserById(id, updateUserRequest);
+        String message = Messages.getMessageForLocale("javadock.update.user.success.message",
+                LocaleContextHolder.getLocale());
+        return new GenericMessage(message);
     }
 }

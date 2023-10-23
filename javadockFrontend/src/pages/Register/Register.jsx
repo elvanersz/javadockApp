@@ -27,6 +27,42 @@ export function Register() {
         }
     }, [password, passwordConfirm]);
 
+    const buttonDisable = () => {
+        if (!firstName || !lastName || !username || !email || !password || password !== passwordConfirm) {
+            return true
+        }
+    }
+    const onSubmit = async (event) => {
+        event.preventDefault();
+        setApiProgress(true);
+        setSuccessMessage();
+        setGeneralError();
+
+        await http.post('/api/v1/users', {
+            firstName: firstName,
+            lastName: lastName,
+            username: username,
+            email: email,
+            password: password
+        }).then((response) => {
+            setApiProgress(false);
+            setSuccessMessage(response.data.message)
+        }).catch((error) => {
+            console.log(error)
+            if (error.response?.data) {
+                setApiProgress(false);
+                if (error.response.data.statusCode === 400) {
+                    setErrors(error.response.data.validationErrors)
+                } else {
+                    setGeneralError(error.response.data.message)
+                }
+            } else {
+                setApiProgress(false);
+                setGeneralError(t("generalErrorMessage"))
+            }
+        })
+    }
+
     useEffect(() => {
         setErrors(function (lastErrors) {
             return {
@@ -67,42 +103,6 @@ export function Register() {
             }
         })
     }, [password])
-
-    const buttonDisable = () => {
-        if (!firstName || !lastName || !username || !email || !password || password !== passwordConfirm) {
-            return true
-        }
-    }
-    const onSubmit = async (event) => {
-        event.preventDefault();
-        setApiProgress(true);
-        setSuccessMessage();
-        setGeneralError();
-
-        await http.post('/api/v1/users', {
-            firstName: firstName,
-            lastName: lastName,
-            username: username,
-            email: email,
-            password: password
-        }).then(() => {
-            setApiProgress(false);
-            setSuccessMessage(t("successMessage"))
-        }).catch((error) => {
-            console.log(error)
-            if (error.response?.data) {
-                setApiProgress(false);
-                if (error.response.data.statusCode === 400) {
-                    setErrors(error.response.data.validationErrors)
-                } else {
-                    setGeneralError(error.response.data.message)
-                }
-            } else {
-                setApiProgress(false);
-                setGeneralError(t("generalErrorMessage"))
-            }
-        })
-    }
 
     return (
         <div className="container">

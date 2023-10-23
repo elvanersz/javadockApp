@@ -18,7 +18,6 @@
   "password": "Password",
   "passwordConfirm": "Confirm Password",
   "passwordMismatch": "Password mismatch!",
-  "successMessage": "Please check your mailbox to activate your account.",
   "generalErrorMessage": "Unexpected error occurred. Please try again!",
   "post": "Post",
   "posts": "Posts",
@@ -45,7 +44,6 @@
   "userDeleteWarning": "If the user is deleted, it cannot be restored!",
   "warning": "Warning",
   "sendMail": "Send Mail",
-  "passwordResetMailSent": "Check your mailbox to reset your password.",
   "resetYourPassword": "Reset your password",
-  "passwordResetSuccess": "Your password has been updated successfully."
+  "deleteYourAccount": "Delete your account"
 }

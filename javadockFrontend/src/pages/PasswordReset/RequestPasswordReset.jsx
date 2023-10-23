@@ -13,15 +13,6 @@ export function RequestPasswordReset() {
     const [generalError, setGeneralError] = useState();
     const {t} = useTranslation();
 
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                email: undefined
-            }
-        })
-    }, [email])
-
     const onSubmit = async (event) => {
         event.preventDefault();
         setSuccessMessage();
@@ -29,9 +20,9 @@ export function RequestPasswordReset() {
         setApiProgress(true);
 
         await http.post(`/api/v1/request-password-reset`, {email: email})
-            .then(() => {
+            .then((response) => {
                 setApiProgress(false);
-                setSuccessMessage(t("passwordResetMailSent"))
+                setSuccessMessage(response.data.message)
             }).catch((error) => {
                 if (error.response?.data) {
                     setApiProgress(false);
@@ -46,6 +37,15 @@ export function RequestPasswordReset() {
                 }
             })
     }
+
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                email: undefined
+            }
+        })
+    }, [email])
 
     return (
         <div className="container">

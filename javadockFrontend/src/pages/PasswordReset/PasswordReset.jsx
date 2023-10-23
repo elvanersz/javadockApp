@@ -18,6 +18,7 @@ export function PasswordReset() {
     const {t} = useTranslation();
     const [newPassword, setNewPassword] = useState();
     const [newPasswordConfirm, setNewPasswordConfirm] = useState();
+    const navigate = useNavigate();
 
     const passwordConfirmError = useMemo(() => {
         if (newPassword && newPassword !== newPasswordConfirm) {
@@ -27,38 +28,14 @@ export function PasswordReset() {
         }
     }, [newPassword, newPasswordConfirm]);
 
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                password: undefined
-            }
-        })
-    }, [newPassword])
-
-    function passwordReset(passwordResetToken) {
-        return http.patch(`/api/v1/password-reset/${passwordResetToken}`)
-    }
-
-    useEffect(() => {
-        async function reset() {
-            setApiProgress(true)
-            try {
-                await passwordReset(passwordResetToken);
-            } catch (error) {
-                setErrorMessage(error.response.data.message)
-            } finally {
-                setApiProgress(false);
-            }
-        }
-
-        reset()
-    }, [passwordResetToken])
-
     const buttonDisable = () => {
         if (newPassword !== newPasswordConfirm) {
             return true
         }
+    }
+
+    function passwordReset(passwordResetToken) {
+        return http.patch(`/api/v1/password-reset/${passwordResetToken}`)
     }
 
     const onSubmit = async (event) => {
@@ -68,9 +45,14 @@ export function PasswordReset() {
         await axios.patch(`/api/v1/password-reset/${passwordResetToken}`, {
             password: newPassword
         })
-            .then(() => {
+            .then((response) => {
                 setApiProgress(false)
-                setSuccessMessage(t("passwordResetSuccess"))
+                setSuccessMessage(response.data.message)
+
+                setTimeout(() => {
+                    navigate('/login')
+                }, 3000)
+
             }).catch((error) => {
                 if (error.response?.data) {
                     setApiProgress(false)
@@ -85,6 +67,29 @@ export function PasswordReset() {
                 }
             })
     }
+
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                password: undefined
+            }
+        })
+    }, [newPassword])
+    useEffect(() => {
+        async function reset() {
+            setApiProgress(true)
+            try {
+                await passwordReset(passwordResetToken);
+            } catch (error) {
+                setErrorMessage(error.response.data.message)
+            } finally {
+                setApiProgress(false);
+            }
+        }
+
+        reset()
+    }, [passwordResetToken])
 
     return (
         <>

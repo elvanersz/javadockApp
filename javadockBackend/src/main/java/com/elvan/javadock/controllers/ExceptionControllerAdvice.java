@@ -28,7 +28,8 @@ public class ExceptionControllerAdvice {
             NotFoundException.class,
             AuthenticationException.class,
             EmailNotFoundException.class,
-            InvalidPasswordResetTokenException.class})
+            InvalidPasswordResetTokenException.class,
+            PasswordMismatchException.class})
     public ResponseEntity<Object> handleException(Exception exception,
                                                   HttpServletRequest request) {
 
@@ -60,10 +61,13 @@ public class ExceptionControllerAdvice {
             errorResponse.setStatusCode(404);
         } else if (exception instanceof AuthenticationException) {
             errorResponse.setStatusCode(401);
-        } else if (exception instanceof EmailNotFoundException){
+        } else if (exception instanceof EmailNotFoundException) {
             errorResponse.setStatusCode(404);
-        } else if (exception instanceof InvalidPasswordResetTokenException){
+        } else if (exception instanceof InvalidPasswordResetTokenException) {
             errorResponse.setStatusCode(400);
+        } else if (exception instanceof PasswordMismatchException) {
+            errorResponse.setStatusCode(400);
+            errorResponse.setValidationErrors(((PasswordMismatchException) exception).getValidationErrors());
         }
 
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(errorResponse.getStatusCode()));
