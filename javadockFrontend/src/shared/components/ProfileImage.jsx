@@ -1,6 +1,6 @@
 import defaultProfileImage from "@/assets/avatars/avatar1.png";
 
-export function ProfıleImage({ width }){
+export function ProfileImage({ width }){
 
     return (
         <>

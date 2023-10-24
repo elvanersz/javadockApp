@@ -8,9 +8,9 @@ import {
     faUsers,
     faRightToBracket,
     faFileSignature,
-    faIdCardClip,
     faRightFromBracket
 } from "@fortawesome/free-solid-svg-icons"
+import {ProfileImage} from "@/shared/components/ProfileImage.jsx";
 
 export function NavBar() {
     const {t} = useTranslation();
@@ -68,8 +68,8 @@ export function NavBar() {
                         <ul className="navbar-nav mb-1 px-2 ms-auto">
                             <li className="navbar-nav-item text-center mt-2 mx-3">
                                 <Link className="nav-link" to={`/user/${authState.id}`}>
-                                    <div><FontAwesomeIcon icon={faIdCardClip} size="lg"/></div>
-                                    <span>{t("myProfile")}</span>
+                                    <div><ProfileImage width={30} /></div>
+                                    <div><span>{t("myProfile")}</span></div>
                                 </Link>
                             </li>
                         </ul>

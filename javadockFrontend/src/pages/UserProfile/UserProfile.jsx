@@ -124,6 +124,7 @@ export function UserProfile() {
             setGeneralError()
             setEditProfileSuccessMessage(response.data.message)
         }).catch((error) => {
+            setEditProfileWarningMessage()
             if (error.response?.data) {
                 if (error.response.data.statusCode === 400) {
                     setErrors(error.response.data.validationErrors)

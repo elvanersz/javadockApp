@@ -16,6 +16,7 @@ public record CreateUserRequest(
 
         @UniqueUsername //custom annotation
         @NotBlank(message = "{javadock.constraints.username.NotBlank.message}")
+        @Size(max = 20, message = "{javadock.constraints.username.max.size.message}")
         @Column(name = "username")
         String username,
 

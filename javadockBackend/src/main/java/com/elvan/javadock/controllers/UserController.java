@@ -92,7 +92,8 @@ public class UserController {
     }
 
     @PatchMapping("/api/v1/user/{id}")
-    public GenericMessage updateUserById(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest updateUserRequest){
+    public GenericMessage updateUserById(@PathVariable Long id,
+                                         @Valid @RequestBody UpdateUserRequest updateUserRequest){
         userService.updateUserById(id, updateUserRequest);
         String message = Messages.getMessageForLocale("javadock.update.user.success.message",
                 LocaleContextHolder.getLocale());

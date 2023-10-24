@@ -2,6 +2,7 @@ package com.elvan.javadock.requests;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record UpdateUserRequest(
 
@@ -12,6 +13,7 @@ public record UpdateUserRequest(
         String lastName,
 
         @NotBlank(message = "{javadock.constraints.username.NotBlank.message}")
+        @Size(max = 20, message = "{javadock.constraints.username.max.size.message}")
         String username,
 
         @Nullable
