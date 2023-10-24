@@ -6,10 +6,11 @@ import {setToken} from "@/lib/http.js";
 export const AuthContext = createContext();
 export const AuthDispatchContext = createContext();
 
-export function useAuthState(){
+export function useAuthState() {
     return useContext(AuthContext);
 }
-export function useAuthDispatch(){
+
+export function useAuthDispatch() {
     return useContext(AuthDispatchContext);
 }
 
@@ -21,6 +22,19 @@ const authReducer = (authState, action) => {
         case "logout-success":
             setToken();
             return {id: 0};
+        case "edit-profile-success":
+            return {
+                ...authState,
+                firstName: action.data.firstName,
+                lastName: action.data.lastName,
+                username: action.data.username,
+                job: {
+                    jobId: action.data.jobId
+                },
+                university: {
+                    universityId: action.data.universityId
+                }
+            }
         default:
             throw new Error(`unknown action: ${action.type}`)
     }

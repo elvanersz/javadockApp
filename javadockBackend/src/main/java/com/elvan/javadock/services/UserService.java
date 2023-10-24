@@ -1,5 +1,7 @@
 package com.elvan.javadock.services;
 
+import com.elvan.javadock.entities.Job;
+import com.elvan.javadock.entities.University;
 import com.elvan.javadock.entities.User;
 import com.elvan.javadock.enums.Role;
 import com.elvan.javadock.exceptions.*;
@@ -16,6 +18,7 @@ import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -110,6 +113,27 @@ public class UserService {
     public void updateUserById(Long id, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
 
-        
+        if (Objects.equals(user.getFirstName(), updateUserRequest.firstName()) &&
+                Objects.equals(user.getLastName(), updateUserRequest.lastName()) &&
+                Objects.equals(user.getUsername(), updateUserRequest.username()) &&
+                Objects.equals(user.getJob().getJobId(), updateUserRequest.jobId()) &&
+                Objects.equals(user.getUniversity().getUniversityId(), updateUserRequest.universityId())){
+            throw new UnmodifiedInformationException();
+        } else {
+            user.setFirstName(updateUserRequest.firstName());
+            user.setLastName(updateUserRequest.lastName());
+            user.setUsername(updateUserRequest.username());
+
+            if (updateUserRequest.jobId() != null) {
+                Job job = new Job(updateUserRequest.jobId());
+                user.setJob(job);
+            }
+            if (updateUserRequest.universityId() != null) {
+                University university = new University(updateUserRequest.universityId());
+                user.setUniversity(university);
+            }
+
+            userRepository.save(user);
+        }
     }
 }
