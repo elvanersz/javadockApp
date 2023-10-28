@@ -1,8 +1,8 @@
 package com.elvan.javadock.controllers;
 
-import  com.elvan.javadock.auth.TokenService;
 import com.elvan.javadock.requests.*;
 import com.elvan.javadock.responses.UserResponse;
+import com.elvan.javadock.security.UserDetailsImpl;
 import com.elvan.javadock.services.UserService;
 import com.elvan.javadock.validation.GenericMessage;
 import com.elvan.javadock.validation.Messages;
@@ -13,8 +13,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @AllArgsConstructor
@@ -22,7 +23,6 @@ public class UserController {
 
     private UserService userService;
     private MessageSource messageSource;
-    private TokenService tokenService;
 
 
     @PostMapping("/api/v1/users")
@@ -43,9 +43,8 @@ public class UserController {
 
     @GetMapping("/api/v1/users")
     public Page<UserResponse> getAllUsers(Pageable page,
-                                          @RequestHeader(name = "Authorization", required = false) String authorizationHeader) {
-        var loggedInUser = tokenService.verifyToken(authorizationHeader);
-        return userService.getAllUsers(page, loggedInUser).map(UserResponse::new);
+                                          @AuthenticationPrincipal UserDetailsImpl currentUser) {
+        return userService.getAllUsers(page, currentUser).map(UserResponse::new);
     }
 
     @GetMapping("/api/v1/user/{id}")
@@ -75,6 +74,7 @@ public class UserController {
     }
 
     @PatchMapping("/api/v1/password-change/{id}")
+    @PreAuthorize("#id == principal.id")
     public GenericMessage passwordChangeById(@PathVariable Long id,
                                              @Valid @RequestBody PasswordChangeRequest passwordChangeRequest){
         userService.passwordChangeById(id, passwordChangeRequest);
@@ -84,6 +84,7 @@ public class UserController {
     }
 
     @DeleteMapping("/api/v1/user/{id}")
+    @PreAuthorize("#id == principal.id")
     public GenericMessage deleteUserById(@PathVariable Long id){
         userService.deleteUserById(id);
         String message = Messages.getMessageForLocale("javadock.delete.user.success.message",
@@ -92,10 +93,21 @@ public class UserController {
     }
 
     @PatchMapping("/api/v1/user/{id}")
+    @PreAuthorize("#id == principal.id")
     public GenericMessage updateUserById(@PathVariable Long id,
                                          @Valid @RequestBody UpdateUserRequest updateUserRequest){
         userService.updateUserById(id, updateUserRequest);
         String message = Messages.getMessageForLocale("javadock.update.user.success.message",
+                LocaleContextHolder.getLocale());
+        return new GenericMessage(message);
+    }
+
+    @PatchMapping("/api/v1/profile-image-change/{id}")
+    @PreAuthorize("#id == principal.id")
+    public GenericMessage profileImageChangeById(@PathVariable Long id,
+                                             @Valid @RequestBody  ){
+        userService.profileImageChangeById(id, passwordChangeRequest);
+        String message = Messages.getMessageForLocale("javadock.password.change.success.message",
                 LocaleContextHolder.getLocale());
         return new GenericMessage(message);
     }

@@ -1,9 +1,9 @@
 import http from "@/lib/http.js";
-import {useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import * as React from "react";
 import {useEffect, useMemo, useState,} from "react";
-import {Alert} from "@/shared/components/Alert.jsx";
-import {Spinner} from "@/shared/components/Spinner.jsx";
+import {Alert} from "@/shared/Components/Alert.jsx";
+import {Spinner} from "@/shared/Components/Spinner.jsx";
 import {useTranslation} from "react-i18next";
 import defaultProfileImage from "@/assets/avatars/avatar1.png"
 import {
@@ -16,26 +16,22 @@ import {
     MDBRow,
     MDBCard
 } from 'mdb-react-ui-kit';
-import {useAuthDispatch, useAuthState} from "@/shared/state/context.jsx";
+import {useAuthDispatch, useAuthState} from "@/shared/State/context.jsx";
 import {MDBBtn, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
-import {Input} from "@/shared/components/Input.jsx";
-import {JobSelector} from "@/shared/components/JobSelector.jsx";
-import {UniversitySelector} from "@/shared/components/UniversitySelector.jsx";
+import {Input} from "@/shared/Components/Input.jsx";
+import {JobSelector} from "@/shared/Components/JobSelector.jsx";
+import {UniversitySelector} from "@/shared/Components/UniversitySelector.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPen, faLock, faTrashCan} from "@fortawesome/free-solid-svg-icons"
+import {ProfileImage} from "@/shared/Components/ProfileImage.jsx";
 
 export function UserProfile() {
     const {id} = useParams();
-    const [user, setUser] = useState(null);
     const {t} = useTranslation();
-    const [apiProgress, setApiProgress] = useState(false);
-    const [errors, setErrors] = useState({});
-    const [errorMessage, setErrorMessage] = useState();
-    const [generalError, setGeneralError] = useState();
     const authState = useAuthState();
-    const [editProfileMode, setEditProfileMode] = useState();
-    const [passwordChangeMode, setPasswordChangeMode] = useState();
-    const [deleteUserMode, setDeleteUserMode] = useState();
+    const dispatch = useAuthDispatch();
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
     const [firstName, setFirstName] = useState();
     const [lastName, setLastName] = useState();
     const [username, setUsername] = useState();
@@ -44,8 +40,17 @@ export function UserProfile() {
     const [currentPassword, setCurrentPassword] = useState();
     const [newPassword, setNewPassword] = useState();
     const [newPasswordConfirm, setNewPasswordConfirm] = useState();
-    const dispatch = useAuthDispatch();
-    const navigate = useNavigate();
+    const [newImage, setNewImage] = useState();
+    const [tempImage, setTempImage] = useState();
+    const [apiProgress, setApiProgress] = useState(false);
+    const [errors, setErrors] = useState({});
+    const [errorMessage, setErrorMessage] = useState();
+    const [generalError, setGeneralError] = useState();
+    const [editProfileMode, setEditProfileMode] = useState();
+    const [passwordChangeMode, setPasswordChangeMode] = useState();
+    const [deleteUserMode, setDeleteUserMode] = useState();
+    const [profileImageChangeMode, setProfileImageChangeMode] = useState();
+    const [profileImageChangeSuccessMessage, setProfileImageChangeSuccessMessage] = useState();
     const [deleteUserSuccessMessage, setDeleteUserSuccessMessage] = useState();
     const [passwordChangeSuccessMessage, setPasswordChangeSuccessMessage] = useState();
     const [editProfileSuccessMessage, setEditProfileSuccessMessage] = useState();
@@ -128,8 +133,50 @@ export function UserProfile() {
             if (error.response?.data) {
                 if (error.response.data.statusCode === 400) {
                     setErrors(error.response.data.validationErrors)
-                } else if (error.response.data.statusCode === 418){
+                } else if (error.response.data.statusCode === 418) {
                     setEditProfileWarningMessage(error.response.data.message)
+                } else {
+                    setGeneralError(error.response.data.message)
+                }
+            } else {
+                setGeneralError(t("generalErrorMessage"))
+            }
+        })
+    }
+
+
+    function onClickProfileImageChangeModal() {
+        setProfileImageChangeMode(!profileImageChangeMode);
+        setNewImage();
+        setTempImage();
+        setProfileImageChangeSuccessMessage();
+        setErrors();
+        setGeneralError();
+    }
+
+    const onClickProfileImage = (event) => {
+        if (event.target.files.length < 1) return;
+        const file = event.target.files[0]
+        const fileReader = new FileReader();
+
+        fileReader.onloadend = () => {
+            const data = fileReader.result
+            setNewImage(data);
+            setTempImage(data)
+        }
+        fileReader.readAsDataURL(file);
+    }
+
+    function onClickProfileImageChangeButton() {
+        http.patch(`/api/v1/profile-image-change/${id}`, {
+            image: newImage
+        }).then((response) => {
+            setGeneralError()
+            setProfileImageChangeSuccessMessage(response.data.message)
+        }).catch((error) => {
+            if (error.response?.data) {
+                if (error.response.data.statusCode === 400) {
+                    setErrors(error.response.data.validationErrors)
                 } else {
                     setGeneralError(error.response.data.message)
                 }
@@ -257,10 +304,13 @@ export function UserProfile() {
                                 <div className="rounded-top text-white d-flex flex-row"
                                      style={{backgroundColor: '#000', height: '200px'}}>
                                     <div className="ms-4 mt-5 d-flex flex-column" style={{width: '150px'}}>
-                                        <MDBCardImage src={defaultProfileImage}
-                                                      alt="Generic placeholder image"
-                                                      className="mt-4 mb-2 img-thumbnail" fluid
-                                                      style={{width: '150px', zIndex: '1'}}/>
+                                        <Link style={{width: '150px', zIndex: '1'}}>
+                                            <MDBCardImage src={tempImage || defaultProfileImage}
+                                                          onClick={onClickProfileImageChangeModal}
+                                                          alt="Generic placeholder image"
+                                                          className="mt-4 mb-2 img-thumbnail" fluid
+                                                          style={{height: '170px'}}/>
+                                        </Link>
                                     </div>
                                     <div className="ms-3" style={{marginTop: '130px'}}>
                                         <MDBTypography tag="h5"><b>{user.username}</b></MDBTypography>
@@ -271,17 +321,17 @@ export function UserProfile() {
                                             <div>
                                                 <button type="button"
                                                         onClick={onClickPasswordChangeModal}
-                                                        className="btn btn-sm btn-outline-info rounded-circle mx-2">
+                                                        className="btn btn-sm btn-outline-info rounded-circle">
                                                     <FontAwesomeIcon icon={faLock}/>
                                                 </button>
                                                 <button type="button"
                                                         onClick={onClickEditProfileModal}
-                                                        className="btn btn-sm btn-outline-info rounded-circle">
+                                                        className="btn btn-sm btn-outline-info rounded-circle mx-2">
                                                     <FontAwesomeIcon icon={faPen}/>
                                                 </button>
                                                 <button type="button"
                                                         onClick={onClickDeleteUserModal}
-                                                        className="btn btn-sm btn-outline-danger rounded-circle mx-2">
+                                                        className="btn btn-sm btn-outline-danger rounded-circle">
                                                     <FontAwesomeIcon icon={faTrashCan}/>
                                                 </button>
                                             </div>
@@ -345,6 +395,69 @@ export function UserProfile() {
 
             </div>
         )}
+        {passwordChangeMode && (
+            <MDBContainer>
+                <MDBModal isOpen={passwordChangeMode} toggle={onClickPasswordChangeModal} side position="bottom-right">
+                    <MDBModalHeader toggle={onClickPasswordChangeModal}>{t("updatePassword")}</MDBModalHeader>
+                    <MDBModalBody>
+                        <Input id="currentPassword"
+                               labelText={t("currentPassword")}
+                               error={errors ? errors.password : null}
+                               onChange={(event) => setCurrentPassword(event.target.value)}
+                               type="password"/>
+                        <Input id="newPassword"
+                               labelText={t("newPassword")}
+                               error={errors ? errors.newPassword : null}
+                               onChange={(event) => setNewPassword(event.target.value)}
+                               type="password"/>
+                        <Input id="newPasswordConfirm"
+                               labelText={t("newPasswordConfirm")}
+                               error={passwordConfirmError}
+                               onChange={(event) => setNewPasswordConfirm(event.target.value)}
+                               type="password"/>
+                        {passwordChangeSuccessMessage &&
+                            <Alert styleType="success" center>{passwordChangeSuccessMessage}</Alert>
+                        }
+                        {generalError &&
+                            <Alert styleType="danger" center>{generalError}</Alert>
+                        }
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                        <MDBBtn color="secondary" onClick={onClickPasswordChangeModal}>{t("close")}</MDBBtn>
+                        {!passwordChangeSuccessMessage &&
+                            <MDBBtn color="primary" onClick={onClickPasswordChangeButton}>{t("save")}</MDBBtn>
+                        }
+                    </MDBModalFooter>
+                </MDBModal>
+            </MDBContainer>
+        )}
+        {profileImageChangeMode && (
+            <MDBContainer>
+                <MDBModal isOpen={profileImageChangeMode} toggle={onClickProfileImageChangeModal} side
+                          position="bottom-right">
+                    <MDBModalHeader toggle={onClickProfileImageChangeModal}>{t("editProfileImage")}</MDBModalHeader>
+                    <MDBModalBody className="text-center">
+                        <MDBCardImage src={tempImage || defaultProfileImage}
+                                      alt="Generic placeholder image"
+                                      className="mb-2 img-thumbnail" fluid
+                                      style={{height: '300px', width: '250px'}}/>
+                        <Input type="file" onChange={onClickProfileImage}/>
+                        {profileImageChangeSuccessMessage &&
+                            <Alert styleType="success" center>{passwordChangeSuccessMessage}</Alert>
+                        }
+                        {generalError &&
+                            <Alert styleType="danger" center>{generalError}</Alert>
+                        }
+                    </MDBModalBody>
+                    <MDBModalFooter>
+                        <MDBBtn color="secondary" onClick={onClickProfileImageChangeModal}>{t("close")}</MDBBtn>
+                        {!profileImageChangeSuccessMessage &&
+                            <MDBBtn color="primary" onClick={onClickProfileImageChangeModal}>{t("save")}</MDBBtn>
+                        }
+                    </MDBModalFooter>
+                </MDBModal>
+            </MDBContainer>
+        )}
         {editProfileMode && (
             <MDBContainer>
                 <MDBModal isOpen={editProfileMode} toggle={onClickEditProfileModal} side position="bottom-right">
@@ -386,44 +499,7 @@ export function UserProfile() {
                     <MDBModalFooter>
                         <MDBBtn color="secondary" onClick={onClickEditProfileModal}>{t("close")}</MDBBtn>
                         {!editProfileSuccessMessage &&
-                            <MDBBtn color="primary" onClick={onClickEditProfileButton}>{t("saveChanges")}</MDBBtn>
-                        }
-
-                    </MDBModalFooter>
-                </MDBModal>
-            </MDBContainer>
-        )}
-        {passwordChangeMode && (
-            <MDBContainer>
-                <MDBModal isOpen={passwordChangeMode} toggle={onClickPasswordChangeModal} side position="bottom-right">
-                    <MDBModalHeader toggle={onClickPasswordChangeModal}>{t("updatePassword")}</MDBModalHeader>
-                    <MDBModalBody>
-                        <Input id="currentPassword"
-                               labelText={t("currentPassword")}
-                               error={errors ? errors.password : null}
-                               onChange={(event) => setCurrentPassword(event.target.value)}
-                               type="password"/>
-                        <Input id="newPassword"
-                               labelText={t("newPassword")}
-                               error={errors ? errors.newPassword : null}
-                               onChange={(event) => setNewPassword(event.target.value)}
-                               type="password"/>
-                        <Input id="newPasswordConfirm"
-                               labelText={t("newPasswordConfirm")}
-                               error={passwordConfirmError}
-                               onChange={(event) => setNewPasswordConfirm(event.target.value)}
-                               type="password"/>
-                        {passwordChangeSuccessMessage &&
-                            <Alert styleType="success" center>{passwordChangeSuccessMessage}</Alert>
-                        }
-                        {generalError &&
-                            <Alert styleType="danger" center>{generalError}</Alert>
-                        }
-                    </MDBModalBody>
-                    <MDBModalFooter>
-                        <MDBBtn color="secondary" onClick={onClickPasswordChangeModal}>{t("close")}</MDBBtn>
-                        {!passwordChangeSuccessMessage &&
-                            <MDBBtn color="primary" onClick={onClickPasswordChangeButton}>{t("save")}</MDBBtn>
+                            <MDBBtn color="primary" onClick={onClickEditProfileButton}>{t("save")}</MDBBtn>
                         }
                     </MDBModalFooter>
                 </MDBModal>

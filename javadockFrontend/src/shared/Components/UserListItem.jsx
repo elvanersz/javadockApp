@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {ProfileImage} from "@/shared/components/ProfileImage.jsx";
+import {ProfileImage} from "@/shared/Components/ProfileImage.jsx";
 
 export function UserListItem(props) {
     const {user} = props;

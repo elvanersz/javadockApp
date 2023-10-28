@@ -45,5 +45,6 @@
   "warning": "Warning",
   "sendMail": "Send Mail",
   "resetYourPassword": "Reset your password",
-  "deleteYourAccount": "Delete your account"
+  "deleteYourAccount": "Delete your account",
+  "editProfileImage": "Edit Profile Image"
 }

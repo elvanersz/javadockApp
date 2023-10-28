@@ -1,6 +1,6 @@
 import axios from "axios";
 import i18n from "i18next";
-import {loadToken, storeToken} from "@/shared/state/storage.js";
+import {loadToken, storeToken} from "@/shared/State/storage.js";
 
 const http = axios.create();
 

@@ -1,5 +1,7 @@
 package com.elvan.javadock.requests;
 
+import com.elvan.javadock.entities.Job;
+import com.elvan.javadock.entities.University;
 import com.elvan.javadock.entities.User;
 import com.elvan.javadock.validation.UniqueEmail;
 import com.elvan.javadock.validation.UniqueUsername;
@@ -34,10 +36,14 @@ public record CreateUserRequest(
 ) {
     public User toUser() {
         User user = new User();
+        Job job = new Job(0L);
+        University university = new University(0L);
 
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setUsername(username);
+        user.setJob(job);
+        user.setUniversity(university);
         user.setEmail(email);
         user.setPassword(password);
         return user;

@@ -2,6 +2,7 @@ PROJEDE KULLANILAN KÜTÜPHANELER, FRAMEWORKLER, DİLLER VE TEKNOLOJİLER
 - Java 17
 - Spring Boot
 - Spring Data JPA
+- Spring Security
 - Restful API
 - OpenAPI
 - MYSQL Database

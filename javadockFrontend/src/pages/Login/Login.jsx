@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
-import {Input} from "../../shared/components/Input.jsx";
+import {Input} from "../../shared/Components/Input.jsx";
 import {useTranslation} from "react-i18next";
-import {Alert} from "@/shared/components/Alert.jsx";
-import {Spinner} from "@/shared/components/Spinner.jsx";
+import {Alert} from "@/shared/Components/Alert.jsx";
+import {Spinner} from "@/shared/Components/Spinner.jsx";
 import http from "@/lib/http";
-import {useAuthDispatch} from "@/shared/state/context.jsx";
+import {useAuthDispatch} from "@/shared/State/context.jsx";
 import {Link, useNavigate} from "react-router-dom";
 
 export function Login() {

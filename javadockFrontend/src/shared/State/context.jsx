@@ -1,6 +1,6 @@
 import {createContext, useContext, useEffect} from "react";
 import {useReducer} from "react";
-import {loadAuthState, storeAuthState} from "@/shared/state/storage.js";
+import {loadAuthState, storeAuthState} from "@/shared/State/storage.js";
 import {setToken} from "@/lib/http.js";
 
 export const AuthContext = createContext();

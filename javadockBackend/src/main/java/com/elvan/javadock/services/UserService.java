@@ -8,6 +8,7 @@ import com.elvan.javadock.exceptions.*;
 import com.elvan.javadock.repositories.UserRepository;
 import com.elvan.javadock.requests.PasswordChangeRequest;
 import com.elvan.javadock.requests.UpdateUserRequest;
+import com.elvan.javadock.security.UserDetailsImpl;
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -54,11 +55,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Page<User> getAllUsers(Pageable page, User loggedInUser) {
-        if (loggedInUser == null){
+    public Page<User> getAllUsers(Pageable page, UserDetailsImpl currentUser) {
+        if (currentUser == null){
             return userRepository.findAll(page);
         }
-        return userRepository.findByIdNot(loggedInUser.getId(), page);
+        return userRepository.findByIdNot(currentUser.getId(), page);
     }
 
     public User getUserById(Long id) {
@@ -135,5 +136,8 @@ public class UserService {
 
             userRepository.save(user);
         }
+    }
+
+    public void profileImageChangeById(Long id, PasswordChangeRequest passwordChangeRequest) {
     }
 }

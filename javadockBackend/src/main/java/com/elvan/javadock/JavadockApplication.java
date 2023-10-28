@@ -18,10 +18,10 @@ import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfigurati
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class,
-								ThymeleafAutoConfiguration.class})
+@SpringBootApplication(exclude = {ThymeleafAutoConfiguration.class})
 public class JavadockApplication {
 
 	public static void main(String[] args) {

@@ -1,6 +1,6 @@
 import {Outlet} from "react-router-dom";
-import {NavBar} from "./shared/components/NavBar.jsx";
-import {AuthenticationContext} from "@/shared/state/context.jsx";
+import {NavBar} from "./shared/Components/NavBar.jsx";
+import {AuthenticationContext} from "@/shared/State/context.jsx";
 
 function App() {
     return (

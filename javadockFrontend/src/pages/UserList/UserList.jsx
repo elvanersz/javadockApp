@@ -1,7 +1,7 @@
 import http from "@/lib/http.js";
 import {useCallback, useEffect, useState} from "react";
-import {Spinner} from "@/shared/components/Spinner.jsx";
-import {UserListItem} from "@/shared/components/UserListItem.jsx";
+import {Spinner} from "@/shared/Components/Spinner.jsx";
+import {UserListItem} from "@/shared/Components/UserListItem.jsx";
 import {useTranslation} from "react-i18next";
 
 export function UserList() {

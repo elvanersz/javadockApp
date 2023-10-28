@@ -1,9 +1,9 @@
 import {useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import http from "@/lib/http.js";
-import {Input} from "@/shared/components/Input.jsx";
-import {Alert} from "@/shared/components/Alert.jsx";
-import {Spinner} from "@/shared/components/Spinner.jsx";
+import {Input} from "@/shared/Components/Input.jsx";
+import {Alert} from "@/shared/Components/Alert.jsx";
+import {Spinner} from "@/shared/Components/Spinner.jsx";
 import * as React from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";

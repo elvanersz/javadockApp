@@ -1,8 +1,8 @@
 import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
 import logo from "@/assets/javadock-icon.png";
-import {LanguageSelector} from "@/shared/components/LanguageSelector.jsx";
-import {useAuthDispatch, useAuthState} from "@/shared/state/context.jsx";
+import {LanguageSelector} from "@/shared/Components/LanguageSelector.jsx";
+import {useAuthDispatch, useAuthState} from "@/shared/State/context.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
     faUsers,
@@ -10,7 +10,7 @@ import {
     faFileSignature,
     faRightFromBracket
 } from "@fortawesome/free-solid-svg-icons"
-import {ProfileImage} from "@/shared/components/ProfileImage.jsx";
+import {ProfileImage} from "@/shared/Components/ProfileImage.jsx";
 
 export function NavBar() {
     const {t} = useTranslation();
