@@ -7,10 +7,12 @@ import com.elvan.javadock.enums.Role;
 import com.elvan.javadock.exceptions.*;
 import com.elvan.javadock.repositories.UserRepository;
 import com.elvan.javadock.requests.PasswordChangeRequest;
+import com.elvan.javadock.requests.ProfileImageChangeRequest;
 import com.elvan.javadock.requests.UpdateUserRequest;
 import com.elvan.javadock.security.UserDetailsImpl;
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -138,6 +140,10 @@ public class UserService {
         }
     }
 
-    public void profileImageChangeById(Long id, PasswordChangeRequest passwordChangeRequest) {
+    public void profileImageChangeById(Long id, ProfileImageChangeRequest profileImageChangeRequest) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+        user.setImage(profileImageChangeRequest.image());
+
+        userRepository.save(user);
     }
 }

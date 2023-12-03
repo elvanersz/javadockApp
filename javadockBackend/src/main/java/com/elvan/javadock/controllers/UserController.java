@@ -105,9 +105,9 @@ public class UserController {
     @PatchMapping("/api/v1/profile-image-change/{id}")
     @PreAuthorize("#id == principal.id")
     public GenericMessage profileImageChangeById(@PathVariable Long id,
-                                             @Valid @RequestBody  ){
-        userService.profileImageChangeById(id, passwordChangeRequest);
-        String message = Messages.getMessageForLocale("javadock.password.change.success.message",
+                                                 @Valid @RequestBody ProfileImageChangeRequest profileImageChangeRequest){
+        userService.profileImageChangeById(id, profileImageChangeRequest);
+        String message = Messages.getMessageForLocale("javadock.profile.image.change.success.message",
                 LocaleContextHolder.getLocale());
         return new GenericMessage(message);
     }

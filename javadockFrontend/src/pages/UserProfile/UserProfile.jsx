@@ -171,6 +171,11 @@ export function UserProfile() {
         http.patch(`/api/v1/profile-image-change/${id}`, {
             image: newImage
         }).then((response) => {
+            dispatch({
+                type: "profile-image-success", data: {
+                    image: newImage
+                }
+            })
             setGeneralError()
             setProfileImageChangeSuccessMessage(response.data.message)
         }).catch((error) => {
@@ -215,13 +220,6 @@ export function UserProfile() {
     }
 
 
-    useEffect(() => {
-        setFirstName(authState.firstName)
-        setLastName(authState.lastName)
-        setUsername(authState.username)
-        if (authState.job !== null) setJob(authState.job.jobId)
-        if (authState.university !== null) setUniversity(authState.university.universityId)
-    }, [])
     useEffect(() => {
         async function user() {
             setApiProgress(true)
@@ -293,6 +291,14 @@ export function UserProfile() {
             }
         })
     }, [newPassword])
+    useEffect(() => {
+        setErrors(function (lastErrors) {
+            return {
+                ...lastErrors,
+                image: undefined
+            }
+        })
+    }, [newImage])
 
     return <>
         {user && (
@@ -304,12 +310,12 @@ export function UserProfile() {
                                 <div className="rounded-top text-white d-flex flex-row"
                                      style={{backgroundColor: '#000', height: '200px'}}>
                                     <div className="ms-4 mt-5 d-flex flex-column" style={{width: '150px'}}>
-                                        <Link style={{width: '150px', zIndex: '1'}}>
-                                            <MDBCardImage src={tempImage || defaultProfileImage}
-                                                          onClick={onClickProfileImageChangeModal}
+                                        <Link>
+                                            <MDBCardImage src={tempImage || user.image || defaultProfileImage}
+                                                          onClick={authState.id === user.id ? onClickProfileImageChangeModal : null}
                                                           alt="Generic placeholder image"
-                                                          className="mt-4 mb-2 img-thumbnail" fluid
-                                                          style={{height: '170px'}}/>
+                                                          className="mt-3 mb-2 img-thumbnail" fluid
+                                                          style={{height: '180px', width: "150px"}}/>
                                         </Link>
                                     </div>
                                     <div className="ms-3" style={{marginTop: '130px'}}>
@@ -437,13 +443,17 @@ export function UserProfile() {
                           position="bottom-right">
                     <MDBModalHeader toggle={onClickProfileImageChangeModal}>{t("editProfileImage")}</MDBModalHeader>
                     <MDBModalBody className="text-center">
-                        <MDBCardImage src={tempImage || defaultProfileImage}
+                        <MDBCardImage src={tempImage || user.image || defaultProfileImage}
                                       alt="Generic placeholder image"
                                       className="mb-2 img-thumbnail" fluid
                                       style={{height: '300px', width: '250px'}}/>
-                        <Input type="file" onChange={onClickProfileImage}/>
+                        <Input id="newImage"
+                               type="file"
+                               accept="image/png, image/jpeg"
+                               onChange={onClickProfileImage}
+                               error={errors ? errors.image : null}/>
                         {profileImageChangeSuccessMessage &&
-                            <Alert styleType="success" center>{passwordChangeSuccessMessage}</Alert>
+                            <Alert styleType="success" center>{profileImageChangeSuccessMessage}</Alert>
                         }
                         {generalError &&
                             <Alert styleType="danger" center>{generalError}</Alert>
@@ -452,7 +462,7 @@ export function UserProfile() {
                     <MDBModalFooter>
                         <MDBBtn color="secondary" onClick={onClickProfileImageChangeModal}>{t("close")}</MDBBtn>
                         {!profileImageChangeSuccessMessage &&
-                            <MDBBtn color="primary" onClick={onClickProfileImageChangeModal}>{t("save")}</MDBBtn>
+                            <MDBBtn color="primary" onClick={onClickProfileImageChangeButton}>{t("save")}</MDBBtn>
                         }
                     </MDBModalFooter>
                 </MDBModal>

@@ -68,7 +68,7 @@ export function NavBar() {
                         <ul className="navbar-nav mb-1 px-2 ms-auto">
                             <li className="navbar-nav-item text-center mt-2 mx-3">
                                 <Link className="nav-link" to={`/user/${authState.id}`}>
-                                    <div><ProfileImage width={30} /></div>
+                                    <div><ProfileImage width={40} image={authState.image}/></div>
                                     <div><span>{t("myProfile")}</span></div>
                                 </Link>
                             </li>

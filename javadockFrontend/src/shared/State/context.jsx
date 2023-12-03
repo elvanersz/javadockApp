@@ -35,6 +35,11 @@ const authReducer = (authState, action) => {
                     universityId: action.data.universityId
                 }
             }
+        case "profile-image-success":
+            return {
+                ...authState,
+                image: action.data.image
+            }
         default:
             throw new Error(`unknown action: ${action.type}`)
     }

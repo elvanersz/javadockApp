@@ -55,7 +55,7 @@ public class User {
     @Column(name = "activationToken")
     private String activationToken;
 
-    @Column(name = "image")
+    @Column(name = "image", columnDefinition = "longtext")
     private String image;
 
     @Column(name = "passwordResetToken")
