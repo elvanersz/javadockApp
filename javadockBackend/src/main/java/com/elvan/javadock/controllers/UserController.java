@@ -74,7 +74,6 @@ public class UserController {
     }
 
     @PatchMapping("/api/v1/password-change/{id}")
-    @PreAuthorize("#id == principal.id")
     public GenericMessage passwordChangeById(@PathVariable Long id,
                                              @Valid @RequestBody PasswordChangeRequest passwordChangeRequest){
         userService.passwordChangeById(id, passwordChangeRequest);
@@ -84,7 +83,6 @@ public class UserController {
     }
 
     @DeleteMapping("/api/v1/user/{id}")
-    @PreAuthorize("#id == principal.id")
     public GenericMessage deleteUserById(@PathVariable Long id){
         userService.deleteUserById(id);
         String message = Messages.getMessageForLocale("javadock.delete.user.success.message",
@@ -93,7 +91,6 @@ public class UserController {
     }
 
     @PatchMapping("/api/v1/user/{id}")
-    @PreAuthorize("#id == principal.id")
     public GenericMessage updateUserById(@PathVariable Long id,
                                          @Valid @RequestBody UpdateUserRequest updateUserRequest){
         userService.updateUserById(id, updateUserRequest);
@@ -103,11 +100,18 @@ public class UserController {
     }
 
     @PatchMapping("/api/v1/profile-image-change/{id}")
-    @PreAuthorize("#id == principal.id")
     public GenericMessage profileImageChangeById(@PathVariable Long id,
                                                  @Valid @RequestBody ProfileImageChangeRequest profileImageChangeRequest){
         userService.profileImageChangeById(id, profileImageChangeRequest);
         String message = Messages.getMessageForLocale("javadock.profile.image.change.success.message",
+                LocaleContextHolder.getLocale());
+        return new GenericMessage(message);
+    }
+
+    @PostMapping("/api/v1/account-confirmation")
+    public GenericMessage accountConfirmationByEmail(@RequestBody AccountConfirmationRequest accountConfirmationRequest){
+        userService.accountConfirmationByEmail(accountConfirmationRequest);
+        String message = Messages.getMessageForLocale("javadock.account.confirmation.success.message",
                 LocaleContextHolder.getLocale());
         return new GenericMessage(message);
     }

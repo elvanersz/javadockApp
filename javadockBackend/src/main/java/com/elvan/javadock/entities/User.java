@@ -49,9 +49,6 @@ public class User {
     @Column(name = "createTime")
     private LocalDate createTime = LocalDate.now();
 
-    @Column(name = "isActive")
-    private boolean isActive = false;
-
     @Column(name = "activationToken")
     private String activationToken;
 

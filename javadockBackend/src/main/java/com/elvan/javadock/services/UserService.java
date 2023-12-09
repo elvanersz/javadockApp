@@ -6,6 +6,7 @@ import com.elvan.javadock.entities.User;
 import com.elvan.javadock.enums.Role;
 import com.elvan.javadock.exceptions.*;
 import com.elvan.javadock.repositories.UserRepository;
+import com.elvan.javadock.requests.AccountConfirmationRequest;
 import com.elvan.javadock.requests.PasswordChangeRequest;
 import com.elvan.javadock.requests.ProfileImageChangeRequest;
 import com.elvan.javadock.requests.UpdateUserRequest;
@@ -52,7 +53,6 @@ public class UserService {
             throw new InvalidActivationTokenException();
         }
         user.setRole(Role.User);
-        user.setActive(true);
         user.setActivationToken(null);
         userRepository.save(user);
     }
@@ -145,5 +145,10 @@ public class UserService {
         user.setImage(profileImageChangeRequest.image());
 
         userRepository.save(user);
+    }
+
+    public void accountConfirmationByEmail(AccountConfirmationRequest accountConfirmationRequest) {
+        User user = userRepository.findByEmail(accountConfirmationRequest.email());
+        emailService.sendActivationEmail(user);
     }
 }

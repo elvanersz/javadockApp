@@ -3,7 +3,9 @@ package com.elvan.javadock.auth;
 import com.elvan.javadock.auth.dto.AuthResponse;
 import com.elvan.javadock.auth.dto.Credentials;
 import com.elvan.javadock.entities.User;
+import com.elvan.javadock.enums.Role;
 import com.elvan.javadock.exceptions.AuthenticationException;
+import com.elvan.javadock.exceptions.UnconfirmedAccount;
 import com.elvan.javadock.responses.UserResponse;
 import com.elvan.javadock.services.UserService;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,8 @@ public class AuthService {
             throw new AuthenticationException();
         }else if(!passwordEncoder.matches(credentials.password(), user.getPassword())){
             throw new AuthenticationException();
+        } else if(user.getRole() == Role.Guest ) {
+            throw new UnconfirmedAccount();
         }
 
         Token token = tokenService.createToken(user, credentials);

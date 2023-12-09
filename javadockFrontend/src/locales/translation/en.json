@@ -46,5 +46,6 @@
   "sendMail": "Send Mail",
   "resetYourPassword": "Reset your password",
   "deleteYourAccount": "Delete your account",
-  "editProfileImage": "Edit Profile Image"
+  "editProfileImage": "Edit Profile Image",
+  "sendConfirmationEmail": "Send a confirmation email"
 }

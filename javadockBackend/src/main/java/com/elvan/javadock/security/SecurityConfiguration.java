@@ -12,7 +12,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
 
     private PasswordEncoder passwordEncoder;
@@ -23,7 +22,7 @@ public class SecurityConfiguration {
         //AntPathRequestMatcher ile verilen url secure olurken anyRequest.permitAll ile diğerlerine uygulanmasın.
         httpSecurity.authorizeHttpRequests((authentication) ->
                 authentication.requestMatchers(
-                        AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/v1/user/{id}"))
+                        AntPathRequestMatcher.antMatcher("/api/v1/user/{id}"))
                         .authenticated()
                         .anyRequest()
                         .permitAll()

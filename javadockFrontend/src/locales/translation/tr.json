@@ -46,5 +46,6 @@
   "sendMail": "Mail Gönder",
   "resetYourPassword": "Şifreni sıfırla",
   "deleteYourAccount": "Hesabını sil",
-  "editProfileImage": "Profil Fotoğrafını Düzenle"
+  "editProfileImage": "Profil Fotoğrafını Düzenle",
+  "sendConfirmationEmail": "Doğrulama maili gönder"
 }

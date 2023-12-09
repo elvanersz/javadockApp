@@ -11,7 +11,7 @@ export function Activation() {
     const [errorMessage, setErrorMessage] = useState();
 
     function activateUser(activationToken) {
-        return http.put(`/api/v1/users/${activationToken}/active`)
+        return http.patch(`/api/v1/users/${activationToken}/active`)
     }
 
     useEffect(() => {

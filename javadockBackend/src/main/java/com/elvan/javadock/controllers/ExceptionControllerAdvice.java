@@ -30,7 +30,8 @@ public class ExceptionControllerAdvice {
             EmailNotFoundException.class,
             InvalidPasswordResetTokenException.class,
             PasswordMismatchException.class,
-            UnmodifiedInformationException.class})
+            UnmodifiedInformationException.class,
+            UnconfirmedAccount.class})
     public ResponseEntity<Object> handleException(Exception exception,
                                                   HttpServletRequest request) {
 
@@ -71,6 +72,8 @@ public class ExceptionControllerAdvice {
             errorResponse.setValidationErrors(((PasswordMismatchException) exception).getValidationErrors());
         } else if (exception instanceof UnmodifiedInformationException) {
             errorResponse.setStatusCode(418);
+        } else if (exception instanceof UnconfirmedAccount){
+            errorResponse.setStatusCode(419);
         }
 
         return new ResponseEntity<>(errorResponse, HttpStatusCode.valueOf(errorResponse.getStatusCode()));

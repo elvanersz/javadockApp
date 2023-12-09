@@ -84,7 +84,7 @@ export function UserProfile() {
 
                 setTimeout(() => {
                     navigate('/')
-                }, 4000)
+                }, 3000)
 
             }).catch((error) => {
                 console.log(error)
