@@ -1,8 +1,8 @@
 package com.elvan.javadock.controllers;
 
+import com.elvan.javadock.auth.TokenServiceImpl;
 import com.elvan.javadock.requests.*;
 import com.elvan.javadock.responses.UserResponse;
-import com.elvan.javadock.security.UserDetailsImpl;
 import com.elvan.javadock.services.UserService;
 import com.elvan.javadock.validation.GenericMessage;
 import com.elvan.javadock.validation.Messages;
@@ -13,8 +13,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +21,7 @@ public class UserController {
 
     private UserService userService;
     private MessageSource messageSource;
+    private TokenServiceImpl tokenServiceImpl;
 
 
     @PostMapping("/api/v1/users")
@@ -42,8 +41,8 @@ public class UserController {
     }
 
     @GetMapping("/api/v1/users")
-    public Page<UserResponse> getAllUsers(Pageable page,
-                                          @AuthenticationPrincipal UserDetailsImpl currentUser) {
+    public Page<UserResponse> getAllUsers(Pageable page, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        var currentUser = tokenServiceImpl.verifyToken(authorizationHeader);
         return userService.getAllUsers(page, currentUser).map(UserResponse::new);
     }
 

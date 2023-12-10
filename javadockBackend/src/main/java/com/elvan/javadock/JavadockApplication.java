@@ -21,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 
-@SpringBootApplication(exclude = {ThymeleafAutoConfiguration.class})
+@SpringBootApplication(exclude = {ThymeleafAutoConfiguration.class, SecurityAutoConfiguration.class})
 public class JavadockApplication {
 
 	public static void main(String[] args) {

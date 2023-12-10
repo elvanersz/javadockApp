@@ -10,10 +10,8 @@ import com.elvan.javadock.requests.AccountConfirmationRequest;
 import com.elvan.javadock.requests.PasswordChangeRequest;
 import com.elvan.javadock.requests.ProfileImageChangeRequest;
 import com.elvan.javadock.requests.UpdateUserRequest;
-import com.elvan.javadock.security.UserDetailsImpl;
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -57,7 +55,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Page<User> getAllUsers(Pageable page, UserDetailsImpl currentUser) {
+    public Page<User> getAllUsers(Pageable page, User currentUser) {
         if (currentUser == null){
             return userRepository.findAll(page);
         }
