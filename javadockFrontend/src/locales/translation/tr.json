@@ -47,5 +47,6 @@
   "resetYourPassword": "Şifreni sıfırla",
   "deleteYourAccount": "Hesabını sil",
   "editProfileImage": "Profil Fotoğrafını Düzenle",
-  "sendConfirmationEmail": "Doğrulama maili gönder"
+  "sendConfirmationEmail": "Doğrulama maili gönder",
+  "pleaseSelectImageFile": "Lütfen resim dosyası seçiniz!"
 }

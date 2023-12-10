@@ -47,5 +47,6 @@
   "resetYourPassword": "Reset your password",
   "deleteYourAccount": "Delete your account",
   "editProfileImage": "Edit Profile Image",
-  "sendConfirmationEmail": "Send a confirmation email"
+  "sendConfirmationEmail": "Send a confirmation email",
+  "pleaseSelectImageFile": "Please select image file!"
 }

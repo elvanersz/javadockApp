@@ -155,16 +155,23 @@ export function UserProfile() {
     }
 
     const onClickProfileImage = (event) => {
-        if (event.target.files.length < 1) return;
-        const file = event.target.files[0]
-        const fileReader = new FileReader();
+        const valid_extensions = /(\.jpg|\.jpeg|\.png|\.PNG|\.JPEG|\.JPG)$/i;
 
-        fileReader.onloadend = () => {
-            const data = fileReader.result
-            setNewImage(data);
-            setTempImage(data)
+        //Resim dosyası olup olmadığı kontrol edilir.
+        if (valid_extensions.test(event.target.files[0].name)){
+            if (event.target.files.length < 1) return;
+            const file = event.target.files[0]
+            const fileReader = new FileReader();
+
+            fileReader.onloadend = () => {
+                const data = fileReader.result
+                setNewImage(data);
+                setTempImage(data)
+            }
+            fileReader.readAsDataURL(file);
+        } else {
+            setGeneralError(t("pleaseSelectImageFile"))
         }
-        fileReader.readAsDataURL(file);
     }
 
     function onClickProfileImageChangeButton() {
