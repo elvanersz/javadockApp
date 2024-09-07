@@ -35,14 +35,14 @@ export function PasswordReset() {
     }
 
     function passwordReset(passwordResetToken) {
-        return http.patch(`/api/v1/password-reset/${passwordResetToken}`)
+        return http.patch(`/api/v1/users/password-reset/${passwordResetToken}`)
     }
 
     const onSubmit = async (event) => {
         event.preventDefault();
         setApiProgress(true);
 
-        await axios.patch(`/api/v1/password-reset/${passwordResetToken}`, {
+        await axios.patch(`/api/v1/users/password-reset/${passwordResetToken}`, {
             password: newPassword
         })
             .then((response) => {

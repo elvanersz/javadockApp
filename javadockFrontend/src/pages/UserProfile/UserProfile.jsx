@@ -65,7 +65,7 @@ export function UserProfile() {
     }, [newPassword, newPasswordConfirm]);
 
     function getUser(id) {
-        return http.get(`/api/v1/user/${id}`)
+        return http.get(`/api/v1/users/${id}`)
     }
 
 
@@ -76,7 +76,7 @@ export function UserProfile() {
     }
 
     function onClickDeleteUserButton() {
-        http.delete(`/api/v1/user/${id}`)
+        http.delete(`/api/v1/users/${id}`)
             .then((response) => {
                 setGeneralError()
                 setDeleteUserSuccessMessage(response.data.message)
@@ -109,12 +109,12 @@ export function UserProfile() {
     }
 
     function onClickEditProfileButton() {
-        http.patch(`/api/v1/user/${id}`, {
+        http.patch(`/api/v1/users/${id}`, {
             firstName: firstName,
             lastName: lastName,
             username: username,
-            jobId: job,
-            universityId: university
+            jobId: job ? job : null,
+            universityId: university ? university : null
         }).then((response) => {
             dispatch({
                 type: "edit-profile-success", data: {
@@ -175,7 +175,7 @@ export function UserProfile() {
     }
 
     function onClickProfileImageChangeButton() {
-        http.patch(`/api/v1/profile-image-change/${id}`, {
+        http.patch(`/api/v1/users/profile-image-change/${id}`, {
             image: newImage
         }).then((response) => {
             dispatch({
@@ -207,7 +207,7 @@ export function UserProfile() {
     }
 
     function onClickPasswordChangeButton() {
-        http.patch(`/api/v1/password-change/${id}`, {
+        http.patch(`/api/v1/users/password-change/${id}`, {
             password: currentPassword,
             newPassword: newPassword
         }).then((response) => {
@@ -355,7 +355,7 @@ export function UserProfile() {
                                     <div className="d-flex justify-content-end text-center py-1">
                                         <div>
                                             <MDBCardText className="small text-muted mb-0">{t("post")}</MDBCardText>
-                                            <MDBCardText className="mb-1 h5">null</MDBCardText>
+                                            <MDBCardText className="mb-1 h5">{user.postList.length}</MDBCardText>
                                         </div>
                                         <div className="px-3">
                                             <MDBCardText

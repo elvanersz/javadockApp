@@ -48,5 +48,7 @@
   "deleteYourAccount": "Hesabını sil",
   "editProfileImage": "Profil Fotoğrafını Düzenle",
   "sendConfirmationEmail": "Doğrulama maili gönder",
-  "pleaseSelectImageFile": "Lütfen resim dosyası seçiniz!"
+  "pleaseSelectImageFile": "Lütfen resim dosyası seçiniz!",
+  "showLess": "Daha Az göster",
+  "readMore": "Devamını Oku"
 }

@@ -48,5 +48,7 @@
   "deleteYourAccount": "Delete your account",
   "editProfileImage": "Edit Profile Image",
   "sendConfirmationEmail": "Send a confirmation email",
-  "pleaseSelectImageFile": "Please select image file!"
+  "pleaseSelectImageFile": "Please select image file!",
+  "showLess": "Show Less",
+  "readMore": "Read More"
 }

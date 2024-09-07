@@ -19,7 +19,7 @@ export function RequestPasswordReset() {
         setGeneralError();
         setApiProgress(true);
 
-        await http.post(`/api/v1/request-password-reset`, {email: email})
+        await http.post(`/api/v1/users/request-password-reset`, {email: email})
             .then((response) => {
                 setApiProgress(false);
                 setSuccessMessage(response.data.message)

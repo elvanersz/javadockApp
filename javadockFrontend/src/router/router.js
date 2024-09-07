@@ -8,6 +8,8 @@ import {UserList} from "@/pages/UserList/UserList.jsx";
 import {UserProfile} from "@/pages/UserProfile/UserProfile.jsx";
 import {RequestPasswordReset} from "@/pages/PasswordReset/RequestPasswordReset.jsx";
 import {PasswordReset} from "@/pages/PasswordReset/PasswordReset.jsx";
+import { PostList } from "../pages/PostList/PostList";
+import { PostDetail } from "../pages/PostDetail/PostDetail";
 
 export default createBrowserRouter([
     {
@@ -36,7 +38,7 @@ export default createBrowserRouter([
                 Component: UserList
             },
             {
-                path: "/user/:id",
+                path: "/users/:id",
                 Component: UserProfile
             },
             {
@@ -46,6 +48,14 @@ export default createBrowserRouter([
             {
                 path: "/password-reset/:passwordResetToken",
                 Component: PasswordReset
+            },
+            {
+                path: "/posts",
+                Component: PostList
+            },
+            {
+                path: "/posts/:id",
+                Component: PostDetail
             }
         ]
     }

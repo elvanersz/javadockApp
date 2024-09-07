@@ -24,7 +24,7 @@ export function Login() {
         setMailProgress(true);
         setUnconfirmedAccountError()
 
-        await http.post('/api/v1/account-confirmation', {
+        await http.post('/api/v1/users/account-confirmation', {
             email: email
         }).then((response) => {
             setMailProgress(false);

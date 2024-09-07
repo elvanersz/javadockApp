@@ -8,7 +8,8 @@ import {
     faUsers,
     faRightToBracket,
     faFileSignature,
-    faRightFromBracket
+    faRightFromBracket,
+    faList
 } from "@fortawesome/free-solid-svg-icons"
 import {ProfileImage} from "@/shared/Components/ProfileImage.jsx";
 
@@ -27,6 +28,14 @@ export function NavBar() {
                 <Link className="navbar-brand" to="/">
                     <img src={logo} width={80}/>
                 </Link>
+                <ul className="navbar-nav mb-1 px-2 ms-auto">
+                    <li className="navbar-nav-item text-center mt-2 mx-3">
+                        <Link className="nav-link" to="posts">
+                        <div><FontAwesomeIcon icon={faList} size="xl"/></div>
+                            <span>{t("posts")}</span>
+                        </Link>
+                    </li>
+                </ul>
                 <ul className="navbar-nav mb-1 px-2 ms-auto">
                     <li className="navbar-nav-item text-center mt-2 mx-3">
                         <Link className="nav-link" to="users">
@@ -67,7 +76,7 @@ export function NavBar() {
                         </ul>
                         <ul className="navbar-nav mb-1 px-2 ms-auto">
                             <li className="navbar-nav-item text-center mt-2 mx-3">
-                                <Link className="nav-link" to={`/user/${authState.id}`}>
+                                <Link className="nav-link" to={`/users/${authState.id}`}>
                                     <div><ProfileImage width={40} image={authState.image}/></div>
                                     <div><span>{t("myProfile")}</span></div>
                                 </Link>
