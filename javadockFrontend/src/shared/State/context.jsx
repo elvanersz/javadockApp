@@ -28,12 +28,8 @@ const authReducer = (authState, action) => {
                 firstName: action.data.firstName,
                 lastName: action.data.lastName,
                 username: action.data.username,
-                job: {
-                    jobId: action.data.jobId
-                },
-                university: {
-                    universityId: action.data.universityId
-                }
+                job: action.data.job,
+                university: action.data.university,
             }
         case "profile-image-success":
             return {

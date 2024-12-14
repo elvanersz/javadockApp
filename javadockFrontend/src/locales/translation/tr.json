@@ -50,5 +50,11 @@
   "sendConfirmationEmail": "Doğrulama maili gönder",
   "pleaseSelectImageFile": "Lütfen resim dosyası seçiniz!",
   "showLess": "Daha Az göster",
-  "readMore": "Devamını Oku"
+  "readMore": "Devamını Oku",
+  "addNewPost": "Yeni Gönderi Ekle",
+  "header": "Başlık",
+  "content": "İçerik",
+  "postDeleteWarning": "Eğer gönderi silinirse, geri getirilemez!",
+  "noPostsYet" : "Henüz Gönderi Yok",
+  "writeSomething": "Bir yorum ekle..."
 }

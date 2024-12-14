@@ -2,7 +2,6 @@ package com.javadock.services;
 
 import com.javadock.configurations.EmailConfiguration;
 import com.javadock.entities.User;
-import com.javadock.exceptions.ActivationNotificationException;
 import com.javadock.exceptions.BusinessException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;

@@ -1,26 +1,41 @@
+import * as React from 'react';
 import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
 import logo from "@/assets/javadock-icon.png";
 import {LanguageSelector} from "@/shared/Components/LanguageSelector.jsx";
 import {useAuthDispatch, useAuthState} from "@/shared/State/context.jsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useNavigate} from "react-router-dom";
 import {
-    faUsers,
-    faRightToBracket,
-    faFileSignature,
-    faRightFromBracket,
-    faList
-} from "@fortawesome/free-solid-svg-icons"
-import {ProfileImage} from "@/shared/Components/ProfileImage.jsx";
+    Box,
+    IconButton,
+    Typography,
+    Menu,
+    Avatar,
+    Tooltip,
+    MenuItem,
+    Button,
+} from '@mui/material';
+
 
 export function NavBar() {
     const {t} = useTranslation();
     const authState = useAuthState();
     const dispatch = useAuthDispatch();
+    const navigate = useNavigate();
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
 
     const onClickLogout = () => {
         dispatch({type: "logout-success"})
     }
+
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
+
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
+
 
     return (
         <nav className="navbar navbar-expand-lg p-0">
@@ -28,64 +43,156 @@ export function NavBar() {
                 <Link className="navbar-brand" to="/">
                     <img src={logo} width={80}/>
                 </Link>
-                <ul className="navbar-nav mb-1 px-2 ms-auto">
-                    <li className="navbar-nav-item text-center mt-2 mx-3">
-                        <Link className="nav-link" to="posts">
-                        <div><FontAwesomeIcon icon={faList} size="xl"/></div>
-                            <span>{t("posts")}</span>
-                        </Link>
-                    </li>
-                </ul>
-                <ul className="navbar-nav mb-1 px-2 ms-auto">
-                    <li className="navbar-nav-item text-center mt-2 mx-3">
-                        <Link className="nav-link" to="users">
-                            <div><FontAwesomeIcon icon={faUsers} size="lg"/></div>
-                            <span>{t("users")}</span>
-                        </Link>
-                    </li>
-                </ul>
-                {authState.id === 0 &&
-                    <>
-                        <ul className="navbar-nav mb-1 px-2 ms-auto">
-                            <li className="navbar-nav-item text-center mt-2 mx-3">
-                                <Link className="nav-link" to="login">
-                                    <div><FontAwesomeIcon icon={faRightToBracket} size="lg"/></div>
-                                    <span>{t("login")}</span>
-                                </Link>
-                            </li>
-                        </ul>
-                        <ul className="navbar-nav mb-1 px-2 ms-auto">
-                            <li className="navbar-nav-item text-center mt-2 mx-3">
-                                <Link className="nav-link" to="register">
-                                    <div><FontAwesomeIcon icon={faFileSignature} size="lg"/></div>
-                                    <span>{t("register")}</span>
-                                </Link>
-                            </li>
-                        </ul>
-                    </>
-                }
+                <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
+                    {authState.id > 1 && (
+                        <Tooltip title={t("posts")}>
+                        <Button
+                            component={Link}
+                            to="posts"
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                textTransform: 'none',
+                                color: 'black',
+                                backgroundColor: 'transparent',
+                                '&:hover': { backgroundColor: 'rgba(128, 128, 128, 0.1)' },
+                                mx: 1,
+                            }}
+                        >
+                            <Typography variant="h6" fontWeight="bold">
+                                {t("posts")}
+                            </Typography>
+                        </Button>
+                        </Tooltip>
+                    )}
+                    {authState.id === 0 && (
+                        <Tooltip title={t("posts")}>
+                        <Button
+                            component={Link}
+                            to="login"
+                            sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            textTransform: 'none',
+                            color: 'black',
+                            backgroundColor: 'transparent',
+                            '&:hover': { backgroundColor: 'rgba(128, 128, 128, 0.1)' },
+                            mx: 1,
+                            }}
+                        >
+                            <Typography variant="h6" fontWeight="bold">
+                                {t("posts")}
+                            </Typography>
+                        </Button>
+                        </Tooltip>
+                    )}
+                </Box>
+                <Box sx={{ flexGrow: 0, mr: 'auto', display: 'flex', alignItems: 'center' }}>
+                    {authState.id > 1 && (
+                        <Tooltip title={t("users")}>
+                        <Button
+                            component={Link}
+                            to="users"
+                            sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            textTransform: 'none',
+                            color: 'black',
+                            backgroundColor: 'transparent',
+                            '&:hover': { backgroundColor: 'rgba(128, 128, 128, 0.1)' },
+                            mx: 1,
+                            }}
+                        >
+                            <Typography variant="h6" fontWeight="bold">
+                                {t("users")}
+                            </Typography>
+                        </Button>
+                        </Tooltip>
+                    )}
+                    {authState.id === 0 && (
+                        <Tooltip title={t("users")}>
+                        <Button
+                            component={Link}
+                            to="login"
+                            sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            textTransform: 'none',
+                            color: 'black',
+                            backgroundColor: 'transparent',
+                            '&:hover': { backgroundColor: 'rgba(128, 128, 128, 0.1)' },
+                            mx: 1,
+                            }}
+                        >
+                            <Typography variant="h6" fontWeight="bold">
+                                {t("users")}
+                            </Typography>
+                        </Button>
+                        </Tooltip>
+                    )}
+                </Box>
+                {authState.id === 0 && (
+                    <Box sx={{ flexGrow: 0, ml: 'auto' }}>
+                        <Tooltip title={t("login")}>
+                        <Button
+                            component={Link}
+                            to="login"
+                            sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textTransform: 'none', color: 'black' }}
+                        >
+                            <Typography variant="h6" fontWeight="bold">
+                                {t("login")}
+                            </Typography>
+                        </Button>
+                        </Tooltip>
+                    </Box>
+                    )}
                 {authState.id > 0 &&
-                    <>
-                        <ul className="navbar-nav mb-1 px-2 ms-auto">
-                            <li className="navbar-nav-item text-center mt-2">
-                                <Link onClick={onClickLogout} className="nav-link">
-                                    <div><FontAwesomeIcon icon={faRightFromBracket} size="lg"/></div>
-                                    <span className="nav-link p-0">{t("logout")}</span>
-                                </Link>
-                            </li>
-                        </ul>
-                        <ul className="navbar-nav mb-1 px-2 ms-auto">
-                            <li className="navbar-nav-item text-center mt-2 mx-3">
-                                <Link className="nav-link" to={`/users/${authState.id}`}>
-                                    <div><ProfileImage width={40} image={authState.image}/></div>
-                                    <div><span>{t("myProfile")}</span></div>
-                                </Link>
-                            </li>
-                        </ul>
-                    </>
+                    <Box sx={{ flexGrow: 0 }}>
+                        <Tooltip title="Open settings">
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                <Avatar alt="User Avatar" src={authState.image} />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            sx={{ mt: '45px' }}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            <MenuItem onClick={() => {
+                                handleCloseUserMenu();
+                                navigate(`/users/${authState.id}`);
+                            }}>
+                                <Typography sx={{ textAlign: 'center' }}>{t("myProfile")}</Typography>
+                            </MenuItem>
+                            <MenuItem onClick={() => {
+                                handleCloseUserMenu();
+                                onClickLogout();
+                                setTimeout(() => {
+                                    navigate('login')
+                                }, 1000)
+                            }}>
+                                <Typography sx={{ textAlign: 'center' }}>{t("logout")}</Typography>
+                            </MenuItem>
+                        </Menu>
+                    </Box>
                 }
                 <ul className="navbar-nav">
-                    <li className="navbar-nav-item mb-2">
+                    <li className="navbar-nav-item mb-2" style={{ marginLeft: '10px', marginTop: '5px' }}>
                         <LanguageSelector/>
                     </li>
                 </ul>

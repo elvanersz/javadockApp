@@ -1,10 +1,9 @@
 package com.javadock.services;
 
-import com.javadock.entities.Job;
-import com.javadock.entities.University;
 import com.javadock.entities.User;
 import com.javadock.enums.Role;
 import com.javadock.exceptions.*;
+import com.javadock.repositories.PostRepository;
 import com.javadock.repositories.UserRepository;
 import com.javadock.requests.AccountConfirmationRequest;
 import com.javadock.requests.PasswordChangeRequest;
@@ -30,6 +29,7 @@ public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     private UserRepository userRepository;
+    private PostRepository postRepository;
     private PasswordEncoder passwordEncoder;
     private EmailService emailService;
 
@@ -58,9 +58,9 @@ public class UserService {
 
     public Page<User> getAllUsers(Pageable page, User currentUser) {
         if (currentUser == null){
-            return userRepository.findAll(page);
+            return userRepository.findByIsDeleteFalse(page);
         }
-        return userRepository.findByIdNot(currentUser.getId(), page);
+        return userRepository.findByIdNotAndIsDelete(currentUser.getId(), false, page);
     }
 
     public User getUserById(Long id) {
@@ -111,7 +111,12 @@ public class UserService {
     }
 
     public void deleteUserById(Long id){
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("javadock.user.not.found", Collections.singletonList(id)));
+        user.setDelete(true);
+        user.getPostList().forEach(post -> post.setDelete(true));
+        userRepository.save(user);
+        postRepository.saveAll(user.getPostList());
     }
 
     public void updateUserById(Long id, UpdateUserRequest updateUserRequest) {
@@ -122,19 +127,8 @@ public class UserService {
         user.setFirstName(updateUserRequest.firstName());
         user.setLastName(updateUserRequest.lastName());
         user.setUsername(updateUserRequest.username());
-
-        if (updateUserRequest.jobId() != null) {
-            Job job = new Job(updateUserRequest.jobId());
-            user.setJob(job);
-        } else {
-            user.setJob(null);
-        }
-        if (updateUserRequest.universityId() != null) {
-            University university = new University(updateUserRequest.universityId());
-            user.setUniversity(university);
-        } else {
-            user.setUniversity(null);
-        }
+        user.setJob(updateUserRequest.job());
+        user.setUniversity(updateUserRequest.university());
 
         userRepository.save(user);
     }

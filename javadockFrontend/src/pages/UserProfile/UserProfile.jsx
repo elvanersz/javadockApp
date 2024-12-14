@@ -1,6 +1,5 @@
 import http from "@/lib/http.js";
 import {Link, useNavigate, useParams} from "react-router-dom";
-import * as React from "react";
 import {useEffect, useMemo, useState,} from "react";
 import {Alert} from "@/shared/Components/Alert.jsx";
 import {Spinner} from "@/shared/Components/Spinner.jsx";
@@ -17,13 +16,15 @@ import {
     MDBCard
 } from 'mdb-react-ui-kit';
 import {useAuthDispatch, useAuthState} from "@/shared/State/context.jsx";
-import {MDBBtn, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
-import {Input} from "@/shared/Components/Input.jsx";
-import {JobSelector} from "@/shared/Components/JobSelector.jsx";
-import {UniversitySelector} from "@/shared/Components/UniversitySelector.jsx";
+import {MDBBtn} from "mdbreact";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPen, faLock, faTrashCan} from "@fortawesome/free-solid-svg-icons"
-import {ProfileImage} from "@/shared/Components/ProfileImage.jsx";
+import {faPen, faLock, faTrashCan, faPlus} from "@fortawesome/free-solid-svg-icons"
+import { PostListItem } from "../../shared/Components/PostListItem";
+import { AddNewPostModal } from "@/shared/Components/AddNewPostModal.jsx";
+import { PasswordChangeModal } from "@/shared/Components/PasswordChangeModal.jsx";
+import { EditProfileModal } from "@/shared/Components/EditProfileModal.jsx";
+import { DeleteUserModal } from "@/shared/Components/DeleteUserModal.jsx";
+import { ProfileImageChangeModal } from "@/shared/Components/ProfileImageChangeModal.jsx";
 
 export function UserProfile() {
     const {id} = useParams();
@@ -55,6 +56,10 @@ export function UserProfile() {
     const [passwordChangeSuccessMessage, setPasswordChangeSuccessMessage] = useState();
     const [editProfileSuccessMessage, setEditProfileSuccessMessage] = useState();
     const [editProfileWarningMessage, setEditProfileWarningMessage] = useState();
+    const [postHeader, setPostHeader] = useState('');
+    const [postContent, setPostContent] = useState('');
+    const [addNewPostMode, setAddNewPostMode] = useState(false);
+    const [addNewPostSuccessMessage, setAddNewPostSuccessMessage] = useState(null);
 
     const passwordConfirmError = useMemo(() => {
         if (newPassword && newPassword !== newPasswordConfirm) {
@@ -67,7 +72,6 @@ export function UserProfile() {
     function getUser(id) {
         return http.get(`/api/v1/users/${id}`)
     }
-
 
     function onClickDeleteUserModal() {
         setDeleteUserMode(!deleteUserMode);
@@ -93,7 +97,6 @@ export function UserProfile() {
         )
     }
 
-
     function onClickEditProfileModal() {
         setEditProfileMode(!editProfileMode);
         setEditProfileSuccessMessage();
@@ -104,8 +107,8 @@ export function UserProfile() {
         setFirstName(authState.firstName)
         setLastName(authState.lastName)
         setUsername(authState.username)
-        if (authState.job !== null) setJob(authState.job.jobId)
-        if (authState.university !== null) setUniversity(authState.university.universityId)
+        setJob(authState.job)
+        setUniversity(authState.university)
     }
 
     function onClickEditProfileButton() {
@@ -113,21 +116,24 @@ export function UserProfile() {
             firstName: firstName,
             lastName: lastName,
             username: username,
-            jobId: job ? job : null,
-            universityId: university ? university : null
+            job: job,
+            university: university
         }).then((response) => {
             dispatch({
                 type: "edit-profile-success", data: {
                     firstName: firstName,
                     lastName: lastName,
                     username: username,
-                    jobId: job,
-                    universityId: university
+                    job: job,
+                    university: university
                 }
             })
             setEditProfileWarningMessage()
             setGeneralError()
             setEditProfileSuccessMessage(response.data.message)
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         }).catch((error) => {
             setEditProfileWarningMessage()
             if (error.response?.data) {
@@ -185,6 +191,9 @@ export function UserProfile() {
             })
             setGeneralError()
             setProfileImageChangeSuccessMessage(response.data.message)
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         }).catch((error) => {
             if (error.response?.data) {
                 if (error.response.data.statusCode === 400) {
@@ -213,6 +222,9 @@ export function UserProfile() {
         }).then((response) => {
             setGeneralError()
             setPasswordChangeSuccessMessage(response.data.message)
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         }).catch((error) => {
             if (error.response?.data) {
                 if (error.response.data.statusCode === 400) {
@@ -226,15 +238,48 @@ export function UserProfile() {
         })
     }
 
+    function onClickAddNewPostModal() {
+        setAddNewPostMode(!addNewPostMode);
+        setAddNewPostSuccessMessage(null);
+        setGeneralError(null);
+        setPostHeader('');
+        setPostContent('');
+        setErrors({});
+    }
+
+    function onClickAddNewPostButton() {
+        http.post(`/api/v1/posts`, {
+            userId: authState.id,
+            header: postHeader,
+            content: postContent
+        }).then((response) => {
+            setGeneralError(null);
+            setAddNewPostSuccessMessage(response.data.message);
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
+        }).catch((error) => {
+            if (error.response?.data) {
+                if (error.response.data.statusCode === 400) {
+                    setErrors(error.response.data.validationErrors);
+                } else {
+                    setGeneralError(error.response.data.message);
+                }
+            } else {
+                setGeneralError(t("generalErrorMessage"));
+            }
+        });
+    }
+
 
     useEffect(() => {
         async function user() {
             setApiProgress(true)
             try {
-                const response = await getUser(id);
-                setUser(response.data)
+                const userResponse = await getUser(id);
+                setUser(userResponse.data)
             } catch (error) {
-                setErrorMessage(error.response.data.message)
+                setErrorMessage(error.userResponse.data.message)
             } finally {
                 setApiProgress(false);
             }
@@ -242,70 +287,19 @@ export function UserProfile() {
 
         user()
     }, [id])
+
     useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                firstName: undefined
-            }
-        })
-    }, [firstName])
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                lastName: undefined
-            }
-        })
-    }, [lastName])
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                username: undefined
-            }
-        })
-    }, [username])
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                jobId: undefined
-            }
-        })
-    }, [job])
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                universityId: undefined
-            }
-        })
-    }, [university])
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                password: undefined
-            }
-        })
-    }, [currentPassword])
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                newPassword: undefined
-            }
-        })
-    }, [newPassword])
-    useEffect(() => {
-        setErrors(function (lastErrors) {
-            return {
-                ...lastErrors,
-                image: undefined
-            }
-        })
-    }, [newImage])
+        const fields = { firstName, lastName, username, job, university, currentPassword, newPassword, newImage };
+        setErrors((lastErrors) => {
+            const updatedErrors = { ...lastErrors };
+            Object.keys(fields).forEach((key) => {
+                if (fields[key] !== undefined) {
+                    updatedErrors[key] = undefined;
+                }
+            });
+            return updatedErrors;
+        });
+    }, [firstName, lastName, username, job, university, currentPassword, newPassword, newImage]);
 
     return <>
         {user && (
@@ -327,7 +321,7 @@ export function UserProfile() {
                                     </div>
                                     <div className="ms-3" style={{marginTop: '130px'}}>
                                         <MDBTypography tag="h5"><b>{user.username}</b></MDBTypography>
-                                        {user.job !== null && (<MDBCardText>{user.job.jobName}</MDBCardText>)}
+                                        {user.job !== null && (<MDBCardText>{user.job}</MDBCardText>)}
                                     </div>
                                     <div className="position-absolute end-0 mx-3" style={{marginTop: '155px'}}>
                                         {authState.id === user.id &&
@@ -378,28 +372,29 @@ export function UserProfile() {
                                             <MDBCardText
                                                 className="mb-1">{t("email") + ": " + user.email}
                                             </MDBCardText>
-                                            {user.university && user.university?.universityName !== null && (
+                                            {user.university && user.university?.university !== null && (
                                                 <MDBCardText className="mb-1">
-                                                    {t("university") + ": " + user.university.universityName}
+                                                    {t("university") + ": " + user.university}
                                                 </MDBCardText>
                                             )}
                                         </div>
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center mb-4">
-                                        <MDBCardText className="lead fw-normal mb-0">{t("posts")}</MDBCardText>
+                                    <MDBCardText className="lead fw-normal mb-0">
+                                        {user.postList.length > 0 ? t("posts") : t("noPostsYet")}
+                                    </MDBCardText>
+                                    {authState.id === user.id &&
+                                        <MDBBtn outline color="black" style={{ width: "180px", height: "40px" }} onClick={onClickAddNewPostModal}>
+                                            <FontAwesomeIcon icon={faPlus} style={{ marginRight: "10px" }} />
+                                            {t("addNewPost")}
+                                        </MDBBtn>
+                                    }
                                     </div>
-                                    <MDBRow className="g-2">
-                                        <MDBCol className="mb-2">
-                                            <MDBCardImage
-                                                src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(108).webp"
-                                                alt="image 1" className="w-100 rounded-3"/>
-                                        </MDBCol>
-                                        <MDBCol className="mb-2">
-                                            <MDBCardImage
-                                                src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(114).webp"
-                                                alt="image 1" className="w-100 rounded-3"/>
-                                        </MDBCol>
-                                    </MDBRow>
+                                    <ul className="list-group list-group-flush">
+                                        {user.postList.map(post => {
+                                            return <PostListItem key={post.id} post={post}/>
+                                        })}
+                                    </ul>
                                 </MDBCardBody>
                             </MDBCard>
                         </MDBCol>
@@ -408,150 +403,72 @@ export function UserProfile() {
 
             </div>
         )}
-        {passwordChangeMode && (
-            <MDBContainer>
-                <MDBModal isOpen={passwordChangeMode} toggle={onClickPasswordChangeModal} side position="bottom-right">
-                    <MDBModalHeader toggle={onClickPasswordChangeModal}>{t("updatePassword")}</MDBModalHeader>
-                    <MDBModalBody>
-                        <Input id="currentPassword"
-                               labelText={t("currentPassword")}
-                               error={errors ? errors.password : null}
-                               onChange={(event) => setCurrentPassword(event.target.value)}
-                               type="password"/>
-                        <Input id="newPassword"
-                               labelText={t("newPassword")}
-                               error={errors ? errors.newPassword : null}
-                               onChange={(event) => setNewPassword(event.target.value)}
-                               type="password"/>
-                        <Input id="newPasswordConfirm"
-                               labelText={t("newPasswordConfirm")}
-                               error={passwordConfirmError}
-                               onChange={(event) => setNewPasswordConfirm(event.target.value)}
-                               type="password"/>
-                        {passwordChangeSuccessMessage &&
-                            <Alert styleType="success" center>{passwordChangeSuccessMessage}</Alert>
-                        }
-                        {generalError &&
-                            <Alert styleType="danger" center>{generalError}</Alert>
-                        }
-                    </MDBModalBody>
-                    <MDBModalFooter>
-                        <MDBBtn color="secondary" onClick={onClickPasswordChangeModal}>{t("close")}</MDBBtn>
-                        {!passwordChangeSuccessMessage &&
-                            <MDBBtn color="primary" onClick={onClickPasswordChangeButton}>{t("save")}</MDBBtn>
-                        }
-                    </MDBModalFooter>
-                </MDBModal>
-            </MDBContainer>
-        )}
-        {profileImageChangeMode && (
-            <MDBContainer>
-                <MDBModal isOpen={profileImageChangeMode} toggle={onClickProfileImageChangeModal} side
-                          position="bottom-right">
-                    <MDBModalHeader toggle={onClickProfileImageChangeModal}>{t("editProfileImage")}</MDBModalHeader>
-                    <MDBModalBody className="text-center">
-                        <MDBCardImage src={tempImage || user.image || defaultProfileImage}
-                                      alt="Generic placeholder image"
-                                      className="mb-2 img-thumbnail" fluid
-                                      style={{height: '300px', width: '250px'}}/>
-                        <Input id="newImage"
-                               type="file"
-                               accept="image/png, image/jpeg"
-                               onChange={onClickProfileImage}
-                               error={errors ? errors.image : null}/>
-                        {profileImageChangeSuccessMessage &&
-                            <Alert styleType="success" center>{profileImageChangeSuccessMessage}</Alert>
-                        }
-                        {generalError &&
-                            <Alert styleType="danger" center>{generalError}</Alert>
-                        }
-                    </MDBModalBody>
-                    <MDBModalFooter>
-                        <MDBBtn color="secondary" onClick={onClickProfileImageChangeModal}>{t("close")}</MDBBtn>
-                        {!profileImageChangeSuccessMessage &&
-                            <MDBBtn color="primary" onClick={onClickProfileImageChangeButton}>{t("save")}</MDBBtn>
-                        }
-                    </MDBModalFooter>
-                </MDBModal>
-            </MDBContainer>
-        )}
-        {editProfileMode && (
-            <MDBContainer>
-                <MDBModal isOpen={editProfileMode} toggle={onClickEditProfileModal} side position="bottom-right">
-                    <MDBModalHeader toggle={onClickEditProfileModal}>{t("editProfile")}</MDBModalHeader>
-                    <MDBModalBody>
-                        <Input id="firstName"
-                               defaultValue={user.firstName}
-                               labelText={t("firstName")}
-                               error={errors ? errors.firstName : null}
-                               onChange={(event) => setFirstName(event.target.value)}/>
-                        <Input id="lastName"
-                               defaultValue={user.lastName}
-                               labelText={t("lastName")}
-                               error={errors ? errors.lastName : null}
-                               onChange={(event) => setLastName(event.target.value)}/>
-                        <Input id="username"
-                               defaultValue={user.username}
-                               labelText={t("username")}
-                               error={errors ? errors.username : null}
-                               onChange={(event) => setUsername(event.target.value)}/>
-                        <JobSelector id="job"
-                                     defaultValue={job ? job : ""}
-                                     labelText={t("job")}
-                                     onChange={(event) => setJob(event.target.value)}/>
-                        <UniversitySelector id="university"
-                                            defaultValue={university ? university : ""}
-                                            labelText={t("university")}
-                                            onChange={(event) => setUniversity(event.target.value)}/>
-                        {editProfileSuccessMessage &&
-                            <Alert styleType="success" center>{editProfileSuccessMessage}</Alert>
-                        }
-                        {editProfileWarningMessage &&
-                            <Alert styleType="warning" center>{editProfileWarningMessage}</Alert>
-                        }
-                        {generalError &&
-                            <Alert styleType="danger" center>{generalError}</Alert>
-                        }
-                    </MDBModalBody>
-                    <MDBModalFooter>
-                        <MDBBtn color="secondary" onClick={onClickEditProfileModal}>{t("close")}</MDBBtn>
-                        {!editProfileSuccessMessage &&
-                            <MDBBtn color="primary" onClick={onClickEditProfileButton}>{t("save")}</MDBBtn>
-                        }
-                    </MDBModalFooter>
-                </MDBModal>
-            </MDBContainer>
-        )}
-        {deleteUserMode && (
-            <MDBContainer>
-                <MDBModal isOpen={deleteUserMode} toggle={onClickDeleteUserModal} side position="bottom-right">
-                    <MDBModalHeader toggle={onClickDeleteUserModal}>{t("deleteYourAccount")}</MDBModalHeader>
-                    <MDBModalBody>
-                        <Input id="username"
-                               disabled={true}
-                               defaultValue={user.username}
-                               labelText={t("username")}/>
-                        <Input id="email"
-                               disabled={true}
-                               labelText={t("email")}
-                               defaultValue={user.email}/>
-                        {!deleteUserSuccessMessage ?
-                            <span className="text-danger">{t("warning")}: {t("userDeleteWarning")}
-                            </span> : <Alert styleType="success" center>{deleteUserSuccessMessage}</Alert>
-                        }
-                        {generalError &&
-                            <Alert styleType="danger" center>{generalError}</Alert>
-                        }
-                    </MDBModalBody>
-                    {!deleteUserSuccessMessage &&
-                        <MDBModalFooter>
-                            <MDBBtn color="secondary" onClick={onClickDeleteUserModal}>{t("close")}</MDBBtn>
-                            <MDBBtn color="danger" onClick={onClickDeleteUserButton}>{t("delete")}</MDBBtn>
-                        </MDBModalFooter>
-                    }
-                </MDBModal>
-            </MDBContainer>
-        )}
+        <PasswordChangeModal
+            isOpen={passwordChangeMode}
+            toggle={onClickPasswordChangeModal}
+            currentPassword={currentPassword}
+            setCurrentPassword={setCurrentPassword}
+            newPassword={newPassword}
+            setNewPassword={setNewPassword}
+            newPasswordConfirm={newPasswordConfirm}
+            setNewPasswordConfirm={setNewPasswordConfirm}
+            passwordChangeSuccessMessage={passwordChangeSuccessMessage}
+            generalError={generalError}
+            errors={errors}
+            onSave={onClickPasswordChangeButton}
+        />
+        <ProfileImageChangeModal
+            profileImageChangeMode={profileImageChangeMode}
+            onClickProfileImageChangeModal={onClickProfileImageChangeModal}
+            tempImage={tempImage}
+            user={user}
+            defaultProfileImage={defaultProfileImage}
+            onClickProfileImage={onClickProfileImage}
+            onClickProfileImageChangeButton={onClickProfileImageChangeButton}
+            errors={errors}
+            profileImageChangeSuccessMessage={profileImageChangeSuccessMessage}
+            generalError={generalError}
+        />
+        <EditProfileModal
+            isOpen={editProfileMode}
+            toggle={onClickEditProfileModal}
+            user={authState}
+            firstName={firstName}
+            setFirstName={setFirstName}
+            lastName={lastName}
+            setLastName={setLastName}
+            username={username}
+            setUsername={setUsername}
+            job={job}
+            setJob={setJob}
+            university={university}
+            setUniversity={setUniversity}
+            editProfileSuccessMessage={editProfileSuccessMessage}
+            editProfileWarningMessage={editProfileWarningMessage}
+            generalError={generalError}
+            errors={errors}
+            onSave={onClickEditProfileButton}
+        />
+        <DeleteUserModal
+            isOpen={deleteUserMode}
+            toggle={onClickDeleteUserModal}
+            user={authState}
+            deleteUserSuccessMessage={deleteUserSuccessMessage}
+            generalError={generalError}
+            onDelete={onClickDeleteUserButton}
+        />
+        <AddNewPostModal 
+            addNewPostMode={addNewPostMode}
+            onClose={onClickAddNewPostModal}
+            onSave={onClickAddNewPostButton}
+            postContent={postContent}
+            setPostContent={setPostContent}
+            postHeader={postHeader}
+            setPostHeader={setPostHeader}
+            errors={errors}
+            addNewPostSuccessMessage={addNewPostSuccessMessage}
+            generalError={generalError}
+        />
         {apiProgress && (
             <Alert styleType="secondary" center><Spinner/></Alert>
         )}

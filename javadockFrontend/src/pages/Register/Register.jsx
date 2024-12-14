@@ -48,7 +48,6 @@ export function Register() {
             setApiProgress(false);
             setSuccessMessage(response.data.message)
         }).catch((error) => {
-            console.log(error)
             if (error.response?.data) {
                 setApiProgress(false);
                 if (error.response.data.statusCode === 400) {

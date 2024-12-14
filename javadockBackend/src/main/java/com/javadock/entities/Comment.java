@@ -6,26 +6,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "Comment")
-public class Comment {
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String content;
-
-    @Column(name = "createTime")
-    private LocalDate createTime = LocalDate.now();
-
-    @Column(name = "updateTime")
-    private LocalDate updateTime;
 
     @ManyToOne
     @JsonIgnore
@@ -37,5 +31,29 @@ public class Comment {
     @JoinColumn(name = "userId")
     private User user;
 
-    private Integer likeCount;
+    private Integer likeCount = 0;
+
+    @Column(columnDefinition="tinyint(1) default 0")
+    boolean isDelete = false;
+
+    @Column(columnDefinition="tinyint(1) default 0")
+    boolean isEdited = false;
+
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+
+    @PrePersist
+    public void prePersist() {
+        if (this.getCreateTime() == null) {
+            this.setCreateTime(LocalDateTime.now());
+        }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.setUpdateTime(LocalDateTime.now());
+    }
 }

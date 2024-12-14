@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Table(name = "Post")
-public class Post {
+public class Post extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +26,6 @@ public class Post {
     @Column(columnDefinition = "longtext")
     private String content;
 
-    @Column(name = "createTime")
-    private LocalDate createTime = LocalDate.now();
-
-    @Column(name = "updateTime")
-    private LocalDate updateTime;
-
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "userId")
@@ -40,9 +34,33 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Comment> commentList;
 
-    private Integer likeCount;
+    private Integer likeCount = 0;
 
     public Post(Long id) {
         this.id = id;
+    }
+
+    @Column(columnDefinition="tinyint(1) default 0")
+    boolean isDelete = false;
+
+    @Column(columnDefinition="tinyint(1) default 0")
+    boolean isEdited = false;
+
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+
+    @PrePersist
+    public void prePersist() {
+        if (this.getCreateTime() == null) {
+            this.setCreateTime(LocalDateTime.now());
+        }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.setUpdateTime(LocalDateTime.now());
     }
 }

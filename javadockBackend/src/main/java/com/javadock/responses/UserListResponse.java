@@ -1,7 +1,5 @@
 package com.javadock.responses;
 
-import com.javadock.entities.Job;
-import com.javadock.entities.University;
 import com.javadock.entities.User;
 import com.javadock.enums.Role;
 import lombok.Getter;
@@ -16,8 +14,8 @@ public class UserListResponse {
     private String lastName;
     private String fullName;
     private String username;
-    private Job job;
-    private University university;
+    private String job;
+    private String university;
     private String email;
     private Role role;
     private String image;

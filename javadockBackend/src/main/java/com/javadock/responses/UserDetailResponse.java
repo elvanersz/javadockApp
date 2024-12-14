@@ -1,8 +1,5 @@
 package com.javadock.responses;
 
-import com.javadock.entities.Job;
-import com.javadock.entities.Post;
-import com.javadock.entities.University;
 import com.javadock.entities.User;
 import com.javadock.enums.Role;
 import lombok.Getter;
@@ -11,6 +8,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -21,8 +19,8 @@ public class UserDetailResponse {
     private String lastName;
     private String fullName;
     private String username;
-    private Job job;
-    private University university;
+    private String job;
+    private String university;
     private String email;
     private Role role;
     private int membershipTime;
@@ -30,7 +28,7 @@ public class UserDetailResponse {
     private List<UserPostListResponse> postList;
 
     public UserDetailResponse(User user){
-        Period diffMembershipTime = Period.between(user.getCreateTime(), LocalDate.now());
+        Period diffMembershipTime = Period.between(user.getCreateTime().toLocalDate(), LocalDate.now());
 
         setId(user.getId());
         setFirstName(user.getFirstName());
@@ -45,8 +43,9 @@ public class UserDetailResponse {
         setImage(user.getImage());
 
         List<UserPostListResponse> postListResponses = user.getPostList().stream()
+                .filter(post -> !post.isDelete())
                 .map(UserPostListResponse::new)
-                .toList();
+                .collect(Collectors.toList());
         setPostList(postListResponses);
     }
 }

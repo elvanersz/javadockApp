@@ -6,21 +6,21 @@ import jakarta.validation.constraints.Size;
 
 public record UpdateUserRequest(
 
-        @NotBlank(message = "{javadock.constraints.firstName.NotBlank.message}")
+        @NotBlank(message = "javadock.constraints.firstName.NotBlank.message")
         String firstName,
 
-        @NotBlank(message = "{javadock.constraints.lastName.NotBlank.message}")
+        @NotBlank(message = "javadock.constraints.lastName.NotBlank.message")
         String lastName,
 
-        @NotBlank(message = "{javadock.constraints.username.NotBlank.message}")
-        @Size(max = 20, message = "{javadock.constraints.username.max.size.message}")
+        @NotBlank(message = "javadock.constraints.username.NotBlank.message")
+        @Size(max = 20, message = "javadock.constraints.username.max.size.message")
         String username,
 
         @Nullable
-        Long jobId,
+        String job,
 
         @Nullable
-        Long universityId
+        String university
 ) {
 
 }

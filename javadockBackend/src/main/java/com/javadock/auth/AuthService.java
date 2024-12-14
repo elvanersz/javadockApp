@@ -21,7 +21,7 @@ public class AuthService {
 
     public AuthResponse authenticate(Credentials credentials){
         User user = userService.getUserByEmail(credentials.email());
-        if (user == null){
+        if (user == null || user.isDelete()){
             throw new BusinessException("javadock.auth.invalid.credentials");
         } else if (!passwordEncoder.matches(credentials.password(), user.getPassword())){
             throw new BusinessException("javadock.auth.invalid.credentials");

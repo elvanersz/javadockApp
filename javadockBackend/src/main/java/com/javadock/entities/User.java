@@ -6,57 +6,40 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "users")
-public class User {
+public class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "firstName")
     private String firstName;
 
-    @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "username")
     private String username;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "jobId")
-    private Job job;
+    private String job;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "universityId")
-    private University university;
+    private String university;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
     private Role role = Role.Guest;
 
-    @Column(name = "createTime")
-    private LocalDate createTime = LocalDate.now();
-
-    @Column(name = "activationToken")
     private String activationToken;
 
-    @Column(name = "image", columnDefinition = "longtext")
+    @Column(columnDefinition = "longtext")
     private String image;
 
-    @Column(name = "passwordResetToken")
     private String passwordResetToken;
 
     @JsonIgnore
@@ -66,4 +49,32 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Comment> commentList;
+
+    public User() {
+        this.id = null;
+    }
+
+    public User(Long userId) {
+        this.id = userId;
+    }
+
+    boolean isDelete = false;
+
+
+    public boolean isDelete() {
+        return isDelete;
+    }
+
+
+    @PrePersist
+    public void prePersist() {
+        if (this.getCreateTime() == null) {
+            this.setCreateTime(LocalDateTime.now());
+        }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.setUpdateTime(LocalDateTime.now());
+    }
 }

@@ -41,7 +41,7 @@
   "forgotYourPassword": "Forgot your password?",
   "delete": "Delete",
   "userDelete": "User Delete",
-  "userDeleteWarning": "If the user is deleted, it cannot be restored!",
+  "userDeleteWarning": "If the user is deleted, it can not be restored!",
   "warning": "Warning",
   "sendMail": "Send Mail",
   "resetYourPassword": "Reset your password",
@@ -50,5 +50,11 @@
   "sendConfirmationEmail": "Send a confirmation email",
   "pleaseSelectImageFile": "Please select image file!",
   "showLess": "Show Less",
-  "readMore": "Read More"
+  "readMore": "Read More",
+  "addNewPost": "Add New Post",
+  "header": "Header",
+  "content": "Content",
+  "postDeleteWarning": "If the post is deleted, it can not be restored!",
+  "noPostsYet" : "No Posts Yet",
+  "writeSomething": "Write something"
 }
